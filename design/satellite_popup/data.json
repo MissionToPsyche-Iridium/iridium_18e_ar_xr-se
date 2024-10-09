@@ -1,0 +1,24 @@
+{
+  "popups": [
+    {
+      "title": "Solar Array",
+      "description": "A group of solar pannels that are the main source of power for the satellite"
+    },
+    {
+      "title": "X-Band High Gain Antenna",
+      "description": "An antenna that is compact and transmits data from the satellite's payload to earth"
+    },
+    {
+      "title": "DSOC (Deep Space Optical Communications",
+      "description": "An experitmental high-bandwidth communications device wich aims to take space communications to the next frontier. DSOC uses lasers to send data 10 times faster than current means."
+    },
+    {
+      "title": "Magnetometers",
+      "description": "A device that is used to measure the satellite's orientation and the geomagnetic filed of its orbit"
+    },
+    {
+      "title": "Gamma-Ray Spectrometer",
+      "description": "An instrument that is used to detect gamma rays that are used to study the composition of planets and other celestial bodies"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black; /* Black background */
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.button-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the buttons */
+  align-items: center; /* Center the buttons */
+}
+
+.open-popup {
+  width: 50px; /* Button size */
+  height: 50px; /* Button size */
+  border-radius: 50%; /* Make buttons circular */
+  background-color: gray; /* Button color */
+  border: none; /* Remove border */
+  margin: 15px; /* Space between buttons */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s; /* Transition effect */
+}
+
+.open-popup:hover {
+  background-color: #888; /* Darker gray on hover */
+}
+
+/* Popup styles */
+.popup {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 100; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.8); /* Black background with transparency */
+}
+
+/* Popup content styles */
+.popup-content {
+  background-color: black; /* Popup background */
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px; /* Some padding */
+  border: 1px solid gray; /* Gray border */
+  border-radius: 10px; /* Rounded edges */
+  width: 80%; /* Width of the popup */
+  max-width: 500px; /* Maximum width */
+  color: white; /* Text color */
+}
+
+/* Popup title and description */
+.popup-title {
+  margin: 0;
+}
+
+.popup-separator {
+  border: 1px solid gray; /* Gray line */
+  margin: 10px 0; /* Margin above and below */
+}
+
+/* Star background */
+.star {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0.8; /* Slightly transparent */
+}
