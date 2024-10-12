@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Popup Example</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="button-container">
+      <button class="open-popup" data-popup="popup1"></button>
+    </div>
+
+    <!-- Popup structures -->
+    <div id="popup1" class="popup">
+      <div class="popup-content">
+        <span class="close">&times;</span>
+        <h2 class="popup-title"></h2>
+        <hr class="popup-separator" />
+        <p class="popup-description"></p>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
