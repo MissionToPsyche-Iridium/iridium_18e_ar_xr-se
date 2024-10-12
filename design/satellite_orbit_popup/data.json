@@ -1,0 +1,36 @@
+{
+  "popups": [
+    {
+      "title": "Launch: October 13, 2023",
+      "description": "Psyche was launched at Kennedy Space Center on a Falcon Heavy rocket."
+    },
+    {
+      "title": "Gravity Assist: 2026",
+      "description": "NASA plans to have Psyche do a gracity assist maneuver at Mars in 2026.  This will make it so it will reach the asteroid in 2029."
+    },
+    {
+      "title": "Orbit A",
+      "description": "Orbit A is the 1st orbit phase and the lowest orbit in the mission. This orbit will last 56 days where Psyche will enter a 700km orbit for magnetic field characterization and preliminary mapping."
+    },
+    {
+      "title": "Orbit B1",
+      "description": "Orbist B1 is the 2nd orbit phase and is below Orbit A.  Psyche will descend from orbit A into orbit B1 at 303km.  This will last for 92 days with the goal of topopgraphy and magentic filed characterization."
+    },
+    {
+      "title": "Orbit D",
+      "description": "Orbit D is the 3rd orbit phase and the lowest orbit in the mission.  It will allow for a direct view of the asteroikd equator and utilize the gamma-ray and neutron spectrometers to determine the chemical composition of the asteroid."
+    },
+    {
+      "title": "Orbit C",
+      "description": "Orbit C is the 4th orbit and is above orbit D at 75km.  Orbit C will last for 100 day in order to perform gravity investigation and more magnetic field observations."
+    },
+    {
+      "title": "Orbit B2",
+      "description": "Orbit B2 is the last orbit and is the same as orbit B1.  It will last for 100 days in order to finish the mapping of the asteroid."
+    },
+    {
+      "title": "End of Mission",
+      "description": "Psyche is expected to end in November 2031 where it will be left to orbit the asteroid."
+    }
+  ]
+}
