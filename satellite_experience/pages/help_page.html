@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Page</title>
+    <style>
+        /* Body styling */
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #20162F;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Help container styling */
+        .help-container {
+            background-color: #20162F;
+            padding: 20px;
+            max-width: 375px;
+            margin: 0 auto;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        /* Logo container styling */
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* Logo styling */
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 24px;
+            margin-top: 0;
+            padding-top: 10px;
+            text-align: center;
+        }
+
+        /* Content styling */
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        /* Columns styling */
+        .left, .right {
+            width: 48%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Icon styling */
+        .icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Text styling */
+        p {
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Help Container -->
+    <div class="help-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="../assets/images/psyche_logo.png" alt="Logo" class="logo">
+        </div>
+
+        <!-- Help Title -->
+        <h1>Help</h1>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Top Left Content -->
+            <div class="left">
+                <img src="../assets/images/zoom_out_icon.png" alt="Pinch to Zoom Out" class="icon">
+                <p>Pinch to Zoom Out</p>
+            </div>
+
+            <!-- Top Right Content -->
+            <div class="right">
+                <img src="../assets/images/zoom_in_icon.png" alt="Spread to Zoom In" class="icon">
+                <p>Spread to Zoom In</p>
+            </div>
+
+            <!-- Bottom Left Content -->
+            <div class="left">
+                <img src="../assets/images/swipe_icon.png" alt="Swipe to Rotate View" class="icon">
+                <p>Swipe to Rotate View</p>
+            </div>
+
+            <!-- Bottom Right Content -->
+            <div class="right">
+                <img src="../assets/images/tap_explore_icon.png" alt="Tap Explore Buttons" class="icon">
+                <p>Tap Explore Buttons to Continue</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
