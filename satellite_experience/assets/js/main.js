@@ -5,8 +5,13 @@ document.addEventListener("DOMContentLoaded", function() {
     var closeButton = document.querySelector(".modal .close");
     var helpContent = document.getElementById("helpContent");
 
-    // Open the help page modal
+    // Open the help page modal when loaded
     document.getElementById("openHelpButton").addEventListener("click", function() {
+        openHelpModal();
+    });
+
+    // Open the help page modal
+    function openHelpModal() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "help_page.html", true);
         xhr.onreadystatechange = function() {
@@ -16,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
         xhr.send();
-    });
+    }
 
     // Close the help page modal
     closeButton.onclick = function() {
@@ -29,4 +34,26 @@ document.addEventListener("DOMContentLoaded", function() {
             modal.style.display = "none";
         }
     };
+
+    // Track user activity
+    var inactivityTime = 15000; // 15 second timer
+    var inactivityTimer;
+
+    // Open help modal if timer reaches inactivity time
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(function() {
+            openHelpModal();
+        }, inactivityTime)
+    }
+
+    // Events to reset the inactivity time i.e. user interaction
+    window.addEventListener('mousemove', resetInactivityTimer);
+    window.addEventListener('keydown', resetInactivityTimer);
+    window.addEventListener('click', resetInactivityTimer);
+    window.addEventListener('touchstart', resetInactivityTimer);
+    window.addEventListener('scroll', resetInactivityTimer);
+
+    // Initialize inactivity timer
+    resetInactivityTimer();
 });
