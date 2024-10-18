@@ -1,37 +1,38 @@
 // Ensure DOM content has loaded
 document.addEventListener("DOMContentLoaded", function() {
-    // Get modal and close button
-    var modal = document.getElementById("helpModal");
-    var closeButton = document.querySelector(".modal .close");
-    var helpContent = document.getElementById("helpContent");
+    // Get the modal and close button
+    var helpModal = document.getElementById("help-modal");
+    var modalCloseButton = document.querySelector(".modal-popup .modal-close");
+    var helpModalContent = document.getElementById("help-modal-content");
 
-    // Open the help page modal when loaded
-    document.getElementById("openHelpButton").addEventListener("click", function() {
+    // Button to open help modal
+    document.getElementById("open-help-modal-button").addEventListener("click", function() {
         openHelpModal();
     });
 
-    // Open the help page modal
+    // Inject the help page modal content
     function openHelpModal() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "help_page.html", true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                helpContent.innerHTML = xhr.responseText;
-                modal.style.display = "block"; // Show modal when content is loaded
+                console.log(xhr.responseText);
+                helpModalContent.innerHTML = xhr.responseText;
+                helpModal.style.display = "flex"; // Show modal when content is loaded
             }
         };
         xhr.send();
     }
 
     // Close the help page modal
-    closeButton.onclick = function() {
-        modal.style.display = "none";
+    modalCloseButton.onclick = function() {
+        helpModal.style.display = "none";
     };
 
     // Close the help page modal if clicking out
     window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target == helpModal) {
+            helpModal.style.display = "none";
         }
     };
 

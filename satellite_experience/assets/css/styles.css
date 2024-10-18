@@ -1,46 +1,66 @@
-/* Main Page Styling */
+/* Main Styling */
 body {
-    font-family: 'JetBrains Mono', monospace;
-    background-color: #f5f5f5;
-    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #5a4a75;
+    color: white;
     text-align: center;
-    padding: 20px;
+    display: flex;
+    padding: 0;
+    margin: 0;
 }
 
-/* Main Page Button Styling */
 button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
 }
 
+
 /* Modal Styling */
 .modal {
-    display: none; /* Hidden modal by default */
+    display: none; /* Hide modal by default */
     position: fixed;
     z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
 }
 
-.modal-content {
-    background-color: #20162F;
+.modal-popup {
+    background-color: rgba(32, 22, 47, 0.8); /* Make background slightly opaque */
     margin: 10% auto;
     padding: 20px;
     width: 80%;
-    max-width: 400px;
-    border-radius: 10px;
+    max-width: 375px;
+    border-radius: 12px;
     color: white;
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
+    z-index: 2;
 }
 
-/* Modal Close Button Styling */
-.close {
+.modal-logo-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3;
+}
+
+.modal-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.modal-title {
+    font-size: 24px;
+    margin-top: 0;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.modal-close {
     color: white;
     position: absolute;
     top: 10px;
@@ -51,19 +71,100 @@ button {
     z-index: 2;
 }
 
-.close:hover {
+.modal-close:hover {
     color: #bbb;
 }
 
-/* Logo Styling */
-.logo-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1;
+.modal-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.logo {
-    width: 40px;
-    height: 40px;
+.modal-column-left, .modal-column-right {
+    width: 48%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-icon {
+    width: 80px;
+    height: auto;
+    max-width: 100%;
+}
+
+.modal-text {
+    margin-top: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Launch Page */
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #20162f;
+    align-items: center;
+    margin-left: 0vh;
+    margin-right: 0vh;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    text-align: center;
+}
+
+#psyche-icon {
+    align-self: flex-start;
+    height: 75px;
+    width: 75px;
+    margin-left: 0%;
+}
+
+#disclaimer {
+    font-size: 12px;
+}
+
+#psyche-info {
+    border: 2px solid white;
+    padding: 7px;
+}
+
+#launch-button {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    font-size: 20px;
+    color: white;
+    background-color: #20162f;
+    border: 2px solid white;
+    height: 50px;
+    width: 75%;
+    cursor: pointer;
+    transition:
+        background-color 0.3s,
+        transform 0.1s;
+}
+
+#launch-button:active {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0.95);
+    border: none;
+}
+
+#launch-button:focus {
+    outline: none;
+}
+
+#psyche-satellite-img img {
+    margin-top: 25px;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    #container {
+        margin-left: 25%;
+        margin-right: 25%;
+    }
 }
