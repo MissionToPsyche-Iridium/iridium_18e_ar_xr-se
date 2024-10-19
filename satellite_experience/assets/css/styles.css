@@ -9,6 +9,17 @@ body {
     margin: 0;
 }
 
+/* Canvas Styling */
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+/* Icon Button Styling */
 #help-icon-button {
     position: fixed;
     bottom: 50px;
@@ -16,7 +27,7 @@ body {
     width: 30px;
     height: 30px;
     cursor: pointer;
-    z-index: 1;
+    z-index: 2;
 }
 
 #settings-icon-button {
@@ -26,14 +37,14 @@ body {
     width: 30px;
     height: 30px;
     cursor: pointer;
-    z-index: 1;
+    z-index: 2;
 }
 
 /* Modal Styling */
 .modal {
     display: none; /* Hide modal by default */
     position: fixed;
-    z-index: 1;
+    z-index: 3;
     left: 0;
     top: 0;
     width: 100%;
@@ -52,14 +63,14 @@ body {
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
-    z-index: 2;
+    z-index: 3;
 }
 
 .modal-logo-container {
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 3;
+    z-index: 4;
 }
 
 .modal-logo {
@@ -82,7 +93,7 @@ body {
     font-size: 30px;
     font-weight: bold;
     cursor: pointer;
-    z-index: 2;
+    z-index: 4;
 }
 
 .modal-close:hover {

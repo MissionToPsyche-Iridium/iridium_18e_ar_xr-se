@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // Track user activity
-    var inactivityTime = 15000; // 15 second timer
+    var inactivityTime = 60000; // 60 second timer
     var inactivityTimer;
 
     // Open help modal if timer reaches inactivity time
@@ -97,4 +97,55 @@ document.addEventListener("DOMContentLoaded", function() {
             settingsModal.style.display = "none";
         }
     };
+
+    // Setup Three.js canvas
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas').appendChild(renderer.domElement);
+
+    // Basic black background
+    renderer.setClearColor(0x000000);
+
+    // Basic light
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    scene.add(ambientLight);
+
+    // Model loader
+    var loader = new THREE.GLTFLoader();
+
+    // Load satellite model
+    loader.load('../assets/models/satellite.glb', function (gltf) {
+        var model = gltf.scene;
+        model.scale.set(0.25, 0.25, 0.25); // Set model scale
+        scene.add(model); // Add model to scene
+
+        // Offset camera from model
+        camera.position.z = 5;
+
+        // Basic rotation animation
+        function animate() {
+            requestAnimationFrame(animate);
+            model.rotation.x += 0.002;
+            renderer.render(scene, camera);
+        }
+        animate();
+    
+    // Log error to console
+    }, undefined, function (error) {
+        console.error(error);
+    });
+
+    // Update canvas when window resizes
+    window.addEventListener('resize', function () {
+        // Set new renderer dimensions
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize(width, height);
+
+        // Update camera
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
 });
