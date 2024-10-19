@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading</title>
+    <style>
+        /* Body styling */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #20162F;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Loading container styling */
+        .loading-container {
+            background-color: #20162F;
+            padding: 20px;
+            max-width: 375px;
+            margin: 0 auto;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Content styling */
+        .content {
+            position: absolute;
+            bottom: 0px;
+        }
+      
+
+        /* Loader styling */
+        .loader {
+          border: 10px solid #f3f3f3; /* Light grey */
+          border-top: 10px solid #A5405C; /* Psyche pink/red color */
+          border-radius: 70%;
+          width: 50px;
+          height: 50px;
+          animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Container -->
+    <div class="loading-container">
+        <!-- Content -->
+        <div class="content">
+            <div class="loader"></div> 
+            <div><p>Loading...</p></div>
+        </div>
+  </div>
+</body>
+</html>
