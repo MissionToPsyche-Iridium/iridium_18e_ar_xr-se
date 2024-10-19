@@ -4,215 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-    <style>
-        /* Body styling */
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #20162F;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Settings container styling */
-        .settings-container {
-            background-color: #20162F;
-            padding: 20px;
-            max-width: 375px;
-            margin: 0 auto;
-            border-radius: 12px;
-            position: relative;
-        }
-
-        /* Logo container styling */
-        .logo-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        /* Logo styling */
-        .logo {
-            width: 40px;
-            height: 40px;
-        }
-
-        /* Exit styling */
-        .exit-container {
-            position: absolute;
-            top: 15px;
-            right: 10px;
-            background-color: transparent;
-            border: none;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            color: white;
-        }
-
-            .exit-container {
-      transition-duration: 0.5s;
-    }
-
-        .exit-container:hover {
-          color: #F99F03;
-        }
-
-
-        /* Title styling */
-        h1 {
-            font-size: 24px;
-            margin-top: 10%;
-            padding-top: 10px;
-            text-align: center;
-            font-weight: normal;
-        }
-
-        /* Content styling */
-        .content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        /* Rows styling */
-        .top, .middle, .bottom {
-            width: 100%;
-            text-align: left;
-            margin-bottom: 1px;
-            margin-top: 10px;
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 2px 10px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .top {
-            margin-top: 20%;
-        }
-
-        /* Icon styling */
-        .icon {
-            width: 80px;
-            height: 80px;
-        }
-
-		/* Toggle/switch - box around slider */
-		.switch {
-		  position: relative;
-		  display: flex;
-		  width: 46px;
-		  height: 24px;
-          margin-top: 12px;
-		}
-
-		/* Hide checkbox default */
-		.switch input {
-		  opacity: 0;
-		  width: 0;
-		  height: 0;
-		}
-
-		/* toggle/slider */
-		.slider {
-		  position: absolute;
-		  cursor: pointer;
-		  top: 0;
-		  left: 0;
-		  right: 0;
-		  bottom: 0;
-		  background-color: #ccc;
-		  -webkit-transition: .5s;
-		  transition: .5s;
-		}
-
-		.slider:before {
-		  position: absolute;
-		  content: "";
-		  height: 20px;
-		  width: 20px;
-		  left: 4px;
-		  bottom: 2px;
-		  background-color: white;
-		  -webkit-transition: .5s;
-		  transition: .5s;
-		}
-
-		input:checked + .slider {
-		  background-color: #A5405C;
-		}
-
-		input:focus + .slider {
-		  box-shadow: 0 0 1px #2196F3;
-		}
-
-		input:checked + .slider:before {
-		  -webkit-transform: translateX(20px);
-		  -ms-transform: translateX(20px);
-		  transform: translateX(20px);
-		}
-
-		/* Rounded toggle/slider border */
-		.slider.round {
-		  border-radius: 34px;
-		}
-
-		.slider.round:before {
-		  border-radius: 50%;
-		}
-    </style>
+    <title>Settings Page</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
     <!-- Settings Container -->
-    <div class="settings-container">
+    <div class="modal-container">
         <!-- Logo -->
-        <div class="logo-container">
-        <a href="./index.html" target="blank">
-            <img src="../assets/images/psyche_logo.png" alt="Logo" class="logo">
-       </a>
+        <div class="modal-logo-container">
+            <img src="../assets/images/psyche_logo.png" alt="Logo" class="modal-logo">
         </div>
 
-        <!-- TODO: update exit button to go back to previous screen or home screen?-->
-        <!--div type="button" class="exit-container" onclick="window.open('', '_self', ''); window.close();">
-            <p class="exit" onclick="window.open('', '_self', ''); window.close();">X</p>
-        </div-->
-        <button class="exit-container" onclick="self.close()">X</button>
         <!-- Settings Title -->
-        <h1>Settings</h1>
+        <div class="modal-title">Settings</div>
 
         <!-- Content -->
-        <div class="content">
+        <div class="modal-content">
             <!-- Top Content -->
-         <div class="top">
-          <p>High Contrast Mode</p>
-          <label class="switch">
-  			<input type="checkbox">
-  			<span class="slider round"></span>
-			</label>
+            <div class="modal-row-top">
+                <p>High Contrast Mode</p>
+                <label class="modal-switch">
+  			            <input type="checkbox">
+  			            <span class="modal-slider round"></span>
+			          </label>
             </div>
           
-          <!-- Middle Content -->
-         <div class="middle">
-          <p>Light Mode</p>
-          <label class="switch">
-  <input type="checkbox">
-  <span class="slider round"></span>
-</label>
+            <!-- Middle Content -->
+            <div class="modal-row-middle">
+                <p>Light Mode</p>
+                <label class="modal-switch">
+                    <input type="checkbox">
+                    <span class="modal-slider round"></span>
+                </label>
             </div>
           
-          <!-- Bottom Content -->
-         <div class="bottom">
-          <p>Color-blind Mode</p>
-<label class="switch">
-  <input type="checkbox">
-  <span class="slider round"></span>
-</label>
+            <!-- Bottom Content -->
+            <div class="modal-row-bottom">
+                <p>Color-blind Mode</p>
+                <label class="modal-switch">
+                    <input type="checkbox">
+                    <span class="modal-slider round"></span>
+                </label>
             </div>   
+        </div>
     </div>
-      
 </body>
 </html>
