@@ -1,14 +1,8 @@
 // Ensure DOM content has loaded
 document.addEventListener("DOMContentLoaded", function() {
-    // Get the modal and close button
+    // Help modal elements
     var helpModal = document.getElementById("help-modal");
-    var modalCloseButton = document.querySelector(".modal-popup .modal-close");
     var helpModalContent = document.getElementById("help-modal-content");
-
-    // Button to open help modal
-    document.getElementById("open-help-modal-button").addEventListener("click", function() {
-        openHelpModal();
-    });
 
     // Inject the help page modal content
     function openHelpModal() {
@@ -16,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
         xhr.open("GET", "help_page.html", true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                console.log(xhr.responseText);
                 helpModalContent.innerHTML = xhr.responseText;
                 helpModal.style.display = "flex"; // Show modal when content is loaded
             }
@@ -24,7 +17,14 @@ document.addEventListener("DOMContentLoaded", function() {
         xhr.send();
     }
 
+    // Help icon button
+    var helpIconButton = document.getElementById("help-icon-button");
+    helpIconButton.addEventListener("click", function() {
+        openHelpModal();
+    });
+
     // Close the help page modal
+    var modalCloseButton = document.querySelector(".modal-popup .modal-close");
     modalCloseButton.onclick = function() {
         helpModal.style.display = "none";
     };
