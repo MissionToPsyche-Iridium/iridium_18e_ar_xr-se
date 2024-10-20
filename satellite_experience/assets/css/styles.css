@@ -274,3 +274,42 @@ input:checked + .modal-slider:before {
         margin-right: 25%;
     }
 }
+
+/* Loading screen */
+/* Loading container styling */
+        #loading-container {
+            position: fixed;
+            inset: 0;
+            background-color: #20162F;
+            z-index: 2;
+            opacity: 1;
+            transition: opacity 700ms ease;
+            padding: 20px;
+            margin: 0 auto;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Content styling */
+        .loading-content {
+            position: absolute;
+            bottom: 0px;
+        }
+      
+        /* Loader styling */
+        .loader {
+          border: 10px solid #f3f3f3; /* Light grey */
+          border-top: 10px solid #A5405C; /* Psyche pink/red color */
+          border-radius: 70%;
+          width: 50px;
+          height: 50px;
+          animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
