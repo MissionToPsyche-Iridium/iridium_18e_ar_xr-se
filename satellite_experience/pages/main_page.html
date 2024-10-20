@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GLTFLoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+</head>
+<body>
+    <!-- Help Icon Button -->
+    <img src="../assets/images/help_icon.png" alt="Help Icon" id="help-icon-button">
+
+    <!-- Settings Icon Button -->
+    <img src="../assets/images/settings_icon.png" alt="Settings Icon" id="settings-icon-button">
+
+    <!-- Modal Container for Help Page -->
+    <div id="help-modal" class="modal">
+        <div class="modal-popup">
+            <!-- Close Modal -->
+            <span id="help-modal-close" class="modal-close">&times;</span>
+
+            <!-- Help Content -->
+            <div id="help-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Modal Container for Settings Page -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-popup">
+            <!-- Close Modal -->
+            <span id="settings-modal-close" class="modal-close">&times;</span>
+
+            <!-- Settings Content -->
+            <div id="settings-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Canvas for Rendering -->
+    <div id="canvas"></div>
+
+    <!-- Loading page -->
+    <!-- Loading Container -->
+    <div id="loading-container">
+        <!-- Content -->
+        <div class="loading-content">
+            <div class="loader"></div> 
+            <div><p>Loading...</p></div>
+        </div>
+   </div>
+   
+    <!-- Main -->
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
