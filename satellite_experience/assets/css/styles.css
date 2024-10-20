@@ -266,9 +266,39 @@ input:checked + .modal-slider:before {
 
 #psyche-info {
     margin-top: 50px;
+    font-weight: bold;
     border: 2px solid white;
     color: black;
     padding: 7px;
+}
+
+#psyche-info-line {
+  font-family: "Helvetica",sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 1.4;
+  text-align: center;
+  color: #302144;
+  letter-spacing: -1px;
+}
+
+#psyche-info-headline {
+  font-family: "Helvetica",sans-serif;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 1.4;
+  text-align: center;
+  color: #302144;
+  letter-spacing: -1px;
+}
+    
+}
+#psyche-info-list {
+    font-weight: normal;
+    color: black;
+    text-align: left;
+    align-self: center;
+    list-style-type: disc;
 }
 
 #launch-button {
