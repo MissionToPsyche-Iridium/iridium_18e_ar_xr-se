@@ -117,16 +117,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // Model loader
     var loader = new THREE.GLTFLoader();
 
-    // Loading screen
-    let loading = document.getElementById("loading-container");
-
-    setTimeout(function () {
-      loading.style.opacity = 0;
-      setTimeout(function () {
-        loading.style.display = "none";
-      }, 2000);
-    }, 1000);
-
     // Load satellite model
     loader.load('../assets/models/satellite.glb', function (gltf) {
         var model = gltf.scene;
@@ -149,7 +139,15 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error(error);
     });
 
+    // Loading screen
+    let loading = document.getElementById("loading-container");
 
+    setTimeout(function () {
+      loading.style.opacity = 0;
+      setTimeout(function () {
+        loading.style.display = "none";
+      }, 3000);
+    }, 2000);
 
     // Update canvas when window resizes
     window.addEventListener('resize', function () {
