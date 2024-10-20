@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Launch Page</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
   </head>
   <body>
     <div id="container">
       <div id="psyche-icon">
-        <img src="./assets/Psyche_Icon_Color-SVG.svg" alt="Psyche Icon" />
+        <img src="../assets/images/Psyche_Icon_Color-SVG.svg" alt="Psyche Icon" />
       </div>
       <header>
         <h1>Welcome to the Psyche Satellite Mission AR Experience</h1>
@@ -26,7 +26,7 @@
       </div>
 
       <div id="psyche-satellite-img">
-        <img src="./assets/satellite_img.jpeg" alt="Psyche Satellite Image" />
+        <img src="../assets/images/satellite_img.jpeg" alt="Psyche Satellite Image" />
       </div>
       <button id="launch-button">Launch AR Experience</button>
       <div id="disclaimer">
@@ -44,6 +44,15 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Button to Main Page -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          var launchButton = document.getElementById("launch-button");
+  
+          launchButton.addEventListener("click", function() {
+              window.location.href = "main_page.html";
+          });
+      });
+      </script>
   </body>
 </html>
