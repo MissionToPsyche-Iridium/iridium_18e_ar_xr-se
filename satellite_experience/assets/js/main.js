@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var loader = new THREE.GLTFLoader();
 
     // Load satellite model
-    loader.load('../assets/models/satellite.glb', function (gltf) {
+    loader.load('../assets/models/satellite.glb', function(gltf) {
         var model = gltf.scene;
         model.scale.set(0.25, 0.25, 0.25); // Set model scale
         scene.add(model); // Add model to scene
@@ -133,24 +133,70 @@ document.addEventListener("DOMContentLoaded", function() {
             renderer.render(scene, camera);
         }
         animate();
-    
-    // Log error to console
-    }, undefined, function (error) {
+
+        // Log error to console
+    }, undefined, function(error) {
         console.error(error);
     });
 
     // Loading screen
     let loading = document.getElementById("loading-container");
 
-    setTimeout(function () {
-      loading.style.opacity = 0;
-      setTimeout(function () {
-        loading.style.display = "none";
-      }, 3000);
+    setTimeout(function() {
+        loading.style.opacity = 0;
+        setTimeout(function() {
+            loading.style.display = "none";
+        }, 3000);
     }, 2000);
 
+    // initial distance for zooming in and out
+    let initialDistance = null;
+
+    // Calculate distance for zooming in and out
+    function getDistance(touches) {
+        const dx = touches[0].pageX - touches[1].pageX;
+        const dy = touches[0].pageY - touches[1].pageY;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Start of Zooming in and out with phone
+    window.addEventListener('touchstart', (event) => {
+        if (event.touches.length === 2) {
+            initialDistance = getDistance(event.touches);
+        }
+    });
+
+    // Coninuously update zooming in and out when on phone
+    window.addEventListener('touchmove', (event) => {
+        if (event.touches.length === 2 && initialDistance !== null) {
+            const currDistance = getDistance(event.touches);
+            const speed = 0.01;
+            if (currDistance > initialDistance) {
+                camera.zoom += speed;
+            } else {
+                camera.zoom -= speed;
+            }
+            camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
+            camera.updateProjectionMatrix();
+            initialDistance = currDistance;
+        }
+    });
+
+    // After zooming in and out reset initial distance
+    window.addEventListener('touchend', () => {
+        initialDistance = null;
+    });
+
+    // Zooming in and out with a mouse
+    window.addEventListener('wheel', (event) => {
+        const speed = 0.1;
+        camera.zoom += event.deltaY * speed * -0.01;
+        camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
+        camera.updateProjectionMatrix();
+    });
+
     // Update canvas when window resizes
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', function() {
         // Set new renderer dimensions
         var width = window.innerWidth;
         var height = window.innerHeight;
