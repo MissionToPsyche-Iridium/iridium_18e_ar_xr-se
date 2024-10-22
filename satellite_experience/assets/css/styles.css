@@ -127,7 +127,7 @@ body {
 
 /* Settings Page/Modal */
 /* Rows styling */
-.settings-modal-row-top, .settings-modal-row-middle, .settings-modal-row-bottom {
+.settings-modal-default-mode, .settings-modal-high-contrast-mode, .settings-modal-light-mode, .settings-modal-color-blind-mode {
     width: 100%;
     text-align: left;
     margin-bottom: 1px;
@@ -139,11 +139,11 @@ body {
     justify-content: space-between;
 }
 
-.settings-modal-row-top {
+.settings-modal-default-mode {
     margin-top: 20%;
 }
 
-#high-contrast-mode, #light-mode, #color-blind-mode {
+#default-mode, #high-contrast-mode, #light-mode, #color-blind-mode {
     /* When the radio button is checked, add a blue background */
     accent-color: #F9A001;
 }

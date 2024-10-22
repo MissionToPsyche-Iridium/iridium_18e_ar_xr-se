@@ -82,16 +82,27 @@ document.addEventListener("DOMContentLoaded", function() {
         // Handle Settings radio button selection
         // TODO: connect to mode changes
         if(document.getElementById('high-contrast-mode').checked) {
+            // default mode selected
+            console.log("Default Mode selected");
+            // link.href="../assets/css/styles.css"
+            // document.querySelector("link[href='u1.css']").href = "../assets/css/styles.css;
+        } else if(document.getElementById('high-contrast-mode').checked) {
             // high contrast mode selected
             console.log("High Constrast Mode selected");
+            // link.href="../assets/css/high_contrast_styles.css"
+            // document.querySelector("link[href='u1.css']").href = "../assets/css/high_contrast_styles.css;
             // TODO US79 Task 85
         } else if(document.getElementById('light-mode').checked) {
             // light mode selected
             console.log("Light Mode selected");
+            // link.href="../assets/css/light_styles.css"
+            // document.querySelector("link[href='u1.css']").href = "../assets/css/light_styles.css;
             // TODO US79 Task 108
         } else if (document.getElementById('color-blind-mode').checked) {
             // color-blind mode selected
             console.log("Color-blind Mode selected");
+            // link.href="../assets/css/color_blind_styles.css"
+            // document.querySelector("link[href='u1.css']").href = "../assets/css/color_blind_styles.css;
             // TODO US79 Task 86
         }
     }
