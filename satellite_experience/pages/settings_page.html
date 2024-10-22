@@ -21,31 +21,30 @@
         <!-- Content -->
         <div class="modal-content">
             <!-- Top Content -->
-            <div class="modal-row-top">
-                <p>High Contrast Mode</p>
-                <label class="modal-switch">
-  			            <input type="checkbox">
-  			            <span class="modal-slider round"></span>
-			          </label>
+            <div class="settings-modal-row-top">
+                <label for="high-contrast-mode">
+                    <span>High Contrast Mode</span>
+                </label>
+                <input type="radio" id="high-contrast-mode" name="setting" value="high-contrast-mode">
+                
             </div>
           
             <!-- Middle Content -->
-            <div class="modal-row-middle">
-                <p>Light Mode</p>
-                <label class="modal-switch">
-                    <input type="checkbox">
-                    <span class="modal-slider round"></span>
+            <div class="settings-modal-row-middle setting-selector">
+                <label for="light-mode">
+                    <span>Light Mode</span>
                 </label>
+                <input type="radio" id="light-mode" name="setting" value="high-mode">
             </div>
           
             <!-- Bottom Content -->
-            <div class="modal-row-bottom">
-                <p>Color-blind Mode</p>
-                <label class="modal-switch">
-                    <input type="checkbox">
-                    <span class="modal-slider round"></span>
+            <div class="settings-modal-row-bottom setting-selector">
+                <label for="color-blind-mode">
+                    <span>Color-blind Mode</span>
                 </label>
-            </div>   
+                <input type="radio" id="color-blind-mode" name="setting" value="color-blind-mode">
+            </div> 
+
         </div>
     </div>
 </body>

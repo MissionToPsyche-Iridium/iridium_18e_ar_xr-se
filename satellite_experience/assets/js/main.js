@@ -78,6 +78,22 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
         xhr.send();
+
+        // Handle Settings radio button selection
+        // TODO: connect to mode changes
+        if(document.getElementById('high-contrast-mode').checked) {
+            // high contrast mode selected
+            console.log("High Constrast Mode selected");
+            // TODO US79 Task 85
+        } else if(document.getElementById('light-mode').checked) {
+            // light mode selected
+            console.log("Light Mode selected");
+            // TODO US79 Task 108
+        } else if (document.getElementById('color-blind-mode').checked) {
+            // color-blind mode selected
+            console.log("Color-blind Mode selected");
+            // TODO US79 Task 86
+        }
     }
 
     // Settings icon button
@@ -85,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
     settingsIconButton.addEventListener("click", function() {
         openSettingsModal();
     });
+
 
     // Close the settings modal
     var settingsModalCloseButton = document.getElementById("settings-modal-close");
