@@ -120,6 +120,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Load satellite model
     loader.load('../assets/models/satellite.glb', function(gltf) {
         var model = gltf.scene;
+        //model.position.set(0, 0, 0);
+        // model.position.x = -15;
         model.scale.set(0.25, 0.25, 0.25); // Set model scale
         scene.add(model); // Add model to scene
 
@@ -152,6 +154,18 @@ document.addEventListener("DOMContentLoaded", function() {
     // initial distance for zooming in and out
     let initialDistance = null;
 
+    // swipe/mouse movement variables
+    let radius = camera.position.length();
+    let azimuth = 0;
+    let elevation = 0;
+    camera.lookAt(0, 0, 0);
+    let isDragging = false;
+    let previousMousePosition = {
+        x: 0,
+        y: 0
+    };
+    const dragSpeed = 0.005;
+
     // Calculate distance for zooming in and out
     function getDistance(touches) {
         const dx = touches[0].pageX - touches[1].pageX;
@@ -163,6 +177,10 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener('touchstart', (event) => {
         if (event.touches.length === 2) {
             initialDistance = getDistance(event.touches);
+        } else {
+            isDragging = true;
+            previousTouch.x = event.touches[0].clientX;  // Store the initial touch position
+            previousTouch.y = event.touches[0].clientY;
         }
     });
 
@@ -179,12 +197,30 @@ document.addEventListener("DOMContentLoaded", function() {
             camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
             camera.updateProjectionMatrix();
             initialDistance = currDistance;
+        } else {
+            if (!isDragging) return;
+
+            const deltaX = event.touches[0].clientX - previousTouch.x;
+            const deltaY = event.touches[0].clientY - previousTouch.y;
+
+            azimuth += deltaX * 0.005;
+            elevation -= deltaY * 0.005;
+            elevation = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, elevation));
+            updateCameraPosition();
+
+            // Update the previous touch position for the next move event
+            previousTouch.x = event.touches[0].clientX;
+            previousTouch.y = event.touches[0].clientY;
         }
     });
 
     // After zooming in and out reset initial distance
     window.addEventListener('touchend', () => {
-        initialDistance = null;
+        if (event.touches.length === 2 && initialDistance !== null) {
+            initialDistance = null;
+        } else {
+            isDragging = false;
+        }
     });
 
     // Zooming in and out with a mouse
@@ -194,6 +230,49 @@ document.addEventListener("DOMContentLoaded", function() {
         camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
         camera.updateProjectionMatrix();
     });
+
+    // Update the camera position based on azimuth and elevation
+    function updateCameraPosition() {
+        radius = camera.position.length();
+        camera.position.x = radius * Math.cos(elevation) * Math.sin(azimuth);
+        camera.position.y = radius * Math.sin(elevation);
+        camera.position.z = radius * Math.cos(elevation) * Math.cos(azimuth);
+        camera.lookAt(0, 0, 0);
+    }
+
+    // when mouse clicks
+    function onMouseDown(event) {
+        isDragging = true;
+    }
+
+    // when mouse stops clicks
+    function onMouseUp(event) {
+        isDragging = false;
+    }
+
+    // during mouse click
+    function onMouseMove(event) {
+        if (!isDragging) return;
+        let deltaMove = {
+            x: event.movementX || event.mozMovementX || event.webkitMovementX || 0,
+            y: event.movementY || event.mozMovementY || event.webkitMovementY || 0
+        };
+
+        // Adjust the left/right/up/down movement
+        azimuth -= deltaMove.x * dragSpeed;
+        elevation -= deltaMove.y * dragSpeed;
+
+        // Clamp elevation so the camera doesn't flip upside down
+        const maxElevation = Math.PI / 2 - 0.1;
+        const minElevation = -Math.PI / 2 + 0.1;
+        elevation = Math.max(minElevation, Math.min(maxElevation, elevation));
+
+        updateCameraPosition();
+    }
+
+    document.addEventListener('mousedown', onMouseDown, false);
+    document.addEventListener('mouseup', onMouseUp, false);
+    document.addEventListener('mousemove', onMouseMove, false);
 
     // Update canvas when window resizes
     window.addEventListener('resize', function() {
