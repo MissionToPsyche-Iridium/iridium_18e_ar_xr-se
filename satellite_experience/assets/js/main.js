@@ -111,8 +111,13 @@ document.addEventListener("DOMContentLoaded", function() {
     renderer.setClearColor(0x000000);
 
     // Basic light
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
+
+    // Basic directional light
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
 
     // Model loader
     var loader = new THREE.GLTFLoader();
