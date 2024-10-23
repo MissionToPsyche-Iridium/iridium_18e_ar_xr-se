@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var loader = new THREE.GLTFLoader();
 
     // Load satellite model
-    loader.load('../assets/models/satellite.glb', function (gltf) {
+    loader.load('../assets/models/satellite_light.glb', function (gltf) {
         var model = gltf.scene;
         model.scale.set(0.25, 0.25, 0.25); // Set model scale
         scene.add(model); // Add model to scene
