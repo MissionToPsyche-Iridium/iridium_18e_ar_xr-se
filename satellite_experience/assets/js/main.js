@@ -242,13 +242,17 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
         xhr.send();
+
     }
+
+    // TODO: connect settings radio buttons to modes
 
     // Settings icon button
     var settingsIconButton = document.getElementById("settings-icon-button");
     settingsIconButton.addEventListener("click", function() {
         openSettingsModal();
     });
+
 
     // Close the settings modal
     var settingsModalCloseButton = document.getElementById("settings-modal-close");
