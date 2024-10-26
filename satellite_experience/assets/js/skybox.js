@@ -1,12 +1,6 @@
-/*
-* @author simondevyoutube / https://github.com/simondevyoutube
-* @author nswanso6
-* @author cmill26
-*/
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
-
-import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
-
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
 
 class SpaceSkybox {
   constructor() {
@@ -14,118 +8,120 @@ class SpaceSkybox {
   }
 
   _Initialize() {
-    this._threejs = new THREE.WebGLRenderer({
-      antialias: true,
-    });
+    this._threejs = new THREE.WebGLRenderer({ antialias: true });
     this._threejs.shadowMap.enabled = true;
     this._threejs.shadowMap.type = THREE.PCFSoftShadowMap;
     this._threejs.setPixelRatio(window.devicePixelRatio);
     this._threejs.setSize(window.innerWidth, window.innerHeight);
-
     document.body.appendChild(this._threejs.domElement);
 
-    window.addEventListener('resize', () => {
-      this._OnWindowResize();
-    }, false);
+    window.addEventListener('resize', () => this._OnWindowResize(), false);
 
+    this._LoadingScreen();
+    this._SetupCamera();
+    this._SetupScene();
+    this._SetupLighting();
+    this._SetupControls();
+    this._LoadSkybox();
+    //this._CreateBasicBox();
+    this._LoadSatelliteModel();
+
+    this._RAF();
+  }
+
+  _SetupCamera() {
     const fov = 60;
-    const aspect = 1920 / 1080;
+    const aspect = window.innerWidth / window.innerHeight;
     const near = 1.0;
     const far = 1000.0;
     this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this._camera.position.set(75, 20, 0);
+    this._camera.position.set(0, 5, 15); // Set initial camera position for better view of the satellite
+  }
 
+  _SetupScene() {
     this._scene = new THREE.Scene();
+  }
 
-    let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-    // TODOL use lighting concepts for US75 Task 78
-    light.position.set(75, 100, 30);
-    // light.target.position.set(0, 0, 0);
-    // light.castShadow = true;
-    // light.shadow.bias = -0.001;
-    // light.shadow.mapSize.width = 2048;
-    // light.shadow.mapSize.height = 2048;
-    // light.shadow.camera.near = 0.1;
-    // light.shadow.camera.far = 500.0;
-    // light.shadow.camera.near = 0.5;
-    // light.shadow.camera.far = 500.0;
-    // light.shadow.camera.left = 100;
-    // light.shadow.camera.right = -100;
-    // light.shadow.camera.top = 100;
-    // light.shadow.camera.bottom = -100;
-    this._scene.add(light);
+  _SetupLighting() {
+    // Ambient Light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Increase intensity
+    this._scene.add(ambientLight);
 
-    light = new THREE.AmbientLight(0x101010);
-    this._scene.add(light);
+    // Directional Light
+    const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+    directionalLight.position.set(75, 100, 30);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.bias = -0.001;
+    directionalLight.shadow.mapSize.set(2048, 2048);
+    this._scene.add(directionalLight);
 
-    const controls = new OrbitControls(
-      this._camera, this._threejs.domElement);
-    controls.target.set(0, 20, 0);
+    // Point Light
+    const pointLight = new THREE.PointLight(0xffffff, 1.5, 100); // Bright point light
+    pointLight.position.set(0, 10, 10); // Position it above the scene
+    this._scene.add(pointLight);
+}
+
+  _SetupControls() {
+    const controls = new OrbitControls(this._camera, this._threejs.domElement);
+    controls.target.set(0, 5, 0); // Center the controls on the satellite
     controls.update();
+  }
 
+  _LoadSkybox() {
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
-        '../assets/images/skybox/space_ft.png',
-        '../assets/images/skybox/space_bk.png',
-        '../assets/images/skybox/space_up.png',
-        '../assets/images/skybox/space_dn.png',
-        '../assets/images/skybox/space_lf.png',
-        '../assets/images/skybox/space_rt.png',
-    ]);
+      '../assets/images/skybox/space_ft.png',
+      '../assets/images/skybox/space_bk.png',
+      '../assets/images/skybox/space_up.png',
+      '../assets/images/skybox/space_dn.png',
+      '../assets/images/skybox/space_lf.png',
+      '../assets/images/skybox/space_rt.png',
+    ], undefined, undefined, (error) => {
+      console.error('Error loading skybox texture:', error);
+    });
     this._scene.background = texture;
+  }
 
-    // Setup Three.js canvas
-    //var scene = new THREE.Scene();
-    //var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    //var renderer = new THREE.WebGLRenderer({ antialias: true });
-    //renderer.setSize(window.innerWidth, window.innerHeight);
-    //document.getElementById('canvas').appendChild(renderer.domElement);
-
-  // Basic light
-    // var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-    // this._scene.add(ambientLight);
-
-    // // Model loader
-    // var loader = new THREE.GLTFLoader();
-
-    // // Load satellite model
-    // loader.load('../assets/models/satellite.glb', function (gltf) {
-    //     var model = gltf.scene;
-    //     model.scale.set(0.25, 0.25, 0.25); // Set model scale
-    //     this._scene.add(model); // Add model to scene
-
-    //     // Offset camera from model
-    //     camera.position.z = 5;
-
-    //     // Skybox
-        
-
-    //     // Basic rotation animation
-    //     function animate() {
-    //         requestAnimationFrame(animate);
-    //         model.rotation.x += 0.002;
-    //         renderer.render(scene, camera);
-    //     }
-    //     animate();
-    
-    // // Log error to console
-    // }, undefined, function (error) {
-    //     console.error(error);
-    // });
-
-    // TODO: remove box and add 3D satellite model
+  _CreateBasicBox() {
     const box = new THREE.Mesh(
       new THREE.BoxGeometry(10, 10, 10),
-      new THREE.MeshStandardMaterial({
-          color: 0xFFFFFF,
-      }));
+      new THREE.MeshStandardMaterial({ color: 0xFFFFFF })
+    );
     box.position.set(0, 3, 0);
     box.castShadow = true;
     box.receiveShadow = true;
-    box.rotation.x = -Math.PI / 2;
     this._scene.add(box);
+  }
 
-    this._RAF();
+  _LoadSatelliteModel() {
+    const loader = new GLTFLoader();
+    loader.load('../assets/models/satellite_light.glb', (gltf) => {
+      const model = gltf.scene;
+      model.scale.set(0.25, 0.25, 0.25); // Set model scale
+      model.position.set(0, 4, 0); // center model
+      this._scene.add(model); // Add model to scene
+
+      // Basic rotation animation
+      const animate = () => {
+        requestAnimationFrame(animate);
+        model.rotation.y += 0.01; // Rotate the model
+        this._threejs.render(this._scene, this._camera);
+      };
+      animate();
+    }, undefined, (error) => {
+      console.error('Error loading model:', error);
+    });
+  }
+
+  _LoadingScreen() {
+    let loading = document.getElementById("loading-container");
+
+    setTimeout(function() {
+        loading.style.opacity = 0;
+        setTimeout(function() {
+            loading.style.display = "none";
+        }, 3000);
+    }, 2000);
   }
 
   _OnWindowResize() {
@@ -142,9 +138,10 @@ class SpaceSkybox {
   }
 }
 
-
 let _APP = null;
 
 window.addEventListener('DOMContentLoaded', () => {
   _APP = new SpaceSkybox();
 });
+
+
