@@ -109,16 +109,21 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('canvas').appendChild(renderer.domElement);
 
     // Basic black background
-    renderer.setClearColor(0x000000);
+    renderer.setClearColor(0x111111);
 
-    // Basic light
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    // Basic directional light
-    var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 1, 1);
+    // Directional lighting
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.3);
+    directionalLight.position.set(5, 10, 7.5);
     scene.add(directionalLight);
+
+    // Ambient light
+    const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.05); // Soft white light
+    scene.add(ambientLight1);
+
+    // Point lights
+    const pointLight = new THREE.PointLight(0xffffff, 10, 100); // White light
+    pointLight.position.set(0, 0, 0); // Position it at the center
+    scene.add(pointLight);
 
     // Model loader
     var loader = new GLTFLoader();
@@ -142,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function() {
         // Offset camera from model
         camera.position.z = 5;
 
-        // Basic rotation animation
         function animate() {
             requestAnimationFrame(animate);
             model.rotation.x += 0.002;
