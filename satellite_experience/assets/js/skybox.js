@@ -6,7 +6,7 @@ class SpaceSkybox {
   constructor() {
     this._Initialize();
   }
-
+  // private method for initialization of skybox scene and model
   _Initialize() {
     this._threejs = new THREE.WebGLRenderer({ antialias: true });
     this._threejs.shadowMap.enabled = true;
@@ -29,6 +29,7 @@ class SpaceSkybox {
     this._RAF();
   }
 
+  // private method for setting up the camera
   _SetupCamera() {
     const fov = 60;
     const aspect = window.innerWidth / window.innerHeight;
@@ -38,10 +39,12 @@ class SpaceSkybox {
     this._camera.position.set(0, 5, 15); // Set initial camera position for better view of the satellite
   }
 
+  // private method for setting up the scene
   _SetupScene() {
     this._scene = new THREE.Scene();
   }
 
+  // private method for lighting
   _SetupLighting() {
     // Ambient Light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Increase intensity
@@ -60,13 +63,14 @@ class SpaceSkybox {
     pointLight.position.set(0, 10, 10); // Position it above the scene
     this._scene.add(pointLight);
 }
-
+  // private method
   _SetupControls() {
     const controls = new OrbitControls(this._camera, this._threejs.domElement);
     controls.target.set(0, 5, 0); // Center the controls on the satellite
     controls.update();
   }
 
+  // private method
   _LoadSkybox() {
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
@@ -82,6 +86,7 @@ class SpaceSkybox {
     this._scene.background = texture;
   }
 
+  // private method to create a cube on the skybox
   _CreateBasicBox() {
     const box = new THREE.Mesh(
       new THREE.BoxGeometry(10, 10, 10),
@@ -93,6 +98,7 @@ class SpaceSkybox {
     this._scene.add(box);
   }
 
+  // private method to load satellite model into skybox
   _LoadSatelliteModel() {
     const loader = new GLTFLoader();
     loader.load('../assets/models/satellite_light.glb', (gltf) => {
@@ -113,6 +119,7 @@ class SpaceSkybox {
     });
   }
 
+  // private method for loading screen
   _LoadingScreen() {
     let loading = document.getElementById("loading-container");
 
