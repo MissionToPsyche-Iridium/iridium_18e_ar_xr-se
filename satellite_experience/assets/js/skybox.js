@@ -1,3 +1,10 @@
+/*
+* Contributed by: simondevyoutube, nswanso6, cmill26, RGDLucky
+* References: 
+* - Inspired by simondevyoutube JavaScript tutorials
+* - Skybox images from opengameart.org
+* - Inspiration about Three.js, AR, and modularity from discussions with AI (ChatGPT)
+*/
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
@@ -18,19 +25,18 @@ class SpaceSkybox {
     window.addEventListener('resize', () => this._OnWindowResize(), false);
 
     this._LoadingScreen();
-    this._SetupCamera();
-    this._SetupScene();
-    this._SetupLighting();
-    this._SetupControls();
-    this._LoadSkybox();
-    //this._CreateBasicBox();
-    this._LoadSatelliteModel();
+    this._Camera();
+    this._Scene();
+    this._Lighting();
+    this._Controls();
+    this._Skybox();
+    this._Satellite();
 
     this._RAF();
   }
 
   // private method for setting up the camera
-  _SetupCamera() {
+  _Camera() {
     const fov = 60;
     const aspect = window.innerWidth / window.innerHeight;
     const near = 1.0;
@@ -40,12 +46,12 @@ class SpaceSkybox {
   }
 
   // private method for setting up the scene
-  _SetupScene() {
+  _Scene() {
     this._scene = new THREE.Scene();
   }
 
   // private method for lighting
-  _SetupLighting() {
+  _Lighting() {
     // Ambient Light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Increase intensity
     this._scene.add(ambientLight);
@@ -64,14 +70,14 @@ class SpaceSkybox {
     this._scene.add(pointLight);
 }
   // private method
-  _SetupControls() {
+  _Controls() {
     const controls = new OrbitControls(this._camera, this._threejs.domElement);
     controls.target.set(0, 5, 0); // Center the controls on the satellite
     controls.update();
   }
 
   // private method
-  _LoadSkybox() {
+  _Skybox() {
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
       '../assets/images/skybox/space_ft.png',
@@ -87,7 +93,8 @@ class SpaceSkybox {
   }
 
   // private method to create a cube on the skybox
-  _CreateBasicBox() {
+  // for testing purposes
+  _BuildCube() {
     const box = new THREE.Mesh(
       new THREE.BoxGeometry(10, 10, 10),
       new THREE.MeshStandardMaterial({ color: 0xFFFFFF })
@@ -99,7 +106,7 @@ class SpaceSkybox {
   }
 
   // private method to load satellite model into skybox
-  _LoadSatelliteModel() {
+  _Satellite() {
     const loader = new GLTFLoader();
     loader.load('../assets/models/satellite_light.glb', (gltf) => {
       const model = gltf.scene;
