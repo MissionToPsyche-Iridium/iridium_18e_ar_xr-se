@@ -1,5 +1,6 @@
-
-
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // Ensure DOM content has loaded
 document.addEventListener("DOMContentLoaded", function() {
     // Help modal elements
@@ -108,39 +109,53 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('canvas').appendChild(renderer.domElement);
 
     // Basic black background
-    renderer.setClearColor(0x000000);
+    renderer.setClearColor(0x111111);
 
-    // Basic light
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    // Basic directional light
-    var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 1, 1);
+    // Directional lighting
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.3);
+    directionalLight.position.set(5, 10, 7.5);
     scene.add(directionalLight);
 
+    // Ambient light
+    const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.05); // Soft white light
+    scene.add(ambientLight1);
+
+    // Point lights
+    const pointLight = new THREE.PointLight(0xffffff, 10, 100); // White light
+    pointLight.position.set(0, 0, 0); // Position it at the center
+    scene.add(pointLight);
+
     // Model loader
-    var loader = new THREE.GLTFLoader();
+    var loader = new GLTFLoader();
+
+    // Zoom and swipe controls for both mobile and pc
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = true;
+    controls.minDistance = 1;
+    controls.maxDistance = 1000;
+    controls.enablePan = true;
+    controls.screenSpacePanning = true;
+
+    controls.update();
 
     // Load satellite model
-    loader.load('../assets/models/satellite_light.glb', function (gltf) {
+    loader.load('../assets/models/satellite_light.glb', function(gltf) {
         var model = gltf.scene;
-        //model.position.set(0, 0, 0);
-        // model.position.x = -15;
         model.scale.set(0.25, 0.25, 0.25); // Set model scale
         scene.add(model); // Add model to scene
 
         // Offset camera from model
         camera.position.z = 5;
 
-        // Basic rotation animation
         function animate() {
             requestAnimationFrame(animate);
             model.rotation.x += 0.002;
+            controls.update()
             renderer.render(scene, camera);
         }
         animate();
-
+    }, function(xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         // Log error to console
     }, undefined, function(error) {
         console.error(error);
@@ -155,129 +170,6 @@ document.addEventListener("DOMContentLoaded", function() {
             loading.style.display = "none";
         }, 3000);
     }, 2000);
-
-    // initial distance for zooming in and out
-    let initialDistance = null;
-
-    // swipe/mouse movement variables
-    let radius = camera.position.length();
-    let azimuth = 0;
-    let elevation = 0;
-    camera.lookAt(0, 0, 0);
-    let isDragging = false;
-    let previousMousePosition = {
-        x: 0,
-        y: 0
-    };
-    const dragSpeed = 0.005;
-
-    // Calculate distance for zooming in and out
-    function getDistance(touches) {
-        const dx = touches[0].pageX - touches[1].pageX;
-        const dy = touches[0].pageY - touches[1].pageY;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    // Start of Zooming in and out with phone
-    window.addEventListener('touchstart', (event) => {
-        if (event.touches.length === 2) {
-            initialDistance = getDistance(event.touches);
-        } else {
-            isDragging = true;
-            previousTouch.x = event.touches[0].clientX;  // Store the initial touch position
-            previousTouch.y = event.touches[0].clientY;
-        }
-    });
-
-    // Coninuously update zooming in and out when on phone
-    window.addEventListener('touchmove', (event) => {
-        if (event.touches.length === 2 && initialDistance !== null) {
-            const currDistance = getDistance(event.touches);
-            const speed = 0.01;
-            if (currDistance > initialDistance) {
-                camera.zoom += speed;
-            } else {
-                camera.zoom -= speed;
-            }
-            camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
-            camera.updateProjectionMatrix();
-            initialDistance = currDistance;
-        } else {
-            if (!isDragging) return;
-
-            const deltaX = event.touches[0].clientX - previousTouch.x;
-            const deltaY = event.touches[0].clientY - previousTouch.y;
-
-            azimuth += deltaX * 0.005;
-            elevation -= deltaY * 0.005;
-            elevation = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, elevation));
-            updateCameraPosition();
-
-            // Update the previous touch position for the next move event
-            previousTouch.x = event.touches[0].clientX;
-            previousTouch.y = event.touches[0].clientY;
-        }
-    });
-
-    // After zooming in and out reset initial distance
-    window.addEventListener('touchend', () => {
-        if (event.touches.length === 2 && initialDistance !== null) {
-            initialDistance = null;
-        } else {
-            isDragging = false;
-        }
-    });
-
-    // Zooming in and out with a mouse
-    window.addEventListener('wheel', (event) => {
-        const speed = 0.1;
-        camera.zoom += event.deltaY * speed * -0.01;
-        camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
-        camera.updateProjectionMatrix();
-    });
-
-    // Update the camera position based on azimuth and elevation
-    function updateCameraPosition() {
-        radius = camera.position.length();
-        camera.position.x = radius * Math.cos(elevation) * Math.sin(azimuth);
-        camera.position.y = radius * Math.sin(elevation);
-        camera.position.z = radius * Math.cos(elevation) * Math.cos(azimuth);
-        camera.lookAt(0, 0, 0);
-    }
-
-    // when mouse clicks
-    function onMouseDown(event) {
-        isDragging = true;
-    }
-
-    // when mouse stops clicks
-    function onMouseUp(event) {
-        isDragging = false;
-    }
-
-    // during mouse click
-    function onMouseMove(event) {
-        if (!isDragging) return;
-        let deltaMove = {
-            x: event.movementX || event.mozMovementX || event.webkitMovementX || 0,
-            y: event.movementY || event.mozMovementY || event.webkitMovementY || 0
-        };
-
-        // Adjust the left/right/up/down movement
-        azimuth -= deltaMove.x * dragSpeed;
-        elevation -= deltaMove.y * dragSpeed;
-
-        // Clamp elevation so the camera doesn't flip upside down
-        const maxElevation = Math.PI / 2 - 0.1;
-        const minElevation = -Math.PI / 2 + 0.1;
-        elevation = Math.max(minElevation, Math.min(maxElevation, elevation));
-
-        updateCameraPosition();
-    }
-
-    document.addEventListener('mousedown', onMouseDown, false);
-    document.addEventListener('mouseup', onMouseUp, false);
-    document.addEventListener('mousemove', onMouseMove, false);
 
     // Update canvas when window resizes
     window.addEventListener('resize', function() {
