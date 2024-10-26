@@ -5,10 +5,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
 
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
 class SpaceSkybox {
     constructor() {
         this._Initialize();
@@ -37,7 +33,7 @@ class SpaceSkybox {
 
     // private method for setting up the camera
     _Camera() {
-        const fov = 70;
+        const fov = 60;
         const aspect = window.innerWidth / window.innerHeight;
         const near = 1.0;
         const far = 1000.0;
@@ -53,11 +49,11 @@ class SpaceSkybox {
     // private method for lighting
     _Lighting() {
         // Ambient Light
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.05); // soft light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Increase intensity
         this._scene.add(ambientLight);
 
         // Directional Light
-        const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.2);
+        const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
         directionalLight.position.set(75, 100, 30);
         directionalLight.castShadow = true;
         directionalLight.shadow.bias = -0.001;
@@ -65,14 +61,21 @@ class SpaceSkybox {
         this._scene.add(directionalLight);
 
         // Point Light
-        const pointLight = new THREE.PointLight(0xffffff, 5, 100); // white light
-        pointLight.position.set(0, 10, 10); // Position above
+        const pointLight = new THREE.PointLight(0xffffff, 1.5, 100); // Bright point light
+        pointLight.position.set(0, 10, 10); // Position it above the scene
         this._scene.add(pointLight);
     }
     // private method
     _Controls() {
         const controls = new OrbitControls(this._camera, this._threejs.domElement);
         controls.target.set(0, 5, 0); // Center the controls on the satellite
+
+        controls.enableZoom = true;
+        controls.minDistance = 1;
+        controls.maxDistance = 1000;
+        controls.enablePan = true;
+        controls.screenSpacePanning = true;
+
         controls.update();
     }
 
@@ -108,18 +111,6 @@ class SpaceSkybox {
     // private method to load satellite model into skybox
     _Satellite() {
         const loader = new GLTFLoader();
-
-        // Zoom and swipe controls for both mobile and pc
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableZoom = true;
-        controls.minDistance = 1;
-        controls.maxDistance = 1000;
-        controls.enablePan = true;
-        controls.screenSpacePanning = true;
-
-        controls.update();
-
-        // Load satellite model
         loader.load('../assets/models/satellite_light.glb', (gltf) => {
             const model = gltf.scene;
             model.scale.set(0.25, 0.25, 0.25); // Set model scale
@@ -129,8 +120,7 @@ class SpaceSkybox {
             // Basic rotation animation
             const animate = () => {
                 requestAnimationFrame(animate);
-                model.rotation.y += 0.005; // Rotate the model
-                controls.update()
+                model.rotation.y += 0.01; // Rotate the model
                 this._threejs.render(this._scene, this._camera);
             };
             animate();
@@ -273,16 +263,4 @@ document.addEventListener("DOMContentLoaded", function() {
             settingsModal.style.display = "none";
         }
     };
-
-    // Update canvas when window resizes
-    window.addEventListener('resize', function() {
-        // Set new renderer dimensions
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        renderer.setSize(width, height);
-
-        // Update camera
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-    });
 });
