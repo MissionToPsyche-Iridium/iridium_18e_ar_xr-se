@@ -16,8 +16,9 @@
         }
 
         /* Loading container styling */
-        .loading-container {
-            background-color: #20162F;
+        .loading-container_v2 {
+            /*background-color: #20162F;*/
+            background-color: #FFFFFF;
             padding: 20px;
             max-width: 375px;
             margin: 0 auto;
@@ -30,15 +31,17 @@
 
         /* Content styling */
         .content {
+            color: #000000;
             position: absolute;
             bottom: 0px;
         }
-      
 
         /* Loader styling */
         .loader {
-          border: 10px solid #f3f3f3; /* Light grey */
-          border-top: 10px solid #A5405C; /* Psyche pink/red color */
+          /*border: 10px solid #f3f3f3; /* Light grey */
+          border: 10px solid #000000;
+          /*border-top: 10px solid #A5405C; /* Psyche pink/red color */
+          border-top: 10px solid #F99F02;
           border-radius: 70%;
           width: 50px;
           height: 50px;
@@ -53,7 +56,7 @@
 </head>
 <body>
     <!-- Loading Container -->
-    <div class="loading-container">
+    <div class="loading-container_v2">
         <!-- Content -->
         <div class="content">
             <div class="loader"></div> 
