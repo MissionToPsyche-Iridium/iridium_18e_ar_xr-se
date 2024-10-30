@@ -1,4 +1,168 @@
+/*
+* skybox module
+ */
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
 
+class SpaceSkybox {
+    constructor() {
+        this._Initialize();
+    }
+    // private method for initialization of skybox scene and model
+    _Initialize() {
+        this._threejs = new THREE.WebGLRenderer({ antialias: true });
+        this._threejs.shadowMap.enabled = true;
+        this._threejs.shadowMap.type = THREE.PCFSoftShadowMap;
+        this._threejs.setPixelRatio(window.devicePixelRatio);
+        this._threejs.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(this._threejs.domElement);
+
+        window.addEventListener('resize', () => this._OnWindowResize(), false);
+
+        this._LoadingScreen();
+        this._Camera();
+        this._Scene();
+        this._Lighting();
+        this._Controls();
+        this._Skybox();
+        this._Satellite();
+
+        this._RAF();
+    }
+
+    // private method for setting up the camera
+    _Camera() {
+        const fov = 60;
+        const aspect = window.innerWidth / window.innerHeight;
+        const near = 1.0;
+        const far = 1000.0;
+        this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+        this._camera.position.set(0, 5, 15); // Set initial camera position for better view of the satellite
+    }
+
+    // private method for setting up the scene
+    _Scene() {
+        this._scene = new THREE.Scene();
+    }
+
+    // private method for lighting
+    _Lighting() {
+        // Ambient Light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Increase intensity
+        this._scene.add(ambientLight);
+
+        // Directional Light
+        const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+        directionalLight.position.set(75, 100, 30);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.bias = -0.001;
+        directionalLight.shadow.mapSize.set(2048, 2048);
+        this._scene.add(directionalLight);
+
+        // Point Light
+        const pointLight = new THREE.PointLight(0xffffff, 1.5, 100); // Bright point light
+        pointLight.position.set(0, 10, 10); // Position it above the scene
+        this._scene.add(pointLight);
+    }
+    // private method
+    _Controls() {
+        const controls = new OrbitControls(this._camera, this._threejs.domElement);
+        controls.target.set(0, 5, 0); // Center the controls on the satellite
+
+        controls.enableZoom = true;
+        controls.minDistance = 1;
+        controls.maxDistance = 1000;
+        controls.enablePan = true;
+        controls.screenSpacePanning = true;
+
+        controls.update();
+    }
+
+    // private method
+    _Skybox() {
+        const loader = new THREE.CubeTextureLoader();
+        const texture = loader.load([
+            '../assets/images/skybox/space_ft.png',
+            '../assets/images/skybox/space_bk.png',
+            '../assets/images/skybox/space_up.png',
+            '../assets/images/skybox/space_dn.png',
+            '../assets/images/skybox/space_lf.png',
+            '../assets/images/skybox/space_rt.png',
+        ], undefined, undefined, (error) => {
+            console.error('Error loading skybox texture:', error);
+        });
+        this._scene.background = texture;
+    }
+
+    // private method to create a cube on the skybox
+    // for testing purposes
+    _BuildCube() {
+        const box = new THREE.Mesh(
+            new THREE.BoxGeometry(10, 10, 10),
+            new THREE.MeshStandardMaterial({ color: 0xFFFFFF })
+        );
+        box.position.set(0, 3, 0);
+        box.castShadow = true;
+        box.receiveShadow = true;
+        this._scene.add(box);
+    }
+
+    // private method to load satellite model into skybox
+    _Satellite() {
+        const loader = new GLTFLoader();
+        loader.load('../assets/models/satellite_light.glb', (gltf) => {
+            const model = gltf.scene;
+            model.scale.set(0.25, 0.25, 0.25); // Set model scale
+            model.position.set(0, 4, 0); // center model
+            this._scene.add(model); // Add model to scene
+
+            // Basic rotation animation
+            const animate = () => {
+                requestAnimationFrame(animate);
+                model.rotation.y += 0.01; // Rotate the model
+                this._threejs.render(this._scene, this._camera);
+            };
+            animate();
+        }, function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            // Log error to console
+        }, undefined, (error) => {
+            console.error('Error loading model:', error);
+        });
+    }
+
+    // private method for loading screen
+    _LoadingScreen() {
+        let loading = document.getElementById("loading-container");
+
+        setTimeout(function() {
+            loading.style.opacity = 0;
+            setTimeout(function() {
+                loading.style.display = "none";
+            }, 3000);
+        }, 2000);
+    }
+
+    _OnWindowResize() {
+        this._camera.aspect = window.innerWidth / window.innerHeight;
+        this._camera.updateProjectionMatrix();
+        this._threejs.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    _RAF() {
+        requestAnimationFrame(() => {
+            this._threejs.render(this._scene, this._camera);
+            this._RAF();
+        });
+    }
+}
+
+let _APP = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+    _APP = new SpaceSkybox();
+});
 
 // Ensure DOM content has loaded
 document.addEventListener("DOMContentLoaded", function() {
@@ -67,6 +231,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialize inactivity timer
     resetInactivityTimer();
 
+    // for keeping the theme setting persistent
+    var themeLink = "../assets/css/styles.css";
+
     // Inject the settings modal content
     function openSettingsModal() {
         var xhr = new XMLHttpRequest();
@@ -75,6 +242,45 @@ document.addEventListener("DOMContentLoaded", function() {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 settingsModalContent.innerHTML = xhr.responseText;
                 settingsModal.style.display = "flex";
+
+                const settingThemeLink = document.getElementById("setting-theme");
+                const radioSetting = document.querySelectorAll('input[name="setting"]');
+                settingThemeLink.href = themeLink;
+
+                /*  TODO - make it so it saves state of radio button
+                if (radioSetting) {
+                    if (themeLink == "../assets/css/styles.css") {
+                        document.getElementById('input[name="setting"][value="default-mode"]').checked = true;
+                    } else if (themeLink == "../assets/css/light_mode.css") {
+                        document.getElementById('input[name="setting"][value="light-mode"]').checked = true;
+                    } else if (themeLink == "../assets/styles.css") {
+                        // TODO
+                    } else if (themeLink == "../assets/styles.css") {
+                        // TODO
+                    }
+                } */
+
+                if (radioSetting.length === 0) {
+                    console.log("No radio buttons found with the name 'theme'.");
+                }
+                radioSetting.forEach(radio => {
+                    radio.addEventListener("change", function() {
+                        if (document.getElementById('default-mode').checked) {
+                            settingThemeLink.href = "../assets/css/styles.css"
+                            themeLink = "../assets/css/styles.css"
+                        } else if (document.getElementById('high-contrast-mode').checked) {
+                            // high contrast mode selected
+                            settingThemeLink.href = "../assets/css/high_contrast_mode.css"
+                            themeLink = "../assets/css/high_contrast_mode.css"
+                        } else if (document.getElementById('light-mode').checked) {
+                            settingThemeLink.href = "../assets/css/light_mode.css"
+                            themeLink = "../assets/css/light_mode.css"
+                        } else if (document.getElementById('color-blind-mode').checked) {
+                            // color-blind mode selected
+                            console.log("Color-blind Mode selected");
+                        }
+                    });
+                });
             }
         };
         xhr.send();
@@ -105,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById('canvas').appendChild(renderer.domElement);
+    // document.getElementById('canvas').appendChild(renderer.domElement);
 
     // Basic black background
     renderer.setClearColor(0x000000);
@@ -115,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function() {
     scene.add(ambientLight);
 
     // Model loader
-    var loader = new THREE.GLTFLoader();
+    var loader = new GLTFLoader();
 
     // Load satellite model
     loader.load('../assets/models/satellite.glb', function(gltf) {
@@ -148,52 +354,6 @@ document.addEventListener("DOMContentLoaded", function() {
             loading.style.display = "none";
         }, 3000);
     }, 2000);
-
-    // initial distance for zooming in and out
-    let initialDistance = null;
-
-    // Calculate distance for zooming in and out
-    function getDistance(touches) {
-        const dx = touches[0].pageX - touches[1].pageX;
-        const dy = touches[0].pageY - touches[1].pageY;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    // Start of Zooming in and out with phone
-    window.addEventListener('touchstart', (event) => {
-        if (event.touches.length === 2) {
-            initialDistance = getDistance(event.touches);
-        }
-    });
-
-    // Coninuously update zooming in and out when on phone
-    window.addEventListener('touchmove', (event) => {
-        if (event.touches.length === 2 && initialDistance !== null) {
-            const currDistance = getDistance(event.touches);
-            const speed = 0.01;
-            if (currDistance > initialDistance) {
-                camera.zoom += speed;
-            } else {
-                camera.zoom -= speed;
-            }
-            camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
-            camera.updateProjectionMatrix();
-            initialDistance = currDistance;
-        }
-    });
-
-    // After zooming in and out reset initial distance
-    window.addEventListener('touchend', () => {
-        initialDistance = null;
-    });
-
-    // Zooming in and out with a mouse
-    window.addEventListener('wheel', (event) => {
-        const speed = 0.1;
-        camera.zoom += event.deltaY * speed * -0.01;
-        camera.zoom = THREE.MathUtils.clamp(camera.zoom, 0.5, 5);
-        camera.updateProjectionMatrix();
-    });
 
     // Update canvas when window resizes
     window.addEventListener('resize', function() {

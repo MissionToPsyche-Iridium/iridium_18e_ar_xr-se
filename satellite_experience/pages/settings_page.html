@@ -1,52 +1,81 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings Page</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
-</head>
-<body>
+    <link id="setting-theme" rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body>
     <!-- Settings Container -->
     <div class="modal-container">
-        <!-- Logo -->
-        <div class="modal-logo-container">
-            <img src="../assets/images/psyche_logo.png" alt="Logo" class="modal-logo">
+      <!-- Logo -->
+      <div class="modal-logo-container">
+        <img
+          src="../assets/images/psyche_logo.png"
+          alt="Logo"
+          class="modal-logo"
+        />
+      </div>
+
+      <!-- Settings Title -->
+      <div class="modal-title">Settings</div>
+
+      <!-- Content -->
+      <div class="modal-content">
+        <!-- Default ModeContent -->
+        <div class="settings-modal-default-mode">
+          <label for="default-mode">
+            <span>Default Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="default-mode"
+            name="setting"
+            value="default-mode"
+          />
         </div>
 
-        <!-- Settings Title -->
-        <div class="modal-title">Settings</div>
-
-        <!-- Content -->
-        <div class="modal-content">
-            <!-- Top Content -->
-            <div class="modal-row-top">
-                <p>High Contrast Mode</p>
-                <label class="modal-switch">
-  			            <input type="checkbox">
-  			            <span class="modal-slider round"></span>
-			          </label>
-            </div>
-          
-            <!-- Middle Content -->
-            <div class="modal-row-middle">
-                <p>Light Mode</p>
-                <label class="modal-switch">
-                    <input type="checkbox">
-                    <span class="modal-slider round"></span>
-                </label>
-            </div>
-          
-            <!-- Bottom Content -->
-            <div class="modal-row-bottom">
-                <p>Color-blind Mode</p>
-                <label class="modal-switch">
-                    <input type="checkbox">
-                    <span class="modal-slider round"></span>
-                </label>
-            </div>   
+        <!-- High Contrast Mode Content -->
+        <div class="settings-modal-high-contrast-mode">
+          <label for="high-contrast-mode">
+            <span>High Contrast Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="high-contrast-mode"
+            name="setting"
+            value="high-contrast-mode"
+          />
         </div>
+
+        <!-- Light Mode Content -->
+        <div class="settings-modal-light-mode">
+          <label for="light-mode">
+            <span>Light Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="light-mode"
+            name="setting"
+            value="high-mode"
+          />
+        </div>
+
+        <!-- Color-blind Mode Content -->
+        <div class="settings-modal-color-blind-mode">
+          <label for="color-blind-mode">
+            <span>Color-blind Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="color-blind-mode"
+            name="setting"
+            value="color-blind-mode"
+          />
+        </div>
+      </div>
     </div>
-</body>
+    <script src="../assets/js/main.js"></script>
+  </body>
 </html>
