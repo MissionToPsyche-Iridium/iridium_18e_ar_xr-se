@@ -231,6 +231,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialize inactivity timer
     resetInactivityTimer();
 
+    // for keeping the theme setting persistent
+    var themeLink = "../assets/css/styles.css";
+
     // Inject the settings modal content
     function openSettingsModal() {
         var xhr = new XMLHttpRequest();
@@ -239,20 +242,55 @@ document.addEventListener("DOMContentLoaded", function() {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 settingsModalContent.innerHTML = xhr.responseText;
                 settingsModal.style.display = "flex";
+
+                const settingThemeLink = document.getElementById("setting-theme");
+                const radioSetting = document.querySelectorAll('input[name="setting"]');
+                settingThemeLink.href = themeLink;
+
+                /*  TODO - make it so it saves state of radio button
+                if (radioSetting) {
+                    if (themeLink == "../assets/css/styles.css") {
+                        document.getElementById('input[name="setting"][value="default-mode"]').checked = true;
+                    } else if (themeLink == "../assets/css/light_mode.css") {
+                        document.getElementById('input[name="setting"][value="light-mode"]').checked = true;
+                    } else if (themeLink == "../assets/styles.css") {
+                        // TODO
+                    } else if (themeLink == "../assets/styles.css") {
+                        // TODO
+                    }
+                } */
+
+                if (radioSetting.length === 0) {
+                    console.log("No radio buttons found with the name 'theme'.");
+                }
+                radioSetting.forEach(radio => {
+                    radio.addEventListener("change", function() {
+                        if (document.getElementById('default-mode').checked) {
+                            settingThemeLink.href = "../assets/css/styles.css"
+                            themeLink = "../assets/css/styles.css"
+                        } else if (document.getElementById('high-contrast-mode').checked) {
+                            // high contrast mode selected
+                            settingThemeLink.href = "../assets/css/high_contrast_mode.css"
+                            themeLink = "../assets/css/high_contrast_mode.css"
+                        } else if (document.getElementById('light-mode').checked) {
+                            settingThemeLink.href = "../assets/css/light_mode.css"
+                            themeLink = "../assets/css/light_mode.css"
+                        } else if (document.getElementById('color-blind-mode').checked) {
+                            // color-blind mode selected
+                            console.log("Color-blind Mode selected");
+                        }
+                    });
+                });
             }
         };
         xhr.send();
-
     }
-
-    // TODO: connect settings radio buttons to modes
 
     // Settings icon button
     var settingsIconButton = document.getElementById("settings-icon-button");
     settingsIconButton.addEventListener("click", function() {
         openSettingsModal();
     });
-
 
     // Close the settings modal
     var settingsModalCloseButton = document.getElementById("settings-modal-close");
@@ -267,4 +305,65 @@ document.addEventListener("DOMContentLoaded", function() {
             settingsModal.style.display = "none";
         }
     };
+
+    // Setup Three.js canvas
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    // document.getElementById('canvas').appendChild(renderer.domElement);
+
+    // Basic black background
+    renderer.setClearColor(0x000000);
+
+    // Basic light
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    scene.add(ambientLight);
+
+    // Model loader
+    var loader = new GLTFLoader();
+
+    // Load satellite model
+    loader.load('../assets/models/satellite.glb', function(gltf) {
+        var model = gltf.scene;
+        model.scale.set(0.25, 0.25, 0.25); // Set model scale
+        scene.add(model); // Add model to scene
+
+        // Offset camera from model
+        camera.position.z = 5;
+
+        // Basic rotation animation
+        function animate() {
+            requestAnimationFrame(animate);
+            model.rotation.x += 0.002;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Log error to console
+    }, undefined, function(error) {
+        console.error(error);
+    });
+
+    // Loading screen
+    let loading = document.getElementById("loading-container");
+
+    setTimeout(function() {
+        loading.style.opacity = 0;
+        setTimeout(function() {
+            loading.style.display = "none";
+        }, 3000);
+    }, 2000);
+
+    // Update canvas when window resizes
+    window.addEventListener('resize', function() {
+        // Set new renderer dimensions
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize(width, height);
+
+        // Update camera
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
 });
