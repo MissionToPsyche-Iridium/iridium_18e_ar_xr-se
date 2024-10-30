@@ -106,7 +106,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             themeLink = "../assets/css/styles.css"
                         } else if (document.getElementById('high-contrast-mode').checked) {
                             // high contrast mode selected
-                            console.log("High Constrast Mode selected");
+                            settingThemeLink.href = "../assets/css/high_contrast_mode.css"
+                            themeLink = "../assets/css/high_contrast_mode.css"
                         } else if (document.getElementById('light-mode').checked) {
                             settingThemeLink.href = "../assets/css/light_mode.css"
                             themeLink = "../assets/css/light_mode.css"
