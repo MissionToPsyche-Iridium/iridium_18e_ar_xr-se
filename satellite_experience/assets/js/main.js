@@ -140,6 +140,7 @@ class SpaceSkybox {
             // Store clickable objects
             this._clickableObjects = this._bubbles.slice();
             this._threejs.domElement.addEventListener('click', this._onClick.bind(this), false);
+            this._threejs.domElement.addEventListener('touchstart', this._onTouchStart.bind(this), false);
 
             // Basic rotation animation
             const animate = () => {
@@ -299,20 +300,12 @@ class SpaceSkybox {
         }
     }
 
-    // Private method to add functionality to bubbles
-    _onClick(event) {
-        event.preventDefault();
-    
-        const rect = this._threejs.domElement.getBoundingClientRect();
-        const mouse = new THREE.Vector2(
-            ((event.clientX - rect.left) / rect.width) * 2 - 1,
-            -((event.clientY - rect.top) / rect.height) * 2 + 1
-        );
-    
+    // Private function to check for intersections at position
+    _performRaycast(normalizedPosition) {
         const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, this._camera);
+        raycaster.setFromCamera(normalizedPosition, this._camera);
     
-        // Check if click intersects
+        // Check if click/touch intersects
         const intersects = raycaster.intersectObjects(this._clickableObjects, true);
         if (intersects.length > 0) {
             // Find the selected bubble
@@ -320,33 +313,69 @@ class SpaceSkybox {
             while (selectedBubble && !this._bubbles.includes(selectedBubble)) {
                 selectedBubble = selectedBubble.parent;
             }
-            
+    
             // If a bubble was selected
             if (selectedBubble) {
+                // Mark the selected bubble as viewed
+                selectedBubble.viewed = true;
+                selectedBubble.bubbleProgressLabel.element.textContent = 'viewed';
+    
                 // Deselect other bubbles
                 this._bubbles.forEach(bubble => {
                     const bubbleMaterial = bubble.material;
                     const bubbleLabelDiv = bubble.bubbleLabel.element;
                     const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
-                    
+    
+                    // Keep the progress label text if the bubble has been viewed
+                    if (bubble.viewed) {
+                        bubbleProgressLabelDiv.textContent = 'viewed';
+                    }
+    
                     // Selected bubble
                     if (bubble === selectedBubble) {
                         bubbleMaterial.opacity = 0.9;
                         bubbleLabelDiv.style.opacity = '0.9';
                         bubbleProgressLabelDiv.style.opacity = '0.9';
-
-                    // Unselected bubbles
                     } else {
+                        // Unselected bubbles
                         bubbleMaterial.opacity = 0.5;
                         bubbleLabelDiv.style.opacity = '0.5';
                         bubbleProgressLabelDiv.style.opacity = '0.5';
                     }
                 });
-
+    
                 // Update instrument content based on selected bubble
                 this._updateInstrumentContent(selectedBubble.bubbleId);
-                selectedBubble.bubbleProgressLabel.element.textContent = '(viewed)';
             }
+        }
+    }
+
+    // Private method to handle clicks
+    _onClick(event) {
+        event.preventDefault();
+    
+        const rect = this._threejs.domElement.getBoundingClientRect();
+        const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        const mouseVector = new THREE.Vector2(mouseX, mouseY);
+    
+        this._performRaycast(mouseVector);
+    }
+
+    // Private method to handle touches
+    _onTouchStart(event) {
+        event.preventDefault();
+    
+        // Only consider the first touch point
+        if (event.touches.length === 1) {
+            const touch = event.touches[0];
+    
+            const rect = this._threejs.domElement.getBoundingClientRect();
+            const touchX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+            const touchY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+            const touchVector = new THREE.Vector2(touchX, touchY);
+    
+            this._performRaycast(touchVector);
         }
     }
 }

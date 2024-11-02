@@ -90,14 +90,14 @@ body {
 #instrument-title-container {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 20px;
-    margin: 20px;
+    padding: 10px;
+    margin: 10px;
     max-width: 600px;
     color: #fff;
 }
 
 #instrument-title {
-    font-size: 24px;
+    font-size: 18px;
     color: #fff;
     text-align: left;
 }
@@ -105,21 +105,23 @@ body {
 #instrument-content-container {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 20px;
-    margin: 20px;
+    padding: 10px;
+    margin: 10px;
     max-width: 600px;
     color: #fff;
 }
 
 #instrument-description {
-    font-size: 16px;
+    font-size: 14px;
+    line-height: 1.5;
     color: #fff;
     text-align: left;
     margin-bottom: 20px;
 }
 
 #instrument-image {
-    width: 300px;
+    width: 200px;
+    border-radius: 10px;
     height: auto;
     display: block;
     margin: 0 auto;
@@ -428,7 +430,6 @@ body {
     transition: opacity 700ms ease;
     padding: 20px;
     margin: 0 auto;
-    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
