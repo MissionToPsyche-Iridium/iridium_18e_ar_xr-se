@@ -1,9 +1,10 @@
 /*
-* skybox module
+ * skybox module
  */
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
+import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/renderers/CSS2DRenderer.js';
 
 class SpaceSkybox {
     constructor() {
@@ -16,7 +17,16 @@ class SpaceSkybox {
         this._threejs.shadowMap.type = THREE.PCFSoftShadowMap;
         this._threejs.setPixelRatio(window.devicePixelRatio);
         this._threejs.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(this._threejs.domElement);
+
+        this._labelRenderer = new CSS2DRenderer();
+        this._labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        this._labelRenderer.domElement.style.position = 'absolute';
+        this._labelRenderer.domElement.style.top = '0px';
+        this._labelRenderer.domElement.style.pointerEvents = 'none'; // Allows clicks to pass through
+        document.body.appendChild(this._labelRenderer.domElement);
+
+        // document.body.appendChild(this._threejs.domElement);
+        document.getElementById("scene").appendChild(this._threejs.domElement);
 
         window.addEventListener('resize', () => this._OnWindowResize(), false);
 
@@ -38,7 +48,7 @@ class SpaceSkybox {
         const near = 1.0;
         const far = 1000.0;
         this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-        this._camera.position.set(0, 5, 15); // Set initial camera position for better view of the satellite
+        this._camera.position.set(0, 0, 10); // Set initial camera position for better view of the satellite
     }
 
     // private method for setting up the scene
@@ -68,13 +78,13 @@ class SpaceSkybox {
     // private method
     _Controls() {
         const controls = new OrbitControls(this._camera, this._threejs.domElement);
-        controls.target.set(0, 5, 0); // Center the controls on the satellite
+        controls.target.set(0, 0, 0); // Center the controls on the satellite
 
         controls.enableZoom = true;
         controls.minDistance = 1;
         controls.maxDistance = 1000;
-        controls.enablePan = true;
-        controls.screenSpacePanning = true;
+        controls.enablePan = false;
+        controls.screenSpacePanning = false;
 
         controls.update();
     }
@@ -112,15 +122,67 @@ class SpaceSkybox {
     _Satellite() {
         const loader = new GLTFLoader();
         loader.load('../assets/models/satellite_light.glb', (gltf) => {
+            // Configure model
             const model = gltf.scene;
             model.scale.set(0.25, 0.25, 0.25); // Set model scale
-            model.position.set(0, 4, 0); // center model
+            model.position.set(0, 0, 0); // Set model position
             this._scene.add(model); // Add model to scene
+            
+            // Create bubble
+            const bubbleCanvas = document.createElement('canvas');
+            bubbleCanvas.width = 256;
+            bubbleCanvas.height = 256;
+            // bubbleCanvas.height = 320;
+            const bubbleContext = bubbleCanvas.getContext('2d');
+            bubbleContext.beginPath();
+            bubbleContext.arc(128, 128, 128, 0, 2 * Math.PI);
+            bubbleContext.fillStyle = '#ffffff' // White
+            bubbleContext.fill();
+            // Draw line
+            // bubbleContext.beginPath();
+            // bubbleContext.moveTo(128, 128);
+            // bubbleContext.lineTo(128, 128 + 128 + 64);
+            // bubbleContext.lineWidth = 5;
+            // bubbleContext.strokeStyle = '#ffffff'; // White
+            // bubbleContext.stroke();
+            const bubbleTexture = new THREE.CanvasTexture(bubbleCanvas);
+            const bubbleMaterial = new THREE.SpriteMaterial({
+                map: bubbleTexture,
+                transparent: true,
+                opacity: 0.7,
+            });
+            const bubble = new THREE.Sprite(bubbleMaterial);
+            bubble.scale.set(2, 2, 2); // Set bubble scale
+            // bubble.scale.set(2, 2.25, 2); // Set bubble scale
+            bubble.position.set(-2, -2, 4.5); // Set bubble position
+            model.add(bubble); // Attach bubble to model
+
+            // Create bubble label
+            const bubbleLabelDiv = document.createElement('div');
+            bubbleLabelDiv.className = 'label';
+            bubbleLabelDiv.textContent = 'Gamma Ray and Neutron Spectrometer';
+            bubbleLabelDiv.style.color = 'white';
+            bubbleLabelDiv.style.opacity = '0.7';
+            bubbleLabelDiv.style.fontSize = '14px';
+            bubbleLabelDiv.style.maxWidth = '200px';
+            bubbleLabelDiv.style.textAlign = 'center';
+            const bubbleLabel = new CSS2DObject(bubbleLabelDiv);
+            bubbleLabel.position.set(0, -1, 0);
+            bubble.add(bubbleLabel)
+
+            // Store references for model
+            this._model = model;
+            this._sprite = bubble;
+
+            // Store clickable objects
+            this._clickableObjects = [];
+            this._clickableObjects.push(bubble);
+            this._threejs.domElement.addEventListener('click', this._onClick.bind(this), false);
 
             // Basic rotation animation
             const animate = () => {
                 requestAnimationFrame(animate);
-                model.rotation.y += 0.01; // Rotate the model
+                model.rotation.y += 0.001; // Rotate the model
                 this._threejs.render(this._scene, this._camera);
             };
             animate();
@@ -148,13 +210,34 @@ class SpaceSkybox {
         this._camera.aspect = window.innerWidth / window.innerHeight;
         this._camera.updateProjectionMatrix();
         this._threejs.setSize(window.innerWidth, window.innerHeight);
+        this._labelRenderer.setSize(window.innerWidth, window.innerHeight);
     }
 
     _RAF() {
         requestAnimationFrame(() => {
             this._threejs.render(this._scene, this._camera);
+            this._labelRenderer.render(this._scene, this._camera);
             this._RAF();
         });
+    }
+
+    _onClick(event) {
+        event.preventDefault();
+    
+        const rect = this._threejs.domElement.getBoundingClientRect();
+        const mouse = new THREE.Vector2(
+            ((event.clientX - rect.left) / rect.width) * 2 - 1,
+            -((event.clientY - rect.top) / rect.height) * 2 + 1
+        );
+    
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, this._camera);
+    
+        const intersects = raycaster.intersectObjects(this._clickableObjects, true);
+    
+        if (intersects.length > 0) {
+            console.log('Bubble clicked!');
+        }
     }
 }
 
@@ -166,6 +249,76 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Ensure DOM content has loaded
 document.addEventListener("DOMContentLoaded", function() {
+    // Handle main state
+    let currentMainState = 'main';
+    const mainContent = document.getElementById('main-content');
+    const upperButton = document.getElementById('upper-button');
+    const lowerButton = document.getElementById('lower-button');
+
+    // Function to load content from a page to main
+    function loadMainContent(page) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', page, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                mainContent.innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send();
+    }
+
+    // Function to update the UI based on the current state
+    function updateCurrentMainState(nextMainState) {
+        currentMainState = nextMainState;
+
+        // Load main page content
+        if (currentMainState === 'main') {
+            loadMainContent('main_content.html');
+            upperButton.textContent = 'Explore Mission';
+            lowerButton.textContent = 'Explore Instruments';
+        // Load mission page content
+        } else if (currentMainState === 'mission') {
+            loadMainContent('mission_content.html');
+            upperButton.textContent = 'Back to Main';
+            lowerButton.textContent = 'Explore Instruments';
+        // Load instrument page content
+        } else if (currentMainState === 'instrument') {
+            loadMainContent('instrument_content.html');
+            upperButton.textContent = 'Back to Main';
+            lowerButton.textContent = 'Explore Mission';
+        }
+    }
+
+    // Navigation button event listeners
+    upperButton.addEventListener('click', () => {
+        // Main -> Mission
+        if (currentMainState === 'main') {
+            updateCurrentMainState('mission');
+        // Mission -> Main
+        } else if (currentMainState === 'mission') {
+            updateCurrentMainState('main');
+        // Instrument -> Main
+        } else if (currentMainState === 'instrument') {
+            updateCurrentMainState('main');
+        }
+    });
+
+    lowerButton.addEventListener('click', () => {
+        // Main -> Instrument
+        if (currentMainState === 'main') {
+            updateCurrentMainState('instrument');
+        // Mission -> Instrument
+        } else if (currentMainState === 'mission') {
+            updateCurrentMainState('instrument');
+        // Instrument -> Mission
+        } else if (currentMainState === 'instrument') {
+            updateCurrentMainState('mission');
+        }
+    });
+
+    // Initialize to main state
+    updateCurrentMainState('main');
+
     // Help modal elements
     var helpModal = document.getElementById("help-modal");
     var helpModalContent = document.getElementById("help-modal-content");
@@ -175,9 +328,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var settingsModalContent = document.getElementById("settings-modal-content");
 
     // Inject the help modal content
-    function openHelpModal() {
+    function loadHelpModalContent() {
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "help_page.html", true);
+        xhr.open("GET", "help_modal.html", true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 helpModalContent.innerHTML = xhr.responseText;
@@ -190,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Help icon button
     var helpIconButton = document.getElementById("help-icon-button");
     helpIconButton.addEventListener("click", function() {
-        openHelpModal();
+        loadHelpModalContent();
     });
 
     // Close the help modal
@@ -216,7 +369,7 @@ document.addEventListener("DOMContentLoaded", function() {
         inactivityTimer = setTimeout(function() {
             // Check that settings page isn't open
             if (settingsModal.style.display !== "flex") {
-                openHelpModal();
+                loadHelpModalContent();
             }
         }, inactivityTime)
     }
@@ -235,9 +388,9 @@ document.addEventListener("DOMContentLoaded", function() {
     var themeLink = "../assets/css/styles.css";
 
     // Inject the settings modal content
-    function openSettingsModal() {
+    function loadSettingsModalContent() {
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "settings_page.html", true);
+        xhr.open("GET", "settings_modal.html", true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 settingsModalContent.innerHTML = xhr.responseText;
@@ -289,7 +442,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Settings icon button
     var settingsIconButton = document.getElementById("settings-icon-button");
     settingsIconButton.addEventListener("click", function() {
-        openSettingsModal();
+        loadSettingsModalContent();
     });
 
     // Close the settings modal
@@ -306,64 +459,64 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // Setup Three.js canvas
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    var renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    // document.getElementById('canvas').appendChild(renderer.domElement);
+    // // Setup Three.js canvas
+    // var scene = new THREE.Scene();
+    // var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // var renderer = new THREE.WebGLRenderer({ antialias: true });
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    // // document.getElementById('canvas').appendChild(renderer.domElement);
 
-    // Basic black background
-    renderer.setClearColor(0x000000);
+    // // Basic black background
+    // renderer.setClearColor(0x000000);
 
-    // Basic light
-    var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-    scene.add(ambientLight);
+    // // Basic light
+    // var ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    // scene.add(ambientLight);
 
-    // Model loader
-    var loader = new GLTFLoader();
+    // // Model loader
+    // var loader = new GLTFLoader();
 
-    // Load satellite model
-    loader.load('../assets/models/satellite.glb', function(gltf) {
-        var model = gltf.scene;
-        model.scale.set(0.25, 0.25, 0.25); // Set model scale
-        scene.add(model); // Add model to scene
+    // // Load satellite model
+    // loader.load('../assets/models/satellite.glb', function(gltf) {
+    //     var model = gltf.scene;
+    //     model.scale.set(0.25, 0.25, 0.25); // Set model scale
+    //     scene.add(model); // Add model to scene
 
-        // Offset camera from model
-        camera.position.z = 5;
+    //     // Offset camera from model
+    //     camera.position.z = 5;
 
-        // Basic rotation animation
-        function animate() {
-            requestAnimationFrame(animate);
-            model.rotation.x += 0.002;
-            renderer.render(scene, camera);
-        }
-        animate();
+    //     // Basic rotation animation
+    //     function animate() {
+    //         requestAnimationFrame(animate);
+    //         model.rotation.x += 0.002;
+    //         renderer.render(scene, camera);
+    //     }
+    //     animate();
 
-        // Log error to console
-    }, undefined, function(error) {
-        console.error(error);
-    });
+    //     // Log error to console
+    // }, undefined, function(error) {
+    //     console.error(error);
+    // });
 
-    // Loading screen
-    let loading = document.getElementById("loading-container");
+    // // Loading screen
+    // let loading = document.getElementById("loading-container");
 
-    setTimeout(function() {
-        loading.style.opacity = 0;
-        setTimeout(function() {
-            loading.style.display = "none";
-        }, 3000);
-    }, 2000);
+    // setTimeout(function() {
+    //     loading.style.opacity = 0;
+    //     setTimeout(function() {
+    //         loading.style.display = "none";
+    //     }, 3000);
+    // }, 2000);
 
-    // Update canvas when window resizes
-    window.addEventListener('resize', function() {
-        // Set new renderer dimensions
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        renderer.setSize(width, height);
+    // // Update canvas when window resizes
+    // window.addEventListener('resize', function() {
+    //     // Set new renderer dimensions
+    //     var width = window.innerWidth;
+    //     var height = window.innerHeight;
+    //     renderer.setSize(width, height);
 
-        // Update camera
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-    });
+    //     // Update camera
+    //     camera.aspect = width / height;
+    //     camera.updateProjectionMatrix();
+    // });
 });
