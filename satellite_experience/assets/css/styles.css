@@ -31,7 +31,7 @@ body {
     width: 100%;
     padding: 20px 0;
     box-sizing: border-box;
-    position: relative; /* Relative positioning for absolute child */
+    position: relative;
 }
 
 /* Main Content */
@@ -50,16 +50,16 @@ body {
     align-self: left;
 }
 
-/* Navigation Buttons positioned at the bottom */
+/* Navigation Buttons Styling */
 .navigation-button-container {
     position: absolute;
-    bottom: 20px; /* Adjust distance from bottom */
+    bottom: 20px;
     left: 50%;
-    transform: translateX(-50%); /* Center horizontally */
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80%; /* Responsive width */
+    width: 80%;
     max-width: 800px;
     z-index: 5;
 }
@@ -84,6 +84,47 @@ body {
 
 .navigation-button:hover {
     background-color: rgba(32, 22, 47, 1.0);
+}
+
+/* Instrument Content Styling */
+#instrument-title-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    max-width: 600px;
+    color: #fff;
+}
+
+#instrument-title {
+    font-size: 18px;
+    color: #fff;
+    text-align: left;
+}
+
+#instrument-content-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    max-width: 600px;
+    color: #fff;
+}
+
+#instrument-description {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #fff;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+#instrument-image {
+    width: 200px;
+    border-radius: 10px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 /* Scene Styling */
@@ -389,7 +430,6 @@ body {
     transition: opacity 700ms ease;
     padding: 20px;
     margin: 0 auto;
-    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
