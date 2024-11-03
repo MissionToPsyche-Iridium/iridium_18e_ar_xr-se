@@ -1,0 +1,15 @@
+apply plugin: 'application'
+mainClassName = 'PsycheServer'
+ext.Port = project.hasProperty('Port') ? project.Port : '8080'
+
+task PsycheServer(type: JavaExec) {
+    group 'http'
+    description 'Simple HTTP Demo'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'PsycheServer'
+    standardInput = System.in
+
+    // Pass the pPort as an argument to the Java application
+    args Port
+}
