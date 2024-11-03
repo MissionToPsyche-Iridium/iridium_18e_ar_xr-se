@@ -21,18 +21,24 @@ export default class InstrumentContent {
         const instrumentTitleMap = {
             'spectrometer': 'Gamma Ray and Neutron Spectrometer',
             'antenna': 'X-Band High Gain Antenna',
+            'imager': 'Multispectral Imager',
+            'communication': 'Deep Space Optical Communication',
             'test': 'Test',
         };
 
         const instrumentDescriptionMap = {
-            'spectrometer': 'Detects gamma rays and neutrons...',
-            'antenna': 'Enables high-speed communication...',
+            'spectrometer': 'Detects gamma rays and neutrons that are emitted when cosmic rays interact with atoms. Measuring these emissions will identify the composition of the asteroid without direct sampling.',
+            'antenna': 'Enables high-speed communication with Earth. The dish shaped antenna is aimed precisely at earth and transmits images and telemetry using X-Band frequency across the vastness of space.',
+            'imager': 'Provides high-resolution images using filters to discriminate between Psyche’s metallic and silicate constituents. The instrument consists of a pair of identical cameras designed to acquire geologic, compositional, and topographic data.',
+            'communication': 'A sophisticated new laser communication technology that encodes data in photons (rather than radio waves) to communicate between a probe in deep space and Earth. Using light instead of radio allows the spacecraft to communicate more data in a given amount of time.',
             'test': 'Description here.',
-        };
+        }
 
         const instrumentImageMap = {
             'spectrometer': '../assets/images/spectrometers.png',
             'antenna': '../assets/images/antenna.png',
+            'imager': '../assets/images/instruments/multispectral_imager.jpg',
+            'communication': '../assets/images/instruments/psyche-dsoc.jpg',
             'test': '',
         };
 
