@@ -1,14 +1,14 @@
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 class PsycheServer {
     private static final int TIMEOUT_LENGTH = 600000;
     private static Map<String, Coordinate> ephemerisTable;
+    private static Map<String, Double> distanceTable;
 
     public static void main(String[] args) {
         if (args.length < 1 || args[0] == null) {
@@ -33,6 +33,7 @@ class PsycheServer {
             server = new ServerSocket(port);
             System.out.println("Server started on port: " + port);
             updateEphemerisTable();
+            updateDistanceTable();
             while (true) {
                 try {
                     Socket sock = server.accept();
@@ -65,7 +66,7 @@ class PsycheServer {
                 "&STEP_SIZE=%271%20d%27");
 
         Scanner jsonScanner = new Scanner(json);
-        Map<String, Coordinate> ephemerisTable = new HashMap<>();
+        Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
         boolean pastHeader = false;
 
         while (jsonScanner.hasNext()) {
@@ -74,7 +75,6 @@ class PsycheServer {
             while (!pastHeader) {
                 if (line.contains("$$SOE")) {
                     pastHeader = true;
-                    System.out.println("Found start of ephemeris data: " + line);
                     line = line.replace("*","");
                     line = line.replace("$$SOE","");
                     jsonScanner.useDelimiter(",");
@@ -84,7 +84,6 @@ class PsycheServer {
             }
 
             if (line.contains("$$EOE")) {
-                System.out.println("Found end of ephemeris data");
                 break;
             }
             String date = jsonScanner.next().split(" ")[2];
@@ -93,12 +92,46 @@ class PsycheServer {
             double z = Double.parseDouble(jsonScanner.next());
             Coordinate coordinate = new Coordinate(x,y,z);
 
-            System.out.println(date+ " " + coordinate);
             ephemerisTable.put(date, coordinate);
         }
         PsycheServer.ephemerisTable = ephemerisTable;
     }
 
+    private static void updateDistanceTable() {
+        Set<String> keys = ephemerisTable.keySet();
+        Iterator<String> keyIter = keys.iterator();
+        distanceTable = new LinkedHashMap<>();
+
+
+        String key1 = "";
+        String key2 = "";
+        if(keyIter.hasNext())
+            key1 = keyIter.next();
+        double runningTotal = 0.0;
+        distanceTable.put(key1, runningTotal);
+
+        while(keyIter.hasNext()) {
+            key2 = keyIter.next();
+            Coordinate cord1 = ephemerisTable.get(key1);
+            Coordinate cord2 = ephemerisTable.get(key2);
+            double distance = Math.sqrt(Math.pow((cord2.x-cord1.x),2)
+                    +Math.pow((cord2.y-cord1.y),2)+Math.pow((cord2.z-cord1.z),2)); //distance formula in km
+            distance/=1e6; //Convert km to million km
+
+            runningTotal += distance;
+
+            //Round to 4 decimal places
+            BigDecimal bd = new BigDecimal(String.valueOf(runningTotal));
+            bd = bd.setScale(4, RoundingMode.HALF_UP);
+            runningTotal = bd.doubleValue();
+
+            distanceTable.put(key2, runningTotal);
+
+            if(keyIter.hasNext()) {
+                key1 = key2;
+            }
+        }
+    }
 
 
     private static class Coordinate {
