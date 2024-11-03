@@ -137,6 +137,7 @@ class SpaceSkybox {
             this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5));
             this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', 1, 0, 4));
             this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -3, 0, 0));
+            this._bubbles.push(this._createBubble(model, 'Deepspace Optical Communication', 'communication', 3, 0, -2));
             this._bubbles.push(this._createBubble(model, '2', 'test', -2, 2, 4.5));
 
             // Store clickable objects
@@ -477,6 +478,7 @@ window.addEventListener("DOMContentLoaded", function() {
             'spectrometer': 'Gamma Ray and Neutron Spectrometer',
             'antenna': 'X-Band High Gain Antenna',
             'imager': 'Multispectral Imager',
+            'communication': 'Deepspace Optical Communication',
             'test': 'Test',
         };
 
@@ -484,6 +486,7 @@ window.addEventListener("DOMContentLoaded", function() {
             'spectrometer': 'Detects gamma rays and neutrons that are emitted when cosmic rays interact with atoms. Measuring these emissions will identify the composition of the asteroid without direct sampling.',
             'antenna': 'Enables high-speed communication with Earth. The dish shaped antenna is aimed precisely at earth and transmits images and telemetry using X-Band frequency across the vastness of space.',
             'imager': 'Provides high-resolution images using filters to discriminate between Psyche’s metallic and silicate constituents. The instrument consists of a pair of identical cameras designed to acquire geologic, compositional, and topographic data.',
+            'communication': 'A sophisticated new laser communication technology that encodes data in photons (rather than radio waves) to communicate between a probe in deep space and Earth. Using light instead of radio allows the spacecraft to communicate more data in a given amount of time.',
             'test': 'Description here.',
         }
 
@@ -491,6 +494,7 @@ window.addEventListener("DOMContentLoaded", function() {
             'spectrometer': '../assets/images/spectrometers.png',
             'antenna': '../assets/images/antenna.png',
             'imager': '../assets/images/instruments/multispectral_imager.jpg',
+            'communication': '../assets/images/instruments/psyche-dsoc.jpg',
             'test': '',
         };
     
