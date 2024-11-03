@@ -136,6 +136,7 @@ class SpaceSkybox {
             // Create bubble
             this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5));
             this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', 1, 0, 4));
+            this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -3, 0, 0));
             this._bubbles.push(this._createBubble(model, '2', 'test', -2, 2, 4.5));
 
             // Store clickable objects
@@ -475,18 +476,21 @@ window.addEventListener("DOMContentLoaded", function() {
         const instrumentTitleMap = {
             'spectrometer': 'Gamma Ray and Neutron Spectrometer',
             'antenna': 'X-Band High Gain Antenna',
+            'imager': 'Multispectral Imager',
             'test': 'Test',
         };
 
         const instrumentDescriptionMap = {
             'spectrometer': 'Detects gamma rays and neutrons that are emitted when cosmic rays interact with atoms. Measuring these emissions will identify the composition of the asteroid without direct sampling.',
             'antenna': 'Enables high-speed communication with Earth. The dish shaped antenna is aimed precisely at earth and transmits images and telemetry using X-Band frequency across the vastness of space.',
+            'imager': 'Provides high-resolution images using filters to discriminate between Psyche’s metallic and silicate constituents. The instrument consists of a pair of identical cameras designed to acquire geologic, compositional, and topographic data.',
             'test': 'Description here.',
         }
 
         const instrumentImageMap = {
             'spectrometer': '../assets/images/spectrometers.png',
             'antenna': '../assets/images/antenna.png',
+            'imager': '../assets/images/instruments/multispectral_imager.jpg',
             'test': '',
         };
     
