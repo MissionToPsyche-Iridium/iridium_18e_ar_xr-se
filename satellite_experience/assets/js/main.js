@@ -137,7 +137,7 @@ class SpaceSkybox {
             this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5));
             this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', 1, 0, 4));
             this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -3, 0, 0));
-            this._bubbles.push(this._createBubble(model, 'Deepspace Optical Communication', 'communication', 3, 0, -2));
+            this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', 3, 0, -2));
             this._bubbles.push(this._createBubble(model, '2', 'test', -2, 2, 4.5));
 
             // Store clickable objects
@@ -478,7 +478,7 @@ window.addEventListener("DOMContentLoaded", function() {
             'spectrometer': 'Gamma Ray and Neutron Spectrometer',
             'antenna': 'X-Band High Gain Antenna',
             'imager': 'Multispectral Imager',
-            'communication': 'Deepspace Optical Communication',
+            'communication': 'Deep Space Optical Communication',
             'test': 'Test',
         };
 
