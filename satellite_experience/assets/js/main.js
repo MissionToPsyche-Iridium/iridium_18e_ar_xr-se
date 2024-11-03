@@ -134,7 +134,8 @@ class SpaceSkybox {
             this._model = model;
     
             // Create bubble
-            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5)); // Add bubble to list
+            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5));
+            this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', 1, 0, 4));
             this._bubbles.push(this._createBubble(model, '2', 'test', -2, 2, 4.5));
 
             // Store clickable objects
@@ -317,19 +318,13 @@ class SpaceSkybox {
             // If a bubble was selected
             if (selectedBubble) {
                 // Mark the selected bubble as viewed
-                selectedBubble.viewed = true;
-                selectedBubble.bubbleProgressLabel.element.textContent = 'viewed';
+                selectedBubble.bubbleProgressLabel.element.textContent = '(viewed)';
     
                 // Deselect other bubbles
                 this._bubbles.forEach(bubble => {
                     const bubbleMaterial = bubble.material;
                     const bubbleLabelDiv = bubble.bubbleLabel.element;
                     const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
-    
-                    // Keep the progress label text if the bubble has been viewed
-                    if (bubble.viewed) {
-                        bubbleProgressLabelDiv.textContent = 'viewed';
-                    }
     
                     // Selected bubble
                     if (bubble === selectedBubble) {
@@ -479,16 +474,19 @@ window.addEventListener("DOMContentLoaded", function() {
     function updateInstrumentContent(id) {
         const instrumentTitleMap = {
             'spectrometer': 'Gamma Ray and Neutron Spectrometer',
+            'antenna': 'X-Band High Gain Antenna',
             'test': 'Test',
         };
 
         const instrumentDescriptionMap = {
             'spectrometer': 'Detects gamma rays and neutrons that are emitted when cosmic rays interact with atoms. Measuring these emissions will identify the composition of the asteroid without direct sampling.',
+            'antenna': 'Enables high-speed communication with Earth. The dish shaped antenna is aimed precisely at earth and transmits images and telemetry using X-Band frequency across the vastness of space.',
             'test': 'Description here.',
         }
 
         const instrumentImageMap = {
             'spectrometer': '../assets/images/spectrometers.png',
+            'antenna': '../assets/images/antenna.png',
             'test': '',
         };
     
