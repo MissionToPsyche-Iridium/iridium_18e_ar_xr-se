@@ -1,8 +1,13 @@
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.HttpsURLConnection;
 
 class PsycheServer {
     public static void main(String[] args) {
@@ -23,6 +28,15 @@ class PsycheServer {
 
     public PsycheServer(int port) {
         ServerSocket server = null;
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContext.getInstance("TLSv1.2", "SunJSSE");
+            sslContext.init(null, null, null);
+        } catch (NoSuchAlgorithmException | NoSuchProviderException | KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+
+
         try {
             server = new ServerSocket(port);
             System.out.println("Server started on port: " + port);
