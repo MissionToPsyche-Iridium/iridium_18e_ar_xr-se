@@ -256,15 +256,14 @@ document.addEventListener("DOMContentLoaded", function() {
                             settingThemeLink.href = "../assets/css/styles.css"
                             themeLink = "../assets/css/styles.css"
                         } else if (document.getElementById('high-contrast-mode').checked) {
-                            // high contrast mode selected
                             settingThemeLink.href = "../assets/css/high_contrast_mode.css"
                             themeLink = "../assets/css/high_contrast_mode.css"
                         } else if (document.getElementById('light-mode').checked) {
                             settingThemeLink.href = "../assets/css/light_mode.css"
                             themeLink = "../assets/css/light_mode.css"
                         } else if (document.getElementById('color-blind-mode').checked) {
-                            // color-blind mode selected
-                            console.log("Color-blind Mode selected");
+                            settingThemeLink.href = "../assets/css/color_blind_mode.css"
+                            themeLink = "../assets/css/color_blind_mode.css"
                         }
                     });
                 });
