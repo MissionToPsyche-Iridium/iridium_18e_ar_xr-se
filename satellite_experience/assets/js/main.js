@@ -132,13 +132,13 @@ class SpaceSkybox {
             model.position.set(0, 0, 0); // Set model position
             this._scene.add(model); // Add model to scene
             this._model = model;
-    
+
             // Create bubble
             this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5));
             this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', 1, 0, 4));
             this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -3, 0, 0));
             this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', 3, 0, -2));
-            this._bubbles.push(this._createBubble(model, '2', 'test', -2, 2, 4.5));
+            this._bubbles.push(this._createBubble(model, 'Magnetometer', 'detection', -2, 2, 4.5));
 
             // Store clickable objects
             this._clickableObjects = this._bubbles.slice();
@@ -152,12 +152,12 @@ class SpaceSkybox {
                 this._threejs.render(this._scene, this._camera);
             };
             animate();
-        
-        // Log loading
+
+            // Log loading
         }, function(xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        
-        // Log error to console
+
+            // Log error to console
         }, undefined, (error) => {
             console.error('Error loading model:', error);
         });
@@ -307,7 +307,7 @@ class SpaceSkybox {
     _performRaycast(normalizedPosition) {
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(normalizedPosition, this._camera);
-    
+
         // Check if click/touch intersects
         const intersects = raycaster.intersectObjects(this._clickableObjects, true);
         if (intersects.length > 0) {
@@ -316,18 +316,18 @@ class SpaceSkybox {
             while (selectedBubble && !this._bubbles.includes(selectedBubble)) {
                 selectedBubble = selectedBubble.parent;
             }
-    
+
             // If a bubble was selected
             if (selectedBubble) {
                 // Mark the selected bubble as viewed
                 selectedBubble.bubbleProgressLabel.element.textContent = '(viewed)';
-    
+
                 // Deselect other bubbles
                 this._bubbles.forEach(bubble => {
                     const bubbleMaterial = bubble.material;
                     const bubbleLabelDiv = bubble.bubbleLabel.element;
                     const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
-    
+
                     // Selected bubble
                     if (bubble === selectedBubble) {
                         bubbleMaterial.opacity = 0.9;
@@ -340,7 +340,7 @@ class SpaceSkybox {
                         bubbleProgressLabelDiv.style.opacity = '0.5';
                     }
                 });
-    
+
                 // Update instrument content based on selected bubble
                 this._updateInstrumentContent(selectedBubble.bubbleId);
             }
@@ -350,28 +350,28 @@ class SpaceSkybox {
     // Private method to handle clicks
     _onClick(event) {
         event.preventDefault();
-    
+
         const rect = this._threejs.domElement.getBoundingClientRect();
         const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
         const mouseVector = new THREE.Vector2(mouseX, mouseY);
-    
+
         this._performRaycast(mouseVector);
     }
 
     // Private method to handle touches
     _onTouchStart(event) {
         event.preventDefault();
-    
+
         // Only consider the first touch point
         if (event.touches.length === 1) {
             const touch = event.touches[0];
-    
+
             const rect = this._threejs.domElement.getBoundingClientRect();
             const touchX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
             const touchY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
             const touchVector = new THREE.Vector2(touchX, touchY);
-    
+
             this._performRaycast(touchVector);
         }
     }
@@ -422,12 +422,12 @@ window.addEventListener("DOMContentLoaded", function() {
             loadMainContent('main_content.html');
             upperButton.textContent = 'Explore Mission';
             lowerButton.textContent = 'Explore Instruments';
-        // Load mission page content
+            // Load mission page content
         } else if (mainState === 'mission') {
             loadMainContent('mission_content.html');
             upperButton.textContent = 'Back to Main';
             lowerButton.textContent = 'Explore Instruments';
-        // Load instrument page content
+            // Load instrument page content
         } else if (mainState === 'instrument') {
             loadMainContent('instrument_content.html');
             upperButton.textContent = 'Back to Main';
@@ -451,10 +451,10 @@ window.addEventListener("DOMContentLoaded", function() {
         // Main -> Mission
         if (mainState === 'main') {
             updateMainState('mission');
-        // Mission -> Main
+            // Mission -> Main
         } else if (mainState === 'mission') {
             updateMainState('main');
-        // Instrument -> Main
+            // Instrument -> Main
         } else if (mainState === 'instrument') {
             updateMainState('main');
         }
@@ -464,10 +464,10 @@ window.addEventListener("DOMContentLoaded", function() {
         // Main -> Instrument
         if (mainState === 'main') {
             updateMainState('instrument');
-        // Mission -> Instrument
+            // Mission -> Instrument
         } else if (mainState === 'mission') {
             updateMainState('instrument');
-        // Instrument -> Mission
+            // Instrument -> Mission
         } else if (mainState === 'instrument') {
             updateMainState('mission');
         }
@@ -479,7 +479,7 @@ window.addEventListener("DOMContentLoaded", function() {
             'antenna': 'X-Band High Gain Antenna',
             'imager': 'Multispectral Imager',
             'communication': 'Deep Space Optical Communication',
-            'test': 'Test',
+            'detection': 'Magnetometer',
         };
 
         const instrumentDescriptionMap = {
@@ -487,7 +487,7 @@ window.addEventListener("DOMContentLoaded", function() {
             'antenna': 'Enables high-speed communication with Earth. The dish shaped antenna is aimed precisely at earth and transmits images and telemetry using X-Band frequency across the vastness of space.',
             'imager': 'Provides high-resolution images using filters to discriminate between Psyche’s metallic and silicate constituents. The instrument consists of a pair of identical cameras designed to acquire geologic, compositional, and topographic data.',
             'communication': 'A sophisticated new laser communication technology that encodes data in photons (rather than radio waves) to communicate between a probe in deep space and Earth. Using light instead of radio allows the spacecraft to communicate more data in a given amount of time.',
-            'test': 'Description here.',
+            'detection': 'Designed to detect and measure the remanent magnetic field of the asteroid. It is composed of two identical high-sensitivity magnetic field sensors located at the middle and outer end of a 6-foot (2-meter) boom.',
         }
 
         const instrumentImageMap = {
@@ -495,20 +495,20 @@ window.addEventListener("DOMContentLoaded", function() {
             'antenna': '../assets/images/antenna.png',
             'imager': '../assets/images/instruments/multispectral_imager.jpg',
             'communication': '../assets/images/instruments/psyche-dsoc.jpg',
-            'test': '',
+            'detection': '../assets/images/instruments/psyche-magnetometer.jpg',
         };
-    
+
         const instrumentTitle = instrumentTitleMap[id] || 'No Title';
         const instrumentDescription = instrumentDescriptionMap[id] || 'No description.';
         const instrumentImage = instrumentImageMap[id] || '';
-    
+
         const instrumentTitleContent = document.getElementById('instrument-title');
         const instrumentDescriptionContent = document.getElementById('instrument-description');
         const instrumentImageContent = document.getElementById('instrument-image');
         if (instrumentTitleContent && instrumentDescriptionContent && instrumentImageContent) {
             instrumentTitleContent.textContent = instrumentTitle;
             instrumentDescriptionContent.textContent = instrumentDescription;
-    
+
             if (instrumentImage) {
                 instrumentImageContent.src = instrumentImage;
                 instrumentImageContent.alt = instrumentTitle;
@@ -678,12 +678,12 @@ window.addEventListener("DOMContentLoaded", function() {
     //     if (event.target == helpModal) {
     //         helpModal.style.display = "none";
     //     }
-    
+
     //     // Close Settings Modal
     //     if (event.target == settingsModal) {
     //         settingsModal.style.display = "none";
     //     }
-    
+
     //     // Close Instrument Content
     //     if (mainState === 'instrument') {
     //         if (event.target == mainContent) {
