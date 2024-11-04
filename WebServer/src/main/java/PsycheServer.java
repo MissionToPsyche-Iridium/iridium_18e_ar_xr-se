@@ -7,8 +7,8 @@ import java.util.*;
 
 class PsycheServer {
     private static final int TIMEOUT_LENGTH = 600000;
-    private static Map<String, Coordinate> ephemerisTable;
-    private static Map<String, Double> distanceTable;
+    private static Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
+    private static Map<String, Double> distanceTable = new LinkedHashMap<>();
 
     public static void main(String[] args) {
         if (args.length < 1 || args[0] == null) {
@@ -23,23 +23,17 @@ class PsycheServer {
             e.printStackTrace();
             return;
         }
-        ephemerisTable = new LinkedHashMap<>();
         new PsycheServer(port);
     }
 
-    public PsycheServer(int port) {
-        ServerSocket server = null;
-        try {
-            server = new ServerSocket(port);
-            System.out.println("Server started on port: " + port);
+    private PsycheServer(int port) {
+        try (ServerSocket server = new ServerSocket(port)) {
             updateEphemerisTable();
             updateDistanceTable();
             while (true) {
                 try {
                     Socket sock = server.accept();
                     sock.setKeepAlive(true);
-                    System.out.println("Socket Request found: " + sock.getInetAddress());
-                    System.out.println("Socket Closed: " + sock.isClosed());
                     new Thread(new ClientHandler(sock)).start();
                 } catch (IOException e) {
                     System.out.println("Error accepting client connection");
@@ -47,12 +41,11 @@ class PsycheServer {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Server initialization failed: ", e);
         }
     }
 
     private static void updateEphemerisTable() throws Exception {
-        // Fetch ephemeris data for the mission
         String json = fetchURL("https://ssd.jpl.nasa.gov/api/horizons.api?format=text" +
                 "&COMMAND=%27-255%27" +
                 "&OBJ_DATA=%27NO%27" +
@@ -66,23 +59,20 @@ class PsycheServer {
                 "&STEP_SIZE=%271%20d%27");
 
         Scanner jsonScanner = new Scanner(json);
-        Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
         boolean pastHeader = false;
+        ephemerisTable.clear();
 
         while (jsonScanner.hasNext()) {
             String line = jsonScanner.next();
-
             while (!pastHeader) {
                 if (line.contains("$$SOE")) {
                     pastHeader = true;
-                    line = line.replace("*","");
-                    line = line.replace("$$SOE","");
+                    line = line.replace("$$SOE", "").trim();
                     jsonScanner.useDelimiter(",");
                     break;
                 }
                 line = jsonScanner.next();
             }
-
             if (line.contains("$$EOE")) {
                 break;
             }
@@ -90,215 +80,42 @@ class PsycheServer {
             double x = Double.parseDouble(jsonScanner.next());
             double y = Double.parseDouble(jsonScanner.next());
             double z = Double.parseDouble(jsonScanner.next());
-            Coordinate coordinate = new Coordinate(x,y,z);
-
-            ephemerisTable.put(date, coordinate);
+            ephemerisTable.put(date, new Coordinate(x, y, z));
         }
-        PsycheServer.ephemerisTable = ephemerisTable;
+        jsonScanner.close();
     }
 
     private static void updateDistanceTable() {
-        Set<String> keys = ephemerisTable.keySet();
-        Iterator<String> keyIter = keys.iterator();
-        distanceTable = new LinkedHashMap<>();
+        if (ephemerisTable.isEmpty()) {
+            System.err.println("Warning: ephemerisTable is empty. Cannot calculate distances.");
+            return;
+        }
 
+        Iterator<String> keyIter = ephemerisTable.keySet().iterator();
+        distanceTable.clear();
+        String key1 = keyIter.next();
+        distanceTable.put(key1, 0.0);
 
-        String key1 = "";
-        String key2 = "";
-        if(keyIter.hasNext())
-            key1 = keyIter.next();
         double runningTotal = 0.0;
-        distanceTable.put(key1, runningTotal);
-
-        while(keyIter.hasNext()) {
-            key2 = keyIter.next();
+        while (keyIter.hasNext()) {
+            String key2 = keyIter.next();
             Coordinate cord1 = ephemerisTable.get(key1);
             Coordinate cord2 = ephemerisTable.get(key2);
-            double distance = Math.sqrt(Math.pow((cord2.x-cord1.x),2)
-                    +Math.pow((cord2.y-cord1.y),2)+Math.pow((cord2.z-cord1.z),2)); //distance formula in km
-            distance/=1e6; //Convert km to million km
+            double distance = Math.sqrt(Math.pow((cord2.x - cord1.x), 2)
+                    + Math.pow((cord2.y - cord1.y), 2) + Math.pow((cord2.z - cord1.z), 2)) / 1e6;
 
             runningTotal += distance;
-
-            //Round to 4 decimal places
-            BigDecimal bd = new BigDecimal(String.valueOf(runningTotal));
-            bd = bd.setScale(4, RoundingMode.HALF_UP);
-            runningTotal = bd.doubleValue();
-
+            runningTotal = new BigDecimal(runningTotal).setScale(4, RoundingMode.HALF_UP).doubleValue();
             distanceTable.put(key2, runningTotal);
-
-            if(keyIter.hasNext()) {
-                key1 = key2;
-            }
+            key1 = key2;
         }
     }
-
-
-    private static class Coordinate {
-        private final double x;
-        private final double y;
-        private final double z;
-
-        public Coordinate(double x, double y, double z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-        @Override
-        public String toString() {
-            return "Coordinate{x=" + x + ", y=" + y + ", z=" + z + '}';
-        }
-    }
-
-
-
-
-    private static class ClientHandler implements Runnable {
-        private final Socket socket;
-
-        public ClientHandler(Socket socket) {
-            this.socket = socket;
-        }
-
-        @Override
-        public void run() {
-            System.out.println("Socket Thread Started: " + socket.getInetAddress());
-            System.out.println("Socket Closed: " + socket.isClosed());
-            try {
-                socket.setSoTimeout(TIMEOUT_LENGTH);
-            } catch (SocketException e) {
-                throw new RuntimeException(e);
-            }
-            InputStream in = null;
-            OutputStream out = null;
-            try {
-                System.out.println("Socket Closed1: " + socket.isClosed());
-                in = socket.getInputStream();
-                System.out.println("Socket Closed2: " + socket.isClosed());
-                out = socket.getOutputStream();
-                System.out.println("Socket Closed3: " + socket.isClosed());
-                byte[] response = createResponse(in, socket);
-                System.out.println("Socket Closed4: " + socket.isClosed());
-                out.write(response);
-                System.out.println("Response written to output stream");
-                out.flush();
-                System.out.println("Output stream flushed");
-            } catch (IOException e) {
-                System.out.println("Error handling client connection: " + e.getMessage());
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                        System.out.println("Output stream closed");
-                    }
-                    if (in != null) {
-                        in.close();
-                        System.out.println("Input stream closed");
-                    }
-                    socket.close();
-                    System.out.println("Socket closed");
-                } catch (IOException e) {
-                    System.out.println("Error closing socket: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static byte[] createResponse(InputStream inStream, Socket socket) {
-        StringBuilder builder = new StringBuilder();
-        String request = null;
-        System.out.println("Socket Closed31: " + socket.isClosed());
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
-            System.out.println("Socket Closed32: " + socket.isClosed());
-            String line;
-            boolean done = false;
-            System.out.println("Socket Closed33: " + socket.isClosed());
-            while (!done && (line = in.readLine()) != null) {
-                if (line.isEmpty()) {
-                    done = true;
-                } else if (line.startsWith("GET")) {
-                    int firstSpace = line.indexOf(" ");
-                    int secondSpace = line.indexOf(" ", firstSpace + 1);
-                    request = line.substring(firstSpace + 2, secondSpace);
-                }
-            }
-            System.out.println("Socket Closed34: " + socket.isClosed());
-            if (request == null || request.isEmpty()) {
-                builder.append("HTTP/1.1 400 Bad Request\r\n")
-                        .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
-                        .append("<html>Illegal request: no GET</html>");
-            } else if (request.contains("psyche?")) {
-                System.out.println("Socket Closed35: " + socket.isClosed());
-                try {
-                    Map<String, String> query_pairs = splitQuery(request.replace("psyche?", ""));
-                    String stepSize = query_pairs.get("STEP_SIZE");
-                    String stopTime = query_pairs.get("STOP_TIME");
-
-                    if (stepSize == null) {
-                        builder.append("HTTP/1.1 400 Bad Request\r\n")
-                                .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
-                                .append("Error 400: STEP_SIZE is required.");
-                    } else {
-                        String json = fetchURL(
-                                "https://ssd.jpl.nasa.gov/api/horizons.api?format=text" +
-                                        "&COMMAND='-255'" +
-                                        "&OBJ_DATA='NO'" +
-                                        "&MAKE_EPHEM='YES'" +
-                                        "&EPHEM_TYPE='OBSERVER'" +
-                                        "&CENTER='@399'" +
-                                        "&START_TIME='2023-OCT-14'" +
-                                        "&STOP_TIME=" + stopTime +
-                                        "&STEP_SIZE=" + stepSize
-                        );
-                        builder.append("HTTP/1.1 200 OK\r\n")
-                                .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
-                                .append(json);
-                    }
-                    System.out.println("Socket Closed36: " + socket.isClosed());
-                    return builder.toString().getBytes(StandardCharsets.UTF_8);
-                } catch (Exception e) {
-                    builder.append("HTTP/1.1 500 Internal Server Error\r\n")
-                            .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
-                            .append("Error: An unexpected error occurred: ").append(e.getMessage());
-                }
-            }
-        } catch (IOException e) {
-            return ("HTTP/1.1 500 Internal Server Error\r\n" +
-                    "Content-Type: text/html; charset=utf-8\r\n\r\n" +
-                    "Error: Unable to process request: " + e.getMessage()).getBytes(StandardCharsets.UTF_8);
-        }
-        return builder.toString().getBytes(StandardCharsets.UTF_8);
-    }
-
-    private static Map<String, String> splitQuery(String query) {
-        Map<String, String> queryPairs = new LinkedHashMap<>();
-        if (query == null || query.isEmpty()) {
-            return queryPairs;
-        }
-        String[] pairs = query.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            if (idx == -1)
-                queryPairs.put(URLDecoder.decode(pair, StandardCharsets.UTF_8), "");
-            else {
-                String key = URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8);
-                String value = URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8);
-                queryPairs.put(key, value);
-            }
-        }
-        return queryPairs;
-    }
-
     private static String fetchURL(String aUrl) {
-        System.out.println("FETCH REQUEST");
         StringBuilder sb = new StringBuilder();
         try {
             URL url = new URL(aUrl);
             URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(60 * 1000);
             conn.setReadTimeout(60 * 1000);
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
@@ -308,10 +125,108 @@ class PsycheServer {
                 }
             }
         } catch (Exception ex) {
-            System.out.println("Exception in URL request: " + ex);
+            System.err.println("Exception in URL request: " + ex);
             ex.printStackTrace();
         }
-
         return sb.toString();
+    }
+    private static class Coordinate {
+        private final double x, y, z;
+
+        public Coordinate(double x, double y, double z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        @Override
+        public String toString() {
+            return "Coordinate{x=" + x + ", y=" + y + ", z=" + z + '}';
+        }
+    }
+    private static class ClientHandler implements Runnable {
+        private final Socket socket;
+
+        public ClientHandler(Socket socket) {
+            this.socket = socket;
+        }
+        @Override
+        public void run() {
+            try (BufferedOutputStream out = new BufferedOutputStream(socket.getOutputStream());
+                 InputStream in = socket.getInputStream()) {
+
+                socket.setSoTimeout(TIMEOUT_LENGTH);
+                byte[] response = createResponse(in);
+                if (response == null || response.length == 0) {
+                    response = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/plain\r\n\r\nServer Error".getBytes(StandardCharsets.UTF_8);
+                }
+                out.write(response);
+                out.flush();
+
+            } catch (IOException e) {
+                System.err.println("Error handling client connection: " + e.getMessage());
+                e.printStackTrace();
+            } finally {
+                try {
+                    socket.close();
+                    System.out.println("Socket closed");
+                } catch (IOException e) {
+                    System.err.println("Error closing socket: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+        private static byte[] createResponse(InputStream inStream) {
+            StringBuilder builder = new StringBuilder();
+            String request = null;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = in.readLine()) != null && !line.isEmpty()) {
+                    if (line.startsWith("GET")) {
+                        int firstSpace = line.indexOf(" ");
+                        int secondSpace = line.indexOf(" ", firstSpace + 1);
+                        request = line.substring(firstSpace + 2, secondSpace);
+                    }
+                }
+                if (request == null) {
+                    builder.append("HTTP/1.1 400 Bad Request\r\n")
+                            .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
+                            .append("<html>Illegal request: no GET</html>");
+                } else if (request.contains("distance?")) {
+                    Map<String, String> query_pairs = splitQuery(request.replace("distance?", ""));
+                    String stopTime = query_pairs.get("STOP_TIME");
+
+                    if (stopTime == null) {
+                        builder.append("HTTP/1.1 400 Bad Request\r\n")
+                                .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
+                                .append("Error 400: STOP_TIME is required.");
+                    } else {
+                        String distance = "" + distanceTable.getOrDefault(stopTime, -1.0);
+                        builder.append("HTTP/1.1 200 OK\r\n")
+                                .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
+                                .append(distance);
+                    }
+                }
+            } catch (IOException e) {
+                builder.append("HTTP/1.1 500 Internal Server Error\r\n")
+                        .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
+                        .append("Error: Unable to process request: ").append(e.getMessage());
+            }
+            return builder.toString().getBytes(StandardCharsets.UTF_8);
+        }
+
+        private static Map<String, String> splitQuery(String query) {
+            Map<String, String> queryPairs = new LinkedHashMap<>();
+            if (query == null || query.isEmpty()) {
+                return queryPairs;
+            }
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                int idx = pair.indexOf("=");
+                String key = URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8);
+                String value = idx == -1 ? "" : URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8);
+                queryPairs.put(key, value);
+            }
+            return queryPairs;
+        }
     }
 }
