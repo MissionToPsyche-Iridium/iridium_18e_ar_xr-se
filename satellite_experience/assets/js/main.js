@@ -247,19 +247,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const radioSetting = document.querySelectorAll('input[name="setting"]');
                 settingThemeLink.href = themeLink;
 
-                /*  TODO - make it so it saves state of radio button
-                if (radioSetting) {
-                    if (themeLink == "../assets/css/styles.css") {
-                        document.getElementById('input[name="setting"][value="default-mode"]').checked = true;
-                    } else if (themeLink == "../assets/css/light_mode.css") {
-                        document.getElementById('input[name="setting"][value="light-mode"]').checked = true;
-                    } else if (themeLink == "../assets/styles.css") {
-                        // TODO
-                    } else if (themeLink == "../assets/styles.css") {
-                        // TODO
-                    }
-                } */
-
                 if (radioSetting.length === 0) {
                     console.log("No radio buttons found with the name 'theme'.");
                 }
@@ -280,6 +267,18 @@ document.addEventListener("DOMContentLoaded", function() {
                             console.log("Color-blind Mode selected");
                         }
                     });
+                });
+
+                // Volume
+                // Remove the following volume comments once combined with task 103
+                // TODO: connect volume range with US101Task103 ambient audio tag
+                // update either range value to default volume of audio, or vice versa.
+                // the default volume range is currently set to 25.
+                const audio = document.getElementById("audio");
+                const volumeSlider = document.getElementById("volume-slider");
+
+                volumeSlider.addEventListener("input", function() {
+                    audio.volume = volumeSlider.value;
                 });
             }
         };
