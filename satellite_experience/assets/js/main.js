@@ -12,7 +12,6 @@ class SpaceSkybox {
         this._updateInstrumentContent = options.updateInstrumentContent;
         this._Initialize();
     }
-
     // private method for initialization of skybox scene and model
     _Initialize() {
         this._threejs = new THREE.WebGLRenderer({ antialias: true });
@@ -493,7 +492,7 @@ window.addEventListener("DOMContentLoaded", function() {
         const instrumentImageMap = {
             'spectrometer': '../assets/images/spectrometers.png',
             'antenna': '../assets/images/antenna.png',
-            'imager': '../assets/images/instruments/multispectral_imager.jpg',
+            'imager': '../assets/images/instruments/multispectral-imager.jpg',
             'communication': '../assets/images/instruments/psyche-dsoc.jpg',
             'detection': '../assets/images/instruments/psyche-magnetometer.jpg',
         };
