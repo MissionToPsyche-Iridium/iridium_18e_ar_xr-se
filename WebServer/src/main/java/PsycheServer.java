@@ -3,12 +3,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 class PsycheServer {
     private static final int TIMEOUT_LENGTH = 600000;
-    private static Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
-    private static Map<String, Double> distanceTable = new LinkedHashMap<>();
+    private static final Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
+    private static final Map<String, Double> distanceTable = new LinkedHashMap<>();
 
     public static void main(String[] args) {
         if (args.length < 1 || args[0] == null) {
@@ -30,6 +32,7 @@ class PsycheServer {
         try (ServerSocket server = new ServerSocket(port)) {
             updateEphemerisTable();
             updateDistanceTable();
+            System.out.println(getMissionDistance());
             while (true) {
                 try {
                     Socket sock = server.accept();
@@ -43,6 +46,16 @@ class PsycheServer {
         } catch (Exception e) {
             throw new RuntimeException("Server initialization failed: ", e);
         }
+    }
+
+    private static Double getCurrentDistance() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        return distanceTable.get(dtf.format(now));
+    }
+
+    private static Double getMissionDistance() {
+        return distanceTable.get("2029-Jun-16");
     }
 
     private static void updateEphemerisTable() throws Exception {
