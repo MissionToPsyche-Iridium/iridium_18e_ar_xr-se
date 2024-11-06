@@ -1,3 +1,14 @@
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -15,7 +26,6 @@ import java.util.*;
  * @version 11/6/2024
  */
 class PsycheHorizonsDataTranslator {
-    private static final int TIMEOUT_LENGTH = 600000;
     private static final Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
     private static final Map<String, Double> distanceTable = new LinkedHashMap<>();
 
@@ -28,25 +38,51 @@ class PsycheHorizonsDataTranslator {
     public static void main(String[] args) {
         updateEphemerisTable();
         updateDistanceTable();
+        generateDistanceDatabase();
     }
 
-    /**
-     * Returns the distance traveled in Million Kilometers
-     * @return - current distance traveled in Million Kilometers
-     */
-    private static Double getCurrentDistance() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
-        LocalDateTime now = LocalDateTime.now();
-        return distanceTable.get(dtf.format(now));
+    private static void generateDistanceDatabase() {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+
+        Document document = builder.newDocument();
+        Element root = document.createElement("PsycheDistanceDatabase");
+        document.appendChild(root);
+
+        Set<String> distance = distanceTable.keySet();
+        for(String date : distance) {
+            Element eEntry = document.createElement("entry");
+
+            Element eDate = document.createElement("date");
+            eDate.appendChild(document.createTextNode(date));
+
+            Element eDistance = document.createElement("distance");
+            eDistance.appendChild(document.createTextNode(String.valueOf(distanceTable.get(date))));
+
+            eEntry.appendChild(eDate);
+            eEntry.appendChild(eDistance);
+
+            root.appendChild(eEntry);
+        }
+
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult("../satellite_experience/assets/xml/distance.xml");
+            transformer.transform(source, result);
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("XML file created successfully!");
     }
 
-    /**
-     * Returns the total distance to be traveled in the mission in Million Kilometers
-     * @return - the total distance to be traveled in the mission in Million Kilometers
-     */
-    private static Double getMissionDistance() {
-        return distanceTable.get("2029-Jun-16");
-    }
 
     /**
      * Populates the Ephemeris LinkedHashMap table to be populated with data pulled from the horizons
