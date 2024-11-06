@@ -6,13 +6,14 @@ export default class SettingsModal {
     /*
      * Public methods
      */
-    
+
     // Constructor
     constructor() {
         this.settingsModal = document.getElementById('settings-modal');
         this.settingsModalContent = document.getElementById('settings-modal-content');
         this.settingsIconButton = document.getElementById('settings-icon-button');
-        this.themeLink = '../assets/css/styles.css';
+        this.cssFile = document.createElement("link");
+        this.cssFile.rel = "stylesheet";
 
         this._initialize();
     }
@@ -30,7 +31,8 @@ export default class SettingsModal {
     _initialize() {
         // Icon button
         this.settingsIconButton.addEventListener('click', () => this._loadSettingsModalContent());
-        
+        localStorage.setItem('theme', "default-mode");
+
         // Close button
         document.addEventListener('click', (event) => {
             if (event.target.id === 'settings-modal-close') {
@@ -57,22 +59,29 @@ export default class SettingsModal {
     _setupThemeSettings() {
         const settingThemeLink = document.getElementById('setting-theme');
         const radioSetting = document.querySelectorAll('input[name="setting"]');
-        settingThemeLink.href = this.themeLink;
+        const savedSelection = localStorage.getItem('theme');
+        if (savedSelection) {
+            const radioToSelect = document.querySelector(`input[name="setting"][value="${savedSelection}"]`);
+            if (radioToSelect) {
+                radioToSelect.checked = true;
+            }
+        }
 
         radioSetting.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (document.getElementById('default-mode').checked) {
-                    settingThemeLink.href = '../assets/css/styles.css';
-                    this.themeLink = '../assets/css/styles.css';
+                    this.cssFile.href = '../assets/css/styles.css';
+                    localStorage.setItem('theme', "default-mode");
                 } else if (document.getElementById('high-contrast-mode').checked) {
-                    settingThemeLink.href = '../assets/css/high_contrast_mode.css';
-                    this.themeLink = '../assets/css/high_contrast_mode.css';
+                    this.cssFile.href = '../assets/css/high_contrast_mode.css';
+                    localStorage.setItem('theme', "high-contrast-mode");
                 } else if (document.getElementById('light-mode').checked) {
-                    settingThemeLink.href = '../assets/css/light_mode.css';
-                    this.themeLink = '../assets/css/light_mode.css';
+                    this.cssFile.href = '../assets/css/light_mode.css';
+                    localStorage.setItem('theme', "high-mode");
                 } else if (document.getElementById('color-blind-mode').checked) {
-                    // Implement color-blind mode if needed
+                    localStorage.setItem('theme', "color-blind-mode");
                 }
+                document.head.appendChild(this.cssFile);
             });
         });
     }
