@@ -7,11 +7,24 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Initializes a Server to interact with Horizons API
+ * to calculate current distance traveled and total distance
+ * traveled in the mission.
+ * @author Emily Dinaro
+ * @version 11/6/2024
+ */
 class PsycheServer {
     private static final int TIMEOUT_LENGTH = 600000;
     private static final Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
     private static final Map<String, Double> distanceTable = new LinkedHashMap<>();
 
+    /**
+     * Initializes the server called with command.
+     * Validates the parameter inputs
+     * Gradle PsycheServer -PPort={port-number}
+     * @param args port number
+     */
     public static void main(String[] args) {
         if (args.length < 1 || args[0] == null) {
             System.out.println("Invalid arguments: server must be started with a port number.");
@@ -28,6 +41,12 @@ class PsycheServer {
         new PsycheServer(port);
     }
 
+    /**
+     * Private constructor to initialize server.
+     * Updates ephemeris table - a table of coordinates centered on the sun
+     * Updates distance table - a table of distance traveled by date
+     * @param port - port the server operates on
+     */
     private PsycheServer(int port) {
         try (ServerSocket server = new ServerSocket(port)) {
             updateEphemerisTable();
@@ -48,16 +67,28 @@ class PsycheServer {
         }
     }
 
+    /**
+     * Returns the distance traveled in Million Kilometers
+     * @return - current distance traveled in Million Kilometers
+     */
     private static Double getCurrentDistance() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
         LocalDateTime now = LocalDateTime.now();
         return distanceTable.get(dtf.format(now));
     }
 
+    /**
+     * Returns the total distance to be traveled in the mission in Million Kilometers
+     * @return - the total distance to be traveled in the mission in Million Kilometers
+     */
     private static Double getMissionDistance() {
         return distanceTable.get("2029-Jun-16");
     }
 
+    /**
+     * Populates the Ephemeris LinkedHashMap table to be 
+     * @throws Exception
+     */
     private static void updateEphemerisTable() throws Exception {
         String json = fetchURL("https://ssd.jpl.nasa.gov/api/horizons.api?format=text" +
                 "&COMMAND=%27-255%27" +
