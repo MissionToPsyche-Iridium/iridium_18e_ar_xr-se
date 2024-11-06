@@ -1,15 +1,12 @@
 apply plugin: 'application'
-mainClassName = 'PsycheServer'
-ext.Port = project.hasProperty('Port') ? project.Port : '8080'
+mainClassName = 'PsycheHorizonsDataTranslator'
 
-task PsycheServer(type: JavaExec) {
+task HorizonPull(type: JavaExec) {
     group 'http'
     description 'Simple HTTP Demo'
 
     classpath = sourceSets.main.runtimeClasspath
-    main = 'PsycheServer'
+    main = 'PsycheHorizonsDataTranslator'
     standardInput = System.in
 
-    // Pass the pPort as an argument to the Java application
-    args Port
 }

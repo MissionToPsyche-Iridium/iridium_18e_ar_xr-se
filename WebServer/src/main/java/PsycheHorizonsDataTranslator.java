@@ -14,7 +14,7 @@ import java.util.*;
  * @author Emily Dinaro
  * @version 11/6/2024
  */
-class PsycheServer {
+class PsycheHorizonsDataTranslator {
     private static final int TIMEOUT_LENGTH = 600000;
     private static final Map<String, Coordinate> ephemerisTable = new LinkedHashMap<>();
     private static final Map<String, Double> distanceTable = new LinkedHashMap<>();
