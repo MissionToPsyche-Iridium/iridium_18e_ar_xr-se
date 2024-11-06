@@ -238,6 +238,12 @@ class PsycheServer {
                 }
             }
         }
+
+        /**
+         * Parse request - generates return of requested data
+         * @param inStream
+         * @return
+         */
         private static byte[] createResponse(InputStream inStream) {
             StringBuilder builder = new StringBuilder();
             String request = null;
@@ -263,10 +269,11 @@ class PsycheServer {
                                 .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
                                 .append("Error 400: STOP_TIME is required.");
                     } else {
-                        String distance = "" + distanceTable.getOrDefault(stopTime, -1.0);
+                        String distance = "Current Distance: " + getCurrentDistance();
+                        String totalDistance = "Mission Total Distance: " + getMissionDistance();
                         builder.append("HTTP/1.1 200 OK\r\n")
                                 .append("Content-Type: text/html; charset=utf-8\r\n\r\n")
-                                .append(distance);
+                                .append(distance + " " + totalDistance);
                     }
                 }
             } catch (IOException e) {
@@ -277,6 +284,11 @@ class PsycheServer {
             return builder.toString().getBytes(StandardCharsets.UTF_8);
         }
 
+        /**
+         * Helper class to parse parameters to url request
+         * @param query
+         * @return
+         */
         private static Map<String, String> splitQuery(String query) {
             Map<String, String> queryPairs = new LinkedHashMap<>();
             if (query == null || query.isEmpty()) {
