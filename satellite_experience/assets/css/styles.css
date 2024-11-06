@@ -8,16 +8,127 @@ body {
     padding: 0;
     margin: 0;
     width: 100%;
-  height: 100%;
-  position: absolute;
-  background: #000000;
-  margin: 0;
-  padding: 0;
-  overscroll-behavior: none;
+    height: 100%;
+    position: absolute;
+    background: #000000;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
 }
 
-/* Canvas Styling */
-#canvas {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+#main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    padding: 20px 0;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Main Content */
+#main-content {
+    width: 80%;
+    max-width: 800px;
+    background-color: rgba(32, 22, 47, 0.8);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    padding: 30px 20px 20px 20px;
+    margin-top: 20px;
+    z-index: 5;
+    box-sizing: border-box;
+    align-self: left;
+}
+
+/* Navigation Buttons Styling */
+.navigation-button-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 800px;
+    z-index: 5;
+}
+
+.navigation-button {
+    width: 50%;
+    max-width: 300px;
+    height: 60px;
+    background-color: rgba(32, 22, 47, 0.8);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.navigation-button:last-child {
+    margin-bottom: 0;
+}
+
+.navigation-button:hover {
+    background-color: rgba(32, 22, 47, 1.0);
+}
+
+/* Instrument Content Styling */
+#instrument-title-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    max-width: 600px;
+    color: #fff;
+}
+
+#instrument-title {
+    font-size: 18px;
+    color: #fff;
+    text-align: left;
+}
+
+#instrument-content-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    max-width: 600px;
+    color: #fff;
+}
+
+#instrument-description {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #fff;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+#instrument-image {
+    width: 200px;
+    border-radius: 10px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Scene Styling */
+#scene {
     position: absolute;
     top: 0;
     left: 0;
@@ -34,7 +145,7 @@ body {
     width: 30px;
     height: 30px;
     cursor: pointer;
-    z-index: 2;
+    z-index: 10;
 }
 
 #settings-icon-button {
@@ -44,14 +155,14 @@ body {
     width: 30px;
     height: 30px;
     cursor: pointer;
-    z-index: 2;
+    z-index: 10;
 }
 
 /* Modal Styling */
 .modal {
     display: none; /* Hide modal by default */
     position: fixed;
-    z-index: 3;
+    z-index: 20;
     left: 0;
     top: 0;
     width: 100%;
@@ -70,14 +181,14 @@ body {
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
-    z-index: 3;
+    z-index: 20;
 }
 
 .modal-logo-container {
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 4;
+    z-index: 30;
 }
 
 .modal-logo {
@@ -100,7 +211,7 @@ body {
     font-size: 30px;
     font-weight: bold;
     cursor: pointer;
-    z-index: 4;
+    z-index: 40;
 }
 
 .modal-close:hover {
@@ -241,8 +352,7 @@ body {
   color: #302144;
   letter-spacing: -1px;
 }
-    
-}
+
 .psyche-info-list {
     font-weight: normal;
     color: black;
@@ -310,43 +420,39 @@ body {
     margin: 10px 0;
 }
 
-
-
-/* Loading screen */
 /* Loading container styling */
-        #loading-container {
-            position: fixed;
-            inset: 0;
-            background-color: #20162F;
-            z-index: 2;
-            opacity: 1;
-            transition: opacity 700ms ease;
-            padding: 20px;
-            margin: 0 auto;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
+#loading-container {
+    position: fixed;
+    inset: 0;
+    background-color: #20162F;
+    z-index: 6;
+    opacity: 1;
+    transition: opacity 700ms ease;
+    padding: 20px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
 
-        /* Content styling */
-        .loading-content {
-            position: absolute;
-            bottom: 0px;
-        }
-      
-        /* Loader styling */
-        .loader {
-          border: 10px solid #f3f3f3; /* Light grey */
-          border-top: 10px solid #A5405C; /* Psyche pink/red color */
-          border-radius: 70%;
-          width: 50px;
-          height: 50px;
-          animation: spin 3s linear infinite;
-        }
+/* Content styling */
+.loading-content {
+    position: absolute;
+    bottom: 0px;
+}
 
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
+/* Loader styling */
+.loader {
+    border: 10px solid #f3f3f3; /* Light grey */
+    border-top: 10px solid #A5405C; /* Psyche pink/red color */
+    border-radius: 70%;
+    width: 50px;
+    height: 50px;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
