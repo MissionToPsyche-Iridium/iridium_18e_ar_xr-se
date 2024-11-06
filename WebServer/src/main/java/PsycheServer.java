@@ -86,10 +86,10 @@ class PsycheServer {
     }
 
     /**
-     * Populates the Ephemeris LinkedHashMap table to be 
-     * @throws Exception
+     * Populates the Ephemeris LinkedHashMap table to be populated with data pulled from the horizons
+     * API
      */
-    private static void updateEphemerisTable() throws Exception {
+    private static void updateEphemerisTable() {
         String json = fetchURL("https://ssd.jpl.nasa.gov/api/horizons.api?format=text" +
                 "&COMMAND=%27-255%27" +
                 "&OBJ_DATA=%27NO%27" +
@@ -129,6 +129,9 @@ class PsycheServer {
         jsonScanner.close();
     }
 
+    /**
+     * Updates the distance table from the emphemris
+     */
     private static void updateDistanceTable() {
         if (ephemerisTable.isEmpty()) {
             System.err.println("Warning: ephemerisTable is empty. Cannot calculate distances.");
@@ -198,6 +201,7 @@ class PsycheServer {
             try (BufferedOutputStream out = new BufferedOutputStream(socket.getOutputStream());
                  InputStream in = socket.getInputStream()) {
 
+                System.out.println("HERE RYAN");
                 socket.setSoTimeout(TIMEOUT_LENGTH);
                 byte[] response = createResponse(in);
                 if (response == null || response.length == 0) {
