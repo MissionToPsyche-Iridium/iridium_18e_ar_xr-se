@@ -1,2 +1,2 @@
-const sound = new Audio();
+window.sound = new Audio();
 sound.autoplay = true;

@@ -271,16 +271,21 @@ document.addEventListener("DOMContentLoaded", function() {
                     });
                 });
 
-                // Volume
-                // Remove the following volume comments once combined with task 103
-                // TODO: connect volume range with US101Task103 ambient audio tag
-                // update either range value to default volume of audio, or vice versa.
-                // the default volume range is currently set to 25.
-                const audio = document.getElementById("audio");
-                const volumeSlider = document.getElementById("volume-slider");
+                // Volume Settings
+                var volumeSlider = document.getElementById("volume-slider");
 
+                // set initial volume from local storage
+                var savedVolume = localStorage.getItem(("volumeSetting"));
+                if (savedVolume !== null) {
+                    volumeSlider.value = savedVolume;
+                    sound.volume = savedVolume / 100;
+                } else {
+                    sound.volume = volumeSlider.value / 100;
+                }
                 volumeSlider.addEventListener("input", function() {
-                    audio.volume = volumeSlider.value;
+                    var volumeValue = volumeSlider.value;
+                    sound.volume = volumeValue / 100;
+                    localStorage.setItem("volumeSetting", volumeValue);
                 });
             }
         };
