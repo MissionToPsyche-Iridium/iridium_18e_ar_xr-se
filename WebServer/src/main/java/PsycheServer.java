@@ -130,7 +130,8 @@ class PsycheServer {
     }
 
     /**
-     * Updates the distance table from the emphemris
+     * Updates the distance table from the ephemeris data, populates the LinkedHashMap object to
+     * Store distance to date in "yyyy-MMM-dd" to "#.####" format
      */
     private static void updateDistanceTable() {
         if (ephemerisTable.isEmpty()) {
@@ -157,6 +158,12 @@ class PsycheServer {
             key1 = key2;
         }
     }
+
+    /**
+     * API interface access method
+     * @param aUrl the url to access
+     * @return the json interface
+     */
     private static String fetchURL(String aUrl) {
         StringBuilder sb = new StringBuilder();
         try {
@@ -177,9 +184,12 @@ class PsycheServer {
         }
         return sb.toString();
     }
+
+    /**
+     * Coordinate class, getters and setters for the X, Y, Z coords of ephemeris data
+     */
     private static class Coordinate {
         private final double x, y, z;
-
         public Coordinate(double x, double y, double z) {
             this.x = x;
             this.y = y;
@@ -190,6 +200,11 @@ class PsycheServer {
             return "Coordinate{x=" + x + ", y=" + y + ", z=" + z + '}';
         }
     }
+
+    /**
+     * The client handler class, this class takes client sockets and writes the JSON, it provides the interface for
+     * interaction with the Server.
+     */
     private static class ClientHandler implements Runnable {
         private final Socket socket;
 
