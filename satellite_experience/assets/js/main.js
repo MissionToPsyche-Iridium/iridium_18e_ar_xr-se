@@ -190,14 +190,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Help icon button
     var helpIconButton = document.getElementById("help-icon-button");
     helpIconButton.addEventListener("click", function() {
-        sound.src = "../audio/open.mp3";
+        parent.playSound1();
         openHelpModal();
     });
 
     // Close the help modal
     var helpModalCloseButton = document.getElementById("help-modal-close");
     helpModalCloseButton.addEventListener("click", function() {
-        sound.src = "../audio/close.mp3";
+        parent.playSound3();
         helpModal.style.display = "none";
     });
 
@@ -267,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 radioSetting.forEach(radio => {
                     radio.addEventListener("change", function() {
-                        sound.src = "../audio/select.mp3";
+                        parent.playSound2();
                         if (document.getElementById('default-mode').checked) {
                             settingThemeLink.href = "../assets/css/styles.css"
                             themeLink = "../assets/css/styles.css"
@@ -292,14 +292,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Settings icon button
     var settingsIconButton = document.getElementById("settings-icon-button");
     settingsIconButton.addEventListener("click", function() {
-        sound.src = "../audio/open.mp3";
+        parent.playSound1();
         openSettingsModal();
     });
 
     // Close the settings modal
     var settingsModalCloseButton = document.getElementById("settings-modal-close");
     settingsModalCloseButton.addEventListener("click", function() {
-        sound.src = "../audio/close.mp3";
+        parent.playSound3();
         resetInactivityTimer(); // Reset activity timer so it doesn't pop up as soon as settings is closed
         settingsModal.style.display = "none";
     });
