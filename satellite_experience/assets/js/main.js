@@ -273,6 +273,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Volume Settings
                 var volumeSlider = document.getElementById("volume-slider");
+                const ambientSound = window.parent.sound;
 
                 // set initial volume from local storage
                 var savedVolume = localStorage.getItem(("volumeSetting"));
@@ -285,6 +286,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 volumeSlider.addEventListener("input", function() {
                     var volumeValue = volumeSlider.value;
                     sound.volume = volumeValue / 100;
+                    ambientSound.volume = sound.volume;
                     localStorage.setItem("volumeSetting", volumeValue);
                 });
             }
