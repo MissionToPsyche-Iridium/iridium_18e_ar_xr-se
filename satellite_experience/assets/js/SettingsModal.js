@@ -70,8 +70,8 @@ export default class SettingsModal {
         }
 
         radioSetting.forEach(radio => {
-            parent.playSound2();
             radio.addEventListener('change', () => {
+                parent.playSound2();
                 if (document.getElementById('default-mode').checked) {
                     this.cssFile.href = '../assets/css/styles.css';
                     localStorage.setItem('theme', "default-mode");
