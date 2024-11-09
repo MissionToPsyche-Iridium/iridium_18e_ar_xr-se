@@ -256,11 +256,11 @@ export default class SpaceScene {
             this._model = model;
 
             // Create bubble and push to bubble list
-            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5));
-            this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', 1, 0, 4));
-            this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -3, 0, 0));
-            this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', 3, 0, -2));
-            this._bubbles.push(this._createBubble(model, 'Magnetometer', 'detection', -2, 2, 4.5));
+            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', "spectrometer", -2, -2, 4.5));
+            this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', "antenna", 1, 0, 4));
+            this._bubbles.push(this._createBubble(model, 'Multispectral Imager', "imager", -3, 0, 0));
+            this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', "communication", 3, 0, -2));
+            this._bubbles.push(this._createBubble(model, 'Magnetometer', "detection", -2, 2, 4.5));
 
             // Store clickable objects
             this._clickableObjects = this._bubbles.slice();
