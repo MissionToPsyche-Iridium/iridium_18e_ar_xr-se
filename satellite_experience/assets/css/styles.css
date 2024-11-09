@@ -24,30 +24,16 @@ body {
 
 /* Main Container */
 #main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 20px 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
     box-sizing: border-box;
-    position: relative;
-}
-
-/* Main Content */
-#main-content {
-    width: 80%;
-    max-width: 800px;
-    background-color: rgba(32, 22, 47, 0.8);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 24px;
-    text-align: center;
-    padding: 30px 20px 20px 20px;
-    margin-top: 20px;
-    z-index: 5;
-    box-sizing: border-box;
-    align-self: left;
 }
 
 /* Navigation Buttons Styling */
@@ -87,44 +73,155 @@ body {
 }
 
 /* Instrument Content Styling */
-#instrument-title-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 10px;
-    margin: 10px;
+#progress-content {
+    position: relative;
+    width: 80%;
     max-width: 600px;
+    background-color: rgba(32, 22, 47, 0.8);
+    border-radius: 10px;
     color: #fff;
+    font-size: 16px;
+    padding: 20px;
+    margin: 0 auto;
+    z-index: 5;
+    box-sizing: border-box;
+}
+
+#instrument-content {
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    background-color: rgba(32, 22, 47, 0.8);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    padding: 20px;
+    margin: 0 auto;
+    z-index: 5;
+    box-sizing: border-box;
+}
+
+#instrument-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    margin-bottom: 10px;
 }
 
 #instrument-title {
-    font-size: 18px;
+    font-size: 24px;
     color: #fff;
     text-align: left;
+    margin: 0;
 }
 
 #instrument-content-container {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 10px;
-    margin: 10px;
-    max-width: 600px;
+    padding: 15px;
     color: #fff;
+    text-align: left;
+    margin-top: 10px;
 }
 
 #instrument-description {
     font-size: 14px;
     line-height: 1.5;
     color: #fff;
-    text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 #instrument-image {
-    width: 200px;
+    height: 100%;
+    max-height: 150px;
     border-radius: 10px;
     height: auto;
     display: block;
     margin: 0 auto;
+}
+
+/* Mission Content Styling */
+#mission-content {
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    background-color: rgba(32, 22, 47, 0.8);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    padding: 20px;
+    margin: 0 auto;
+    margin-top: 150px;
+    z-index: 5;
+    box-sizing: border-box;
+}
+
+#phase-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+#phase-title {
+    font-size: 24px;
+    color: #fff;
+    text-align: left;
+    margin: 0;
+}
+
+#phase-content-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    color: #fff;
+    text-align: left;
+    margin-top: 10px;
+}
+
+#phase-description {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+#phase-image {
+    height: 100%;
+    max-height: 150px;
+    border-radius: 10px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+#phase-transition-button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 600px;
+    margin: 10px auto 0;
+}
+
+#left-phase-transition-button,
+#right-phase-transition-button {
+    width: 48%;
+    height: 50px;
+    background-color: rgba(32, 22, 47, 0.8);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    z-index: 5;
+}
+
+#left-phase-transition-button:hover,
+#right-phase-transition-button:hover {
+    background-color: rgba(32, 22, 47, 1.0);
 }
 
 /* Scene Styling */
