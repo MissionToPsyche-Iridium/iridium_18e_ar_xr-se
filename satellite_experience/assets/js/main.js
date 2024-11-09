@@ -190,14 +190,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Help icon button
     var helpIconButton = document.getElementById("help-icon-button");
     helpIconButton.addEventListener("click", function() {
-        sound.src = "../audio/open.mp3";
+        parent.playSound1();
         openHelpModal();
     });
 
     // Close the help modal
     var helpModalCloseButton = document.getElementById("help-modal-close");
     helpModalCloseButton.addEventListener("click", function() {
-        sound.src = "../audio/close.mp3";
+        parent.playSound3();
         helpModal.style.display = "none";
     });
 
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 radioSetting.forEach(radio => {
                     radio.addEventListener("change", function() {
-                        sound.src = "../audio/select.mp3";
+                        parent.playSound2();
                         if (document.getElementById('default-mode').checked) {
                             settingThemeLink.href = "../assets/css/styles.css"
                             themeLink = "../assets/css/styles.css"
@@ -272,21 +272,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
 
                 // Volume Settings
-                var volumeSlider = document.getElementById("volume-slider");
-                const ambientSound = window.parent.sound;
-
+                const volumeSlider = document.getElementById("volume-slider");
                 // set initial volume from local storage
-                var savedVolume = localStorage.getItem(("volumeSetting"));
+                const savedVolume = localStorage.getItem("volumeSetting");
                 if (savedVolume !== null) {
                     volumeSlider.value = savedVolume;
-                    sound.volume = savedVolume / 100;
+                    parent.setVolume(savedVolume / 100);
                 } else {
-                    sound.volume = volumeSlider.value / 100;
+                    parent.setVolume(volumeSlider.value / 100);
                 }
+                // event listener for changes in volume slider
                 volumeSlider.addEventListener("input", function() {
-                    var volumeValue = volumeSlider.value;
-                    sound.volume = volumeValue / 100;
-                    ambientSound.volume = sound.volume;
+                    const volumeValue = volumeSlider.value;
+                    parent.setVolume(volumeValue / 100);
                     localStorage.setItem("volumeSetting", volumeValue);
                 });
             }
@@ -297,14 +295,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Settings icon button
     var settingsIconButton = document.getElementById("settings-icon-button");
     settingsIconButton.addEventListener("click", function() {
-        sound.src = "../audio/open.mp3";
+        parent.playSound1();
         openSettingsModal();
     });
 
     // Close the settings modal
     var settingsModalCloseButton = document.getElementById("settings-modal-close");
     settingsModalCloseButton.addEventListener("click", function() {
-        sound.src = "../audio/close.mp3";
+        parent.playSound3();
         resetInactivityTimer(); // Reset activity timer so it doesn't pop up as soon as settings is closed
         settingsModal.style.display = "none";
     });
