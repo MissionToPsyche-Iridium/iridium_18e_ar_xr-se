@@ -305,9 +305,9 @@ input[type="range"]::-webkit-slider-thumb {
     width: 15px;
     background-color: #fff;
     border-radius: 50%;
-    border: 2px solid #A5405C;
+    border: 2px solid #F9A001;
     /*  slider progress  */
-    box-shadow: -407px 0 0 400px #A5405C;
+    box-shadow: -407px 0 0 400px #F9A001;
 }
 
 /* Thumb: Firefox */
@@ -316,9 +316,9 @@ input[type="range"]::-moz-range-thumb {
     width: 15px;
     background-color: #fff;
     border-radius: 50%;
-    border: 1px solid #A5405C;
+    border: 1px solid #F9A001;
     /*  slider progress  */
-    box-shadow: -407px 0 0 400px #A5405C;
+    box-shadow: -407px 0 0 400px #F9A001;
 }
 
 /* End of Settings Page/Modal */
