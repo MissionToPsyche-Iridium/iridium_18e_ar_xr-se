@@ -77,6 +77,7 @@ export default class InstrumentContent {
         // Close button
         document.addEventListener('click', (event) => {
             if (event.target.id === 'instrument-modal-close') {
+                parent.playSound3();
                 this.close();
             }
         });

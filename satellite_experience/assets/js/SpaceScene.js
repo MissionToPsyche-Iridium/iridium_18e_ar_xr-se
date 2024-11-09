@@ -332,6 +332,7 @@ export default class SpaceScene {
 
             // If a bubble was selected
             if (selectedBubble) {
+                parent.playSound2();
                 // Mark the selected bubble as viewed
                 selectedBubble.bubbleProgressLabel.element.textContent = '(viewed)';
 
@@ -364,7 +365,6 @@ export default class SpaceScene {
     // Handle clicks then do raycast
     _onClick(event) {
         event.preventDefault();
-
         const rect = this._threejs.domElement.getBoundingClientRect();
         const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
