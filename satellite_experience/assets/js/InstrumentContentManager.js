@@ -1,18 +1,20 @@
 /*
- * Instrument Content class
+ * Instrument Content Manager class
  */
 
-export default class InstrumentContent {
+export default class InstrumentContentManager {
     // Constructor
-    constructor(mainContent) {
-        this._mainContent = mainContent;
+    constructor(spaceScene, mainContainer) {
+        this._spaceScene = spaceScene;
+        this._mainContainer = mainContainer;
 
         this._initialize();
     }
 
     // Close instrument content
     close() {
-        this._mainContent.style.display = 'none';
+        this._mainContainer.style.display = 'none';
+        this._spaceScene.deselectBubbles();
     }
 
     // Update content based on bubble id
@@ -66,7 +68,7 @@ export default class InstrumentContent {
                 instrumentImageContent.style.display = 'none';
             }
 
-            this._mainContent.style.display = 'block';
+            this._mainContainer.style.display = 'block';
         } else {
             console.error('Instrument content elements not found.');
         }
@@ -77,6 +79,7 @@ export default class InstrumentContent {
         // Close button
         document.addEventListener('click', (event) => {
             if (event.target.id === 'instrument-modal-close') {
+                parent.playSound3();
                 this.close();
             }
         });
