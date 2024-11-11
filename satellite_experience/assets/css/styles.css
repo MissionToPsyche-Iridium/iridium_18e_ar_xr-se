@@ -1,492 +1,499 @@
 /* Main Styling */
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: black;
-    color: white;
-    text-align: center;
-    display: flex;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background: #000000;
-    margin: 0;
-    padding: 0;
-    overscroll-behavior: none;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: black;
+  color: white;
+  text-align: center;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #000000;
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Main Container */
 #main-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 20px;
-    box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+  box-sizing: border-box;
 }
 
 /* Navigation Buttons Styling */
 .navigation-button-container {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    max-width: 800px;
-    z-index: 5;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  max-width: 800px;
+  z-index: 5;
 }
 
 .navigation-button {
-    width: 50%;
-    max-width: 300px;
-    height: 60px;
-    background-color: rgba(32, 22, 47, 0.8);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    cursor: pointer;
-    text-align: center;
-    margin-bottom: 20px;
+  width: 50%;
+  max-width: 300px;
+  height: 60px;
+  background-color: rgba(32, 22, 47, 0.8);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .navigation-button:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .navigation-button:hover {
-    background-color: rgba(32, 22, 47, 1.0);
+  background-color: rgba(32, 22, 47, 1);
 }
 
 /* Instrument Content Styling */
-#progress-content {
-    position: relative;
-    width: 80%;
-    max-width: 600px;
-    background-color: rgba(32, 22, 47, 0.8);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 16px;
-    padding: 20px;
-    margin: 0 auto;
-    z-index: 5;
-    box-sizing: border-box;
+#distanceTag {
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  background-color: rgba(32, 22, 47, 0.8);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  padding: 20px;
+  margin: 0 auto;
+  z-index: 5;
+  box-sizing: border-box;
 }
 
 #instrument-content {
-    position: relative;
-    width: 80%;
-    max-width: 600px;
-    background-color: rgba(32, 22, 47, 0.8);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 16px;
-    padding: 20px;
-    margin: 0 auto;
-    z-index: 5;
-    box-sizing: border-box;
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  background-color: rgba(32, 22, 47, 0.8);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  padding: 20px;
+  margin: 0 auto;
+  z-index: 5;
+  box-sizing: border-box;
 }
 
 #instrument-title-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #fff;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 #instrument-title {
-    font-size: 24px;
-    color: #fff;
-    text-align: left;
-    margin: 0;
+  font-size: 24px;
+  color: #fff;
+  text-align: left;
+  margin: 0;
 }
 
 #instrument-content-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
-    color: #fff;
-    text-align: left;
-    margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  color: #fff;
+  text-align: left;
+  margin-top: 10px;
 }
 
 #instrument-description {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #fff;
-    margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 #instrument-image {
-    height: 100%;
-    max-height: 150px;
-    border-radius: 10px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+  height: 100%;
+  max-height: 150px;
+  border-radius: 10px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Mission Content Styling */
 #mission-content {
-    position: relative;
-    width: 80%;
-    max-width: 600px;
-    background-color: rgba(32, 22, 47, 0.8);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 16px;
-    padding: 20px;
-    margin: 0 auto;
-    margin-top: 150px;
-    z-index: 5;
-    box-sizing: border-box;
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  background-color: rgba(32, 22, 47, 0.8);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  padding: 20px;
+  margin: 0 auto;
+  margin-top: 150px;
+  z-index: 5;
+  box-sizing: border-box;
 }
 
 #phase-title-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #fff;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 #phase-title {
-    font-size: 24px;
-    color: #fff;
-    text-align: left;
-    margin: 0;
+  font-size: 24px;
+  color: #fff;
+  text-align: left;
+  margin: 0;
 }
 
 #phase-content-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
-    color: #fff;
-    text-align: left;
-    margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  color: #fff;
+  text-align: left;
+  margin-top: 10px;
 }
 
 #phase-description {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #fff;
-    margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
 #phase-image {
-    height: 100%;
-    max-height: 150px;
-    border-radius: 10px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+  height: 100%;
+  max-height: 150px;
+  border-radius: 10px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 #phase-transition-button-container {
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-    max-width: 600px;
-    margin: 10px auto 0;
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 600px;
+  margin: 10px auto 0;
 }
 
 #left-phase-transition-button,
 #right-phase-transition-button {
-    width: 48%;
-    height: 50px;
-    background-color: rgba(32, 22, 47, 0.8);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-    z-index: 5;
+  width: 48%;
+  height: 50px;
+  background-color: rgba(32, 22, 47, 0.8);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  z-index: 5;
 }
 
 #left-phase-transition-button:hover,
 #right-phase-transition-button:hover {
-    background-color: rgba(32, 22, 47, 1.0);
+  background-color: rgba(32, 22, 47, 1);
 }
 
 /* Scene Styling */
 #scene {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
 }
 
 /* Icon Button Styling */
 #help-icon-button {
-    position: fixed;
-    bottom: 50px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    z-index: 10;
+  position: fixed;
+  bottom: 50px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 10;
 }
 
 #settings-icon-button {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    z-index: 10;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 10;
 }
 
 /* Modal Styling */
 .modal {
-    display: none; /* Hide modal by default */
-    position: fixed;
-    z-index: 20;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+  display: none; /* Hide modal by default */
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-popup {
-    background-color: rgba(32, 22, 47, 0.8); /* Make background slightly opaque */
-    margin: 10% auto;
-    padding: 20px;
-    width: 80%;
-    max-width: 375px;
-    border-radius: 12px;
-    color: white;
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-    z-index: 20;
+  background-color: rgba(32, 22, 47, 0.8); /* Make background slightly opaque */
+  margin: 10% auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 375px;
+  border-radius: 12px;
+  color: white;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 20;
 }
 
 .modal-logo-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 30;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 30;
 }
 
 .modal-logo {
-    width: 40px;
-    height: 40px;
+  width: 40px;
+  height: 40px;
 }
 
 .modal-title {
-    font-size: 24px;
-    margin-top: 0;
-    padding-top: 10px;
-    text-align: center;
+  font-size: 24px;
+  margin-top: 0;
+  padding-top: 10px;
+  text-align: center;
 }
 
 .modal-close {
-    color: white;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 40;
+  color: white;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 40;
 }
 
 .modal-close:hover {
-    color: #bbb;
+  color: #bbb;
 }
 
 .modal-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.modal-column-left, .modal-column-right {
-    width: 48%;
-    text-align: center;
-    margin-bottom: 40px;
+.modal-column-left,
+.modal-column-right {
+  width: 48%;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .modal-icon {
-    width: 80px;
-    height: auto; /* Maintain aspect ratio */
-    max-width: 100%;
+  width: 80px;
+  height: auto; /* Maintain aspect ratio */
+  max-width: 100%;
 }
 
 .modal-text {
-    margin-top: 10px;
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 10px;
-    border-radius: 5px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 5px;
 }
 
 /* Settings Page/Modal */
 /* Rows styling */
-.settings-modal-default-mode, .settings-modal-high-contrast-mode,
-.settings-modal-light-mode, .settings-modal-color-blind-mode, .settings-modal-volume {
-    width: 100%;
-    text-align: left;
-    margin-bottom: 1px;
-    margin-top: 10px;
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 15px 10px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-between;
+.settings-modal-default-mode,
+.settings-modal-high-contrast-mode,
+.settings-modal-light-mode,
+.settings-modal-color-blind-mode,
+.settings-modal-volume {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 1px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 15px 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .settings-modal-default-mode {
-    margin-top: 20%;
+  margin-top: 20%;
 }
 
-#default-mode, #high-contrast-mode, #light-mode, #color-blind-mode {
-    /* When the radio button is checked, add a orange background */
-    accent-color: #F9A001;
+#default-mode,
+#high-contrast-mode,
+#light-mode,
+#color-blind-mode {
+  /* When the radio button is checked, add a orange background */
+  accent-color: #f9a001;
 }
 
 /* Volume */
 input[type="range"] {
-    /* remove default appearance */
-    -webkit-appearance: none;
-    appearance: none;
-    /* custom design */
-    width: 50%;
-    cursor: pointer;
-    outline: none;
-    /*  slider progress  */
-    overflow: hidden;
-    border-radius: 16px;
+  /* remove default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* custom design */
+  width: 50%;
+  cursor: pointer;
+  outline: none;
+  /*  slider progress  */
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 /* Track: webkit browsers */
 input[type="range"]::-webkit-slider-runnable-track {
-    height: 15px;
-    background: #ccc;
-    border-radius: 16px;
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
 }
 
 /* Track: Mozilla Firefox */
 input[type="range"]::-moz-range-track {
-    height: 15px;
-    background: #ccc;
-    border-radius: 16px;
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
 }
 
 /* Thumb: webkit */
 input[type="range"]::-webkit-slider-thumb {
-    /* remove default appearance */
-    -webkit-appearance: none;
-    appearance: none;
-    /* custom design */
-    height: 15px;
-    width: 15px;
-    background-color: #fff;
-    border-radius: 50%;
-    border: 2px solid #F9A001;
-    /*  slider progress  */
-    box-shadow: -407px 0 0 400px #F9A001;
+  /* remove default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* custom design */
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #f9a001;
+  /*  slider progress  */
+  box-shadow: -407px 0 0 400px #f9a001;
 }
 
 /* Thumb: Firefox */
 input[type="range"]::-moz-range-thumb {
-    height: 15px;
-    width: 15px;
-    background-color: #fff;
-    border-radius: 50%;
-    border: 1px solid #F9A001;
-    /*  slider progress  */
-    box-shadow: -407px 0 0 400px #F9A001;
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #f9a001;
+  /*  slider progress  */
+  box-shadow: -407px 0 0 400px #f9a001;
 }
 
 /* End of Settings Page/Modal */
 
 /* Launch Page */
 #container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #ffffff;
-    align-items: center;
-    margin-left: 0vh;
-    margin-right: 0vh;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 25px;
-    padding-bottom: 25px;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+  align-items: center;
+  margin-left: 0vh;
+  margin-right: 0vh;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  text-align: center;
 }
 #body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center; 
-    height: 100vh;
-    margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
 #psyche-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-image: linear-gradient(to right, #302144 , #000000);
-    align-items: stretch;
-    width: calc(100% + 15px);
-    margin-left: -50px;
-    margin-right: -50px;
-    margin-top: -25px;
-    height: 15%;
-    padding-top: 5%;
-    padding-bottom: 25px;
-    padding-left: 10px;
-    padding-right: 75px;
-    text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-image: linear-gradient(to right, #302144, #000000);
+  align-items: stretch;
+  width: calc(100% + 15px);
+  margin-left: -50px;
+  margin-right: -50px;
+  margin-top: -25px;
+  height: 15%;
+  padding-top: 5%;
+  padding-bottom: 25px;
+  padding-left: 10px;
+  padding-right: 75px;
+  text-align: center;
 }
 
 #psyche-icon {
-    align-self: center;
-    min-height: 75px;
-    min-width: 75px;
-    height: 15%;
-    width: 15%;
-    margin-left: 5%;
+  align-self: center;
+  min-height: 75px;
+  min-width: 75px;
+  height: 15%;
+  width: 15%;
+  margin-left: 5%;
 }
 
 #disclaimer {
-    font-size: 12px;
-    color: grey;
-    border-color: grey;
-    border-width: 20px;
+  font-size: 12px;
+  color: grey;
+  border-color: grey;
+  border-width: 20px;
 }
 
 .psyche-info {
-    margin-top: 50px;
-    font-weight: bold;
-    border: 2px solid white;
-    color: black;
+  margin-top: 50px;
+  font-weight: bold;
+  border: 2px solid white;
+  color: black;
 }
 
 .psyche-info-line {
-  font-family: "Helvetica",sans-serif;
+  font-family: "Helvetica", sans-serif;
   font-weight: normal;
   font-size: 20px;
   line-height: 1.4;
@@ -496,7 +503,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .psyche-info-headline {
-  font-family: "Helvetica",sans-serif;
+  font-family: "Helvetica", sans-serif;
   font-weight: normal;
   font-size: 30px;
   line-height: 1.4;
@@ -506,105 +513,110 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .psyche-info-list {
-    font-weight: normal;
-    color: black;
-    text-align: left;
-    align-self: center;
-    list-style-type: disc;
+  font-weight: normal;
+  color: black;
+  text-align: left;
+  align-self: center;
+  list-style-type: disc;
 }
 
 #launch-button {
-    margin-top: 25px;
-    margin-bottom: 25px;
-    font-size: 20px;
-    color: white;
-    font-weight: bold;
-    background-color: #f9a000;
-    border: 2px 50% black;
-    border-radius: 16px;
-    height: 50px;
-    width: 75%;
-    cursor: pointer;
-    transition:
-        background-color 0.3s,
-        transform 0.1s;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  background-color: #f9a000;
+  border: 2px 50% black;
+  border-radius: 16px;
+  height: 50px;
+  width: 75%;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.1s;
 }
 
 #launch-button:active {
-    background: rgba(255, 255, 255, 0.5);
-    transform: scale(0.95);
-    border: none;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0.95);
+  border: none;
 }
 
 #launch-button:focus {
-    outline: none;
+  outline: none;
 }
 
 .psyche-satellite-img img {
-    margin-top: 25px;
-    width: 100%;
+  margin-top: 25px;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
-    #container {
-        margin-left: 25%;
-        margin-right: 25%;
-    }
+  #container {
+    margin-left: 25%;
+    margin-right: 25%;
+  }
 }
 
 .fade-in-section {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease-out, transform 1s ease-out; 
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 1s ease-out,
+    transform 1s ease-out;
 }
 
 .fade-in-section.visible {
-    opacity: 1;
-    transform: translateY(0); 
+  opacity: 1;
+  transform: translateY(0);
 }
 
-
 .psyche-info {
-    margin: 20px 0;
+  margin: 20px 0;
 }
 
 .psyche-info-line {
-    margin: 10px 0;
+  margin: 10px 0;
 }
 
 /* Loading container styling */
 #loading-container {
-    position: fixed;
-    inset: 0;
-    background-color: #20162F;
-    z-index: 6;
-    opacity: 1;
-    transition: opacity 700ms ease;
-    padding: 20px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+  position: fixed;
+  inset: 0;
+  background-color: #20162f;
+  z-index: 6;
+  opacity: 1;
+  transition: opacity 700ms ease;
+  padding: 20px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* Content styling */
 .loading-content {
-    position: absolute;
-    bottom: 0px;
+  position: absolute;
+  bottom: 0px;
 }
 
 /* Loader styling */
 .loader {
-    border: 10px solid #f3f3f3; /* Light grey */
-    border-top: 10px solid #A5405C; /* Psyche pink/red color */
-    border-radius: 70%;
-    width: 50px;
-    height: 50px;
-    animation: spin 3s linear infinite;
+  border: 10px solid #f3f3f3; /* Light grey */
+  border-top: 10px solid #a5405c; /* Psyche pink/red color */
+  border-radius: 70%;
+  width: 50px;
+  height: 50px;
+  animation: spin 3s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

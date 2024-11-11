@@ -10,6 +10,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const mainContainer = document.getElementById('main-container');
     const upperButton = document.getElementById('upper-button');
     const lowerButton = document.getElementById('lower-button');
+    
+
 
     // Initialize SpaceScene
     let spaceScene = new SpaceScene({

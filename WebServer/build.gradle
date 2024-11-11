@@ -1,0 +1,12 @@
+apply plugin: 'application'
+mainClassName = 'PsycheHorizonsDataTranslator'
+
+task HorizonPull(type: JavaExec) {
+    group 'http'
+    description 'Simple HTTP Demo'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'PsycheHorizonsDataTranslator'
+    standardInput = System.in
+
+}
