@@ -21,6 +21,16 @@ window.addEventListener("DOMContentLoaded", () => {
     const helpModal = new HelpModal();
     const settingsModal = new SettingsModal();
 
+    // Volume
+    // set initial volume from local storage
+    const savedVolume = localStorage.getItem("volumeSetting");
+    if (savedVolume !== null) {
+        // volumeSlider.value = savedVolume;
+        parent.setVolume(savedVolume / 100);
+    } else {
+        parent.setVolume(volumeSlider.value / 100);
+    }
+    
     // Connect settings modal to help modal inactivity timer
     settingsModal.resetInactivityTimer = () => helpModal._setupInactivityTimer();
 });
