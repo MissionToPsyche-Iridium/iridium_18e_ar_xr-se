@@ -36,6 +36,7 @@ export default class HelpModal {
         // Close button
         document.addEventListener('click', (event) => {
             if (event.target.id === 'help-modal-close') {
+                parent.playSound3();
                 this.close();
             }
         });
@@ -46,6 +47,7 @@ export default class HelpModal {
 
     // Load help modal content
     _loadHelpModalContent() {
+        parent.playSound1();
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'help_modal.html', true);
         xhr.onreadystatechange = () => {

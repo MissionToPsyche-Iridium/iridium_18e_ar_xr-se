@@ -134,7 +134,8 @@ body {
 .settings-modal-default-mode,
 .settings-modal-high-contrast-mode,
 .settings-modal-light-mode,
-.settings-modal-color-blind-mode {
+.settings-modal-color-blind-mode,
+.settings-modal-volume{
   width: 100%;
   text-align: left;
   margin-bottom: 1px;
@@ -160,6 +161,60 @@ body {
 #color-blind-mode {
   /* When the radio button is checked, add a blue background */
   accent-color: #f9a001;
+}
+
+/* Volume */
+input[type="range"] {
+  /* remove default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* custom design */
+  width: 50%;
+  cursor: pointer;
+  outline: none;
+  /*  slider progress  */
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+/* Track: webkit browsers */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+/* Track: Mozilla Firefox */
+input[type="range"]::-moz-range-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+  /* remove default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* custom design */
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #f9a001;
+  /*  slider progress  */
+  box-shadow: -407px 0 0 400px #f9a001;
+}
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #f9a001;
+  /*  slider progress  */
+  box-shadow: -407px 0 0 400px #f9a001;
 }
 
 /* End of Settings Page/Modal */
