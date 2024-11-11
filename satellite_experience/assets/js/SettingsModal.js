@@ -36,6 +36,7 @@ export default class SettingsModal {
         // Close button
         document.addEventListener('click', (event) => {
             if (event.target.id === 'settings-modal-close') {
+                parent.playSound3();
                 this.close();
             }
         });
@@ -43,6 +44,7 @@ export default class SettingsModal {
 
     // Load settings modal content
     _loadSettingsModalContent() {
+        parent.playSound1();
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'settings_modal.html', true);
         xhr.onreadystatechange = () => {
@@ -69,6 +71,7 @@ export default class SettingsModal {
 
         radioSetting.forEach(radio => {
             radio.addEventListener('change', () => {
+                parent.playSound2();
                 if (document.getElementById('default-mode').checked) {
                     this.cssFile.href = '../assets/css/styles.css';
                     localStorage.setItem('theme', "default-mode");
@@ -79,10 +82,28 @@ export default class SettingsModal {
                     this.cssFile.href = '../assets/css/light_mode.css';
                     localStorage.setItem('theme', "high-mode");
                 } else if (document.getElementById('color-blind-mode').checked) {
+                    this.cssFile.href = '../assets/css/color_blind_mode.css';
                     localStorage.setItem('theme', "color-blind-mode");
                 }
                 document.head.appendChild(this.cssFile);
             });
+        });
+
+        // Volume Settings
+        const volumeSlider = document.getElementById("volume-slider");
+        // set initial volume from local storage
+        const savedVolume = localStorage.getItem("volumeSetting");
+        if (savedVolume !== null) {
+            volumeSlider.value = savedVolume;
+            parent.setVolume(savedVolume / 100);
+        } else {
+            parent.setVolume(volumeSlider.value / 100);
+        }
+        // event listener for changes in volume slider
+        volumeSlider.addEventListener("input", function() {
+            const volumeValue = volumeSlider.value;
+            parent.setVolume(volumeValue / 100);
+            localStorage.setItem("volumeSetting", volumeValue);
         });
     }
 }
