@@ -4,7 +4,7 @@
 
 async function findDistanceByDateFromFile(targetDate) {
     try {
-        const response = await fetch("/assets/xml/distance.xml");
+        const response = await fetch("../assets/xml/distance.xml");
         const xmlText = await response.text();
 
         const parser = new DOMParser();
