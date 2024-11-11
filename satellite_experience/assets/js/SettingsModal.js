@@ -82,6 +82,7 @@ export default class SettingsModal {
                     this.cssFile.href = '../assets/css/light_mode.css';
                     localStorage.setItem('theme', "high-mode");
                 } else if (document.getElementById('color-blind-mode').checked) {
+                    this.cssFile.href = '../assets/css/color_blind_mode.css';
                     localStorage.setItem('theme', "color-blind-mode");
                 }
                 document.head.appendChild(this.cssFile);

@@ -67,7 +67,7 @@ export default class SpaceScene {
         }
         this._updatePhaseSelection();
     }
-    
+
     // Go to previous phase
     nextPhase() {
         this._currentPhaseIndex++;
@@ -223,7 +223,7 @@ export default class SpaceScene {
         this._timelineGroup = timelineGroup;
         this._camera.add(timelineGroup);
         timelineGroup.position.set(0, 3, -5.75);
-    
+
         // Create main line
         const lineCanvas = document.createElement('canvas');
         lineCanvas.width = 512;
@@ -231,14 +231,14 @@ export default class SpaceScene {
         const lineContext = lineCanvas.getContext('2d');
         lineContext.fillStyle = '#ffffff' // White
         lineContext.fillRect(0, 0, lineCanvas.width, lineCanvas.height);
-    
+
         const lineTexture = new THREE.CanvasTexture(lineCanvas);
         const lineMaterial = new THREE.SpriteMaterial({
             map: lineTexture,
             transparent: true,
             opacity: 0.5,
         });
-        
+
         const mainLine = new THREE.Sprite(lineMaterial);
         mainLine.scale.set(3.1, 0.01, 1);
         mainLine.position.set(0, 0, 0);
@@ -249,7 +249,7 @@ export default class SpaceScene {
         const endYear = 2032;
         const timelineStartX = -1.5;
         const timelineEndX = 1.5;
-    
+
         // Function to map year to x position
         const yearToX = (year, month) => {
             const totalMonths = (year - startYear) * 12 + month;
@@ -257,12 +257,12 @@ export default class SpaceScene {
             const fraction = totalMonths / totalDurationMonths;
             return timelineStartX + fraction * (timelineEndX - timelineStartX);
         };
-    
+
         // Create line and label for each phase
         phases.forEach((phase, index) => {
             const phaseLinePosition = yearToX(phase.phaseYear, phase.phaseMonth);
             const phaseLineHeight = phase.phaseLineHeight === 'long' ? 0.45 : 0.3;
-    
+
             // Create line for phase
             const phaseLineCanvas = document.createElement('canvas');
             phaseLineCanvas.width = 4;
@@ -270,19 +270,19 @@ export default class SpaceScene {
             const phaseLineContext = phaseLineCanvas.getContext('2d');
             phaseLineContext.fillStyle = '#ffffff' // White
             phaseLineContext.fillRect(0, 0, phaseLineCanvas.width, phaseLineCanvas.height);
-    
+
             const phaseLineTexture = new THREE.CanvasTexture(phaseLineCanvas);
             const phaseLineMaterial = new THREE.SpriteMaterial({
                 map: phaseLineTexture,
                 transparent: true,
                 opacity: index === 0 ? 1.0 : 0.5,
             });
-    
+
             const phaseLine = new THREE.Sprite(phaseLineMaterial);
             phaseLine.scale.set(0.01, phaseLineHeight, 1);
             phaseLine.position.set(phaseLinePosition, -0.05 - (phaseLineHeight / 2), 0);
             timelineGroup.add(phaseLine);
-    
+
             // Create label for phase
             const phaseLabelDiv = document.createElement('div');
             phaseLabelDiv.className = 'label';
@@ -291,12 +291,12 @@ export default class SpaceScene {
             phaseLabelDiv.style.opacity = index === 0 ? '1.0' : '0.5'
             phaseLabelDiv.style.fontSize = '14px';
             phaseLabelDiv.style.pointerEvents = 'none';
-    
+
             const phaseLabel = new CSS2DObject(phaseLabelDiv);
             phaseLabel.position.set(phaseLinePosition, phaseLine.position.y - (phaseLineHeight / 2) + -0.075, 0);
             phaseLabel.visible = false;
             timelineGroup.add(phaseLabel);
-    
+
             // Store checkpoint references
             this._phases.push({
                 phaseLabel: phaseLabel,
@@ -304,7 +304,7 @@ export default class SpaceScene {
                 phaseId: phase.phaseId,
             });
         });
-    
+
         // Create label for orbit section of timeline
         const orbitsLabelDiv = document.createElement('div');
         orbitsLabelDiv.className = 'label';
@@ -313,12 +313,12 @@ export default class SpaceScene {
         orbitsLabelDiv.style.opacity = '0.5';
         orbitsLabelDiv.style.fontSize = '12px';
         orbitsLabelDiv.style.pointerEvents = 'none';
-    
+
         const orbitsLabel = new CSS2DObject(orbitsLabelDiv);
         orbitsLabel.position.set(1.05, -0.8, 0);
         orbitsLabel.visible = false;
         timelineGroup.add(orbitsLabel);
-    
+
         // Create labels for years
         const numberOfYears = endYear - startYear + 1;
         const years = [];
@@ -330,7 +330,7 @@ export default class SpaceScene {
                 x: x,
             });
         }
-    
+
         years.forEach((yearData) => {
             const yearLabelDiv = document.createElement('div');
             yearLabelDiv.className = 'label';
@@ -339,13 +339,13 @@ export default class SpaceScene {
             yearLabelDiv.style.opacity = '0.5';
             yearLabelDiv.style.fontSize = '11px';
             yearLabelDiv.style.pointerEvents = 'none';
-    
+
             const yearLabel = new CSS2DObject(yearLabelDiv);
             yearLabel.position.set(yearData.x, 0.1, 0);
             yearLabel.visible = false;
             timelineGroup.add(yearLabel);
         });
-    
+
         // Current position marker based on current date
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
@@ -357,7 +357,7 @@ export default class SpaceScene {
         triangleShape.lineTo(-0.05, -0.15);
         triangleShape.lineTo(0.05, -0.15);
         triangleShape.closePath();
-    
+
         const geometry = new THREE.ShapeGeometry(triangleShape);
         const material = new THREE.MeshBasicMaterial({
             color: 'white',
@@ -465,11 +465,11 @@ export default class SpaceScene {
             this._createTimeline(phases);
 
             // Create bubble and push to bubble list
-            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -3, 3.5));
-            this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', -3.75, 0, 2.75));
-            this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -0.5, -2.5, -0.6));
-            this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', -0.5, 3.5, -0.6));
-            this._bubbles.push(this._createBubble(model, 'Magnetometer', 'detection', -4.75, -3, 1));
+            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', "spectrometer", -2, -2, 4.5));
+            this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', "antenna", 1, 0, 4));
+            this._bubbles.push(this._createBubble(model, 'Multispectral Imager', "imager", -3, 0, 0));
+            this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', "communication", 3, 0, -2));
+            this._bubbles.push(this._createBubble(model, 'Magnetometer', "detection", -2, 2, 4.5));
 
             // Store clickable objects
             this._clickableObjects = this._bubbles.slice();
@@ -490,12 +490,12 @@ export default class SpaceScene {
     _RAF() {
         requestAnimationFrame(() => {
             this._RAF();
-    
+
             // Simple model rotation
             if (this._model) {
                 this._model.rotation.y += 0.0002;
             }
-    
+
             // Render the scene and the labels
             this._threejs.render(this._scene, this._camera);
             this._labelRenderer.render(this._scene, this._camera);
@@ -534,7 +534,7 @@ export default class SpaceScene {
             });
         }
     }
-    
+
     _hideTimeline() {
         if (this._timelineGroup) {
             this._timelineGroup.visible = false;
