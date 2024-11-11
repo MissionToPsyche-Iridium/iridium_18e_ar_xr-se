@@ -9,6 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main Page</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
+
+    <!--script src="../assets/js/sfx.js"></script-->
+    <script src="../assets/js/main.js" type="module"></script>
+
     <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- GLTFLoader -->
@@ -51,6 +55,15 @@
       </div>
     </div>
 
+    <!-- Main Container -->
+    <div id="main-container"></div>
+
+    <!-- Buttons to Navigate -->
+    <div class="navigation-button-container">
+      <button class="navigation-button" id="upper-button">Explore Mission</button>
+      <button class="navigation-button" id="lower-button">Explore Instruments</button>
+    </div>
+
     <!-- Loading page -->
     <!-- Loading Container -->
     <div id="loading-container">
@@ -61,7 +74,9 @@
       </div>
     </div>
 
-    <script src="../assets/js/main.js" type="module"></script>
+    <!-- Three.js Canvas Container -->
+    <div id="scene"></div>
+
+    <script src="../assets/js/app.js" type="module"></script>
   </body>
 </html>
-
