@@ -14,17 +14,33 @@ export default class SpaceScene {
     // Constructor
     constructor(options = {}) {
         this._bubbles = [];
+        this._phases = [];
+        this._currentPhaseIndex = 0;
         this._updateInstrumentContent = options.updateInstrumentContent;
         this._Initialize();
+        this._mainState = 'main';
     }
 
     // Make bubbles visible/invisible based on state
-    updateBubbles(newMainState) {
-        console.log('Updating Bubble State to:', newMainState);
+    updateState(newMainState) {
+        this._mainState = newMainState;
+
+        console.log('Updating Scene State to:', newMainState);
+        // Instrument State
         if (newMainState === 'instrument') {
             this._showBubbles();
         } else {
+            this.deselectBubbles();
             this._hideBubbles();
+        }
+
+        // Mission State
+        if (newMainState === 'mission') {
+            this._showTimeline();
+        } else {
+            this._currentPhaseIndex = 0;
+            this._updatePhaseSelection();
+            this._hideTimeline();
         }
     }
 
@@ -41,6 +57,29 @@ export default class SpaceScene {
                 bubbleProgressLabelDiv.style.opacity = '0.5';
             });
         }
+    }
+
+    // Go to next phase
+    prevPhase() {
+        this._currentPhaseIndex--;
+        if (this._currentPhaseIndex < 0) {
+            this._currentPhaseIndex = this._phases.length - 1;
+        }
+        this._updatePhaseSelection();
+    }
+    
+    // Go to previous phase
+    nextPhase() {
+        this._currentPhaseIndex++;
+        if (this._currentPhaseIndex >= this._phases.length) {
+            this._currentPhaseIndex = 0;
+        }
+        this._updatePhaseSelection();
+    }
+
+    // Get current phase id
+    getCurrentPhase() {
+        return this._phases[this._currentPhaseIndex].phaseId;
     }
 
     /*
@@ -112,6 +151,7 @@ export default class SpaceScene {
     // Setup scene
     _Scene() {
         this._scene = new THREE.Scene();
+        this._scene.add(this._camera);
     }
 
     // Setup lighting for scene
@@ -174,6 +214,160 @@ export default class SpaceScene {
         box.castShadow = true;
         box.receiveShadow = true;
         this._scene.add(box);
+    }
+
+    _createTimeline(phases) {
+        // Create timeline group
+        const timelineGroup = new THREE.Group();
+        timelineGroup.visible = false;
+        this._timelineGroup = timelineGroup;
+        this._camera.add(timelineGroup);
+        timelineGroup.position.set(0, 3, -5.75);
+    
+        // Create main line
+        const lineCanvas = document.createElement('canvas');
+        lineCanvas.width = 512;
+        lineCanvas.height = 2;
+        const lineContext = lineCanvas.getContext('2d');
+        lineContext.fillStyle = '#ffffff' // White
+        lineContext.fillRect(0, 0, lineCanvas.width, lineCanvas.height);
+    
+        const lineTexture = new THREE.CanvasTexture(lineCanvas);
+        const lineMaterial = new THREE.SpriteMaterial({
+            map: lineTexture,
+            transparent: true,
+            opacity: 0.5,
+        });
+        
+        const mainLine = new THREE.Sprite(lineMaterial);
+        mainLine.scale.set(3.1, 0.01, 1);
+        mainLine.position.set(0, 0, 0);
+        timelineGroup.add(mainLine);
+
+        // Year to x position ratio
+        const startYear = 2023;
+        const endYear = 2032;
+        const timelineStartX = -1.5;
+        const timelineEndX = 1.5;
+    
+        // Function to map year to x position
+        const yearToX = (year, month) => {
+            const totalMonths = (year - startYear) * 12 + month;
+            const totalDurationMonths = (endYear - startYear) * 12;
+            const fraction = totalMonths / totalDurationMonths;
+            return timelineStartX + fraction * (timelineEndX - timelineStartX);
+        };
+    
+        // Create line and label for each phase
+        phases.forEach((phase, index) => {
+            const phaseLinePosition = yearToX(phase.phaseYear, phase.phaseMonth);
+            const phaseLineHeight = phase.phaseLineHeight === 'long' ? 0.45 : 0.3;
+    
+            // Create line for phase
+            const phaseLineCanvas = document.createElement('canvas');
+            phaseLineCanvas.width = 4;
+            phaseLineCanvas.height = 256;
+            const phaseLineContext = phaseLineCanvas.getContext('2d');
+            phaseLineContext.fillStyle = '#ffffff' // White
+            phaseLineContext.fillRect(0, 0, phaseLineCanvas.width, phaseLineCanvas.height);
+    
+            const phaseLineTexture = new THREE.CanvasTexture(phaseLineCanvas);
+            const phaseLineMaterial = new THREE.SpriteMaterial({
+                map: phaseLineTexture,
+                transparent: true,
+                opacity: index === 0 ? 1.0 : 0.5,
+            });
+    
+            const phaseLine = new THREE.Sprite(phaseLineMaterial);
+            phaseLine.scale.set(0.01, phaseLineHeight, 1);
+            phaseLine.position.set(phaseLinePosition, -0.05 - (phaseLineHeight / 2), 0);
+            timelineGroup.add(phaseLine);
+    
+            // Create label for phase
+            const phaseLabelDiv = document.createElement('div');
+            phaseLabelDiv.className = 'label';
+            phaseLabelDiv.textContent = phase.phaseLabel;
+            phaseLabelDiv.style.color = 'white';
+            phaseLabelDiv.style.opacity = index === 0 ? '1.0' : '0.5'
+            phaseLabelDiv.style.fontSize = '14px';
+            phaseLabelDiv.style.pointerEvents = 'none';
+    
+            const phaseLabel = new CSS2DObject(phaseLabelDiv);
+            phaseLabel.position.set(phaseLinePosition, phaseLine.position.y - (phaseLineHeight / 2) + -0.075, 0);
+            phaseLabel.visible = false;
+            timelineGroup.add(phaseLabel);
+    
+            // Store checkpoint references
+            this._phases.push({
+                phaseLabel: phaseLabel,
+                phaseLine: phaseLine,
+                phaseId: phase.phaseId,
+            });
+        });
+    
+        // Create label for orbit section of timeline
+        const orbitsLabelDiv = document.createElement('div');
+        orbitsLabelDiv.className = 'label';
+        orbitsLabelDiv.textContent = 'O R B I T S';
+        orbitsLabelDiv.style.color = 'white';
+        orbitsLabelDiv.style.opacity = '0.5';
+        orbitsLabelDiv.style.fontSize = '12px';
+        orbitsLabelDiv.style.pointerEvents = 'none';
+    
+        const orbitsLabel = new CSS2DObject(orbitsLabelDiv);
+        orbitsLabel.position.set(1.05, -0.8, 0);
+        orbitsLabel.visible = false;
+        timelineGroup.add(orbitsLabel);
+    
+        // Create labels for years
+        const numberOfYears = endYear - startYear + 1;
+        const years = [];
+        for (let i = 0; i < numberOfYears; i++) {
+            const year = startYear + i;
+            const x = yearToX(year, 0);
+            years.push({
+                year: year.toString(),
+                x: x,
+            });
+        }
+    
+        years.forEach((yearData) => {
+            const yearLabelDiv = document.createElement('div');
+            yearLabelDiv.className = 'label';
+            yearLabelDiv.textContent = yearData.year;
+            yearLabelDiv.style.color = 'white';
+            yearLabelDiv.style.opacity = '0.5';
+            yearLabelDiv.style.fontSize = '11px';
+            yearLabelDiv.style.pointerEvents = 'none';
+    
+            const yearLabel = new CSS2DObject(yearLabelDiv);
+            yearLabel.position.set(yearData.x, 0.1, 0);
+            yearLabel.visible = false;
+            timelineGroup.add(yearLabel);
+        });
+    
+        // Current position marker based on current date
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth();
+        const xPosition = yearToX(currentYear, currentMonth);
+
+        const triangleShape = new THREE.Shape();
+        triangleShape.moveTo(0, 0);
+        triangleShape.lineTo(-0.05, -0.15);
+        triangleShape.lineTo(0.05, -0.15);
+        triangleShape.closePath();
+    
+        const geometry = new THREE.ShapeGeometry(triangleShape);
+        const material = new THREE.MeshBasicMaterial({
+            color: 'white',
+            transparent: true,
+            opacity: 1.0
+        });
+        const triangle = new THREE.Mesh(geometry, material);
+        triangle.position.set(xPosition, -0.02, 0);
+
+        timelineGroup.add(triangle);
     }
 
     // Create a bubble, bubble label, and bubble progress label
@@ -255,6 +449,21 @@ export default class SpaceScene {
             this._scene.add(model); // Add model to scene
             this._model = model;
 
+            // Define phases for the timeline
+            const phases = [
+                { phaseLabel: 'Launch', phaseId: 'launch', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
+                { phaseLabel: 'Gravity Assist', phaseId: 'assist', phaseYear: 2026, phaseMonth: 3, phaseLineHeight: 'short' },
+                { phaseLabel: 'A', phaseId: 'a', phaseYear: 2029, phaseMonth: 7, phaseLineHeight: 'short' },
+                { phaseLabel: 'B1', phaseId: 'b1', phaseYear: 2029, phaseMonth: 9, phaseLineHeight: 'long' },
+                { phaseLabel: 'D', phaseId: 'd', phaseYear: 2030, phaseMonth: 4, phaseLineHeight: 'short' },
+                { phaseLabel: 'C', phaseId: 'c', phaseYear: 2031, phaseMonth: 0, phaseLineHeight: 'short' },
+                { phaseLabel: 'B2', phaseId: 'b2', phaseYear: 2031, phaseMonth: 4, phaseLineHeight: 'long' },
+                { phaseLabel: 'End', phaseId: 'end', phaseYear: 2031, phaseMonth: 10, phaseLineHeight: 'short' },
+            ];
+
+            // Create timeline with phases
+            this._createTimeline(phases);
+
             // Create bubble and push to bubble list
             this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -2, 4.5));
             this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', 1, 0, 4));
@@ -266,14 +475,6 @@ export default class SpaceScene {
             this._clickableObjects = this._bubbles.slice();
             this._threejs.domElement.addEventListener('click', this._onClick.bind(this), false);
             this._threejs.domElement.addEventListener('touchstart', this._onTouchStart.bind(this), false);
-
-            // Basic rotation animation
-            const animate = () => {
-                requestAnimationFrame(animate);
-                model.rotation.y += 0.001; // Rotate the model
-                this._threejs.render(this._scene, this._camera);
-            };
-            animate();
 
             // Log loading
         }, function(xhr) {
@@ -288,9 +489,15 @@ export default class SpaceScene {
     // Render
     _RAF() {
         requestAnimationFrame(() => {
+            this._RAF();
+    
+            if (this._model) {
+                this._model.rotation.y += 0.001; // Rotate the model
+            }
+    
+            // Render the scene and the labels
             this._threejs.render(this._scene, this._camera);
             this._labelRenderer.render(this._scene, this._camera);
-            this._RAF();
         });
     }
 
@@ -316,6 +523,37 @@ export default class SpaceScene {
         }
     }
 
+    _showTimeline() {
+        if (this._timelineGroup) {
+            this._timelineGroup.visible = true;
+            this._timelineGroup.traverse((child) => {
+                if (child instanceof CSS2DObject) {
+                    child.visible = true;
+                }
+            });
+        }
+    }
+    
+    _hideTimeline() {
+        if (this._timelineGroup) {
+            this._timelineGroup.visible = false;
+            this._timelineGroup.traverse((child) => {
+                if (child instanceof CSS2DObject) {
+                    child.visible = false;
+                }
+            });
+        }
+    }
+
+    _updatePhaseSelection() {
+        this._phases.forEach((phase, index) => {
+            const isSelected = index === this._currentPhaseIndex;
+            const opacity = isSelected ? 1.0 : 0.5;
+            phase.phaseLine.material.opacity = opacity;
+            phase.phaseLabel.element.style.opacity = opacity.toString();
+        });
+    }
+
     // Check for intersection with clickable objects at position
     _performRaycast(normalizedPosition) {
         const raycaster = new THREE.Raycaster();
@@ -332,6 +570,7 @@ export default class SpaceScene {
 
             // If a bubble was selected
             if (selectedBubble) {
+                parent.playSound1();
                 // Mark the selected bubble as viewed
                 selectedBubble.bubbleProgressLabel.element.textContent = '(viewed)';
 
@@ -363,30 +602,34 @@ export default class SpaceScene {
 
     // Handle clicks then do raycast
     _onClick(event) {
-        event.preventDefault();
+        if (this._mainState === 'instrument') {
+            event.preventDefault();
 
-        const rect = this._threejs.domElement.getBoundingClientRect();
-        const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-        const mouseVector = new THREE.Vector2(mouseX, mouseY);
+            const rect = this._threejs.domElement.getBoundingClientRect();
+            const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            const mouseVector = new THREE.Vector2(mouseX, mouseY);
 
-        this._performRaycast(mouseVector);
+            this._performRaycast(mouseVector);
+        }
     }
 
     // Handle taps then do raycast
     _onTouchStart(event) {
-        event.preventDefault();
+        if (this._mainState === 'instrument') {
+            event.preventDefault();
 
-        // Only consider the first touch point
-        if (event.touches.length === 1) {
-            const touch = event.touches[0];
+            // Only consider the first touch point
+            if (event.touches.length === 1) {
+                const touch = event.touches[0];
 
-            const rect = this._threejs.domElement.getBoundingClientRect();
-            const touchX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-            const touchY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
-            const touchVector = new THREE.Vector2(touchX, touchY);
+                const rect = this._threejs.domElement.getBoundingClientRect();
+                const touchX = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+                const touchY = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+                const touchVector = new THREE.Vector2(touchX, touchY);
 
-            this._performRaycast(touchVector);
+                this._performRaycast(touchVector);
+            }
         }
     }
 }
