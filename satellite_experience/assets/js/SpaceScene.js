@@ -5,6 +5,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/renderers/CSS2DRenderer.js';
+import HelpModal from './HelpModal.js';
 
 export default class SpaceScene {
     /*
@@ -12,11 +13,12 @@ export default class SpaceScene {
      */
 
     // Constructor
-    constructor(options = {}) {
+    constructor(options = {}, helpModal) {
         this._bubbles = [];
         this._phases = [];
         this._currentPhaseIndex = 0;
         this._updateInstrumentContent = options.updateInstrumentContent;
+        this._helpModal = helpModal;
         this._Initialize();
         this._mainState = 'main';
     }
@@ -130,12 +132,17 @@ export default class SpaceScene {
     _LoadingScreen() {
         let loading = document.getElementById("loading-container");
 
-        setTimeout(function() {
+        setTimeout(() => {
             loading.style.opacity = 0;
-            setTimeout(function() {
+            setTimeout(() => {
                 loading.style.display = "none";
+                this._AfterLoadingScreen();
             }, 500);
         }, 2000);
+    }
+
+    _AfterLoadingScreen() {
+        this._helpModal._loadHelpModalContent();
     }
 
     // Setup camera, camera limits, and camera position
