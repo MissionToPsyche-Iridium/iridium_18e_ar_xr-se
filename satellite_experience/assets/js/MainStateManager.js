@@ -37,6 +37,27 @@ function getCurrentDateFormatted() {
     return `${year}-${month}-${day}`;
 }
 
+var missionCompletionTime = new Date("2029-Jun-16").getTime();
+var x = setInterval(function() {
+  var currentDate = new Date().getTime();
+  var distance = missionCompletionTime - currentDate;
+
+  var years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24)) - (years*365);
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("timeRemaining").innerHTML = "Mission Accomplished: " + years + "y " + days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("timeRemaining").innerHTML = "Mission Accomplished"
+  }
+}, 1000);
+
+
 export default class MainStateManager {
     /*
      * Public methods
