@@ -96,6 +96,16 @@ body {
     box-sizing: border-box;
 }
 
+#timeRemaining {
+  font-size: 16px;
+  font-family: "OCR A Std, monospace";
+  justify-self: center !important;
+  width: 90%;
+  background-color: rgba(32, 22, 47, 0.2);
+  padding: 10px;
+  margin-left: 5%;
+  margin-right: 5%;
+}
 
 .distanceHeading {
   font-size: 24px;
