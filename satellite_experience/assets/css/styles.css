@@ -83,7 +83,6 @@ body {
 .distance {
     position: relative;
     width: 80%;
-    max-width: 600px;
     justify-content: left;
     background-color: rgba(32, 22, 47, 0.8);
     border-radius: 10px;
