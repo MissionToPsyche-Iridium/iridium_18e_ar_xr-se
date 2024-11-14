@@ -151,14 +151,15 @@ export default class MainStateManager {
                     if (xhr.status === 200) {
                         this._mainContainer.innerHTML = xhr.responseText;
                         const distanceTag = this._mainContainer.querySelector("#distanceTag");
+                        const distanceLeft = this._mainContainer.querySelector("#distanceLeft");
+                        let distance1 = await findDistanceByDateFromFile(getCurrentDateFormatted());
+                        let units = " million km";
                         if (distanceTag) {
-                            let text = "Distance Traveled ";
-                            let distance1 = findDistanceByDateFromFile(getCurrentDateFormatted());
-                            let outOf = "/";
-                            let distance2 = findDistanceByDateFromFile("2029-Jun-16");
-                            let units = " Million Kilometers";
-                            text = text.concat(await distance1, outOf, await distance2, units);
-                            distanceTag.textContent = text;
+                            distanceTag.textContent = distance1 + units;
+                        }
+                        if (distanceLeft) {
+                            let distance2 = (await findDistanceByDateFromFile("2029-Jun-16")) - distance1;
+                            distanceLeft.textContent = distance2.toFixed(4) + units;
                         }
                         resolve(); // Resolve the promise when content is loaded
                     } else {
