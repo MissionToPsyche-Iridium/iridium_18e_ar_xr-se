@@ -453,28 +453,20 @@ export default class SpaceScene {
             const phases = [
                 { phaseLabel: 'Launch', phaseId: 'launch0', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
                 { phaseLabel: 'Launch', phaseId: 'launch1', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
-                { phaseLabel: 'Launch', phaseId: 'launch2', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
                 { phaseLabel: 'Gravity Assist', phaseId: 'assist0', phaseYear: 2026, phaseMonth: 3, phaseLineHeight: 'short' },
                 { phaseLabel: 'Gravity Assist', phaseId: 'assist1', phaseYear: 2026, phaseMonth: 3, phaseLineHeight: 'short' },
-                { phaseLabel: 'Gravity Assist', phaseId: 'assist2', phaseYear: 2026, phaseMonth: 3, phaseLineHeight: 'short' },
                 { phaseLabel: 'A', phaseId: 'a0', phaseYear: 2029, phaseMonth: 7, phaseLineHeight: 'short' },
                 { phaseLabel: 'A', phaseId: 'a1', phaseYear: 2029, phaseMonth: 7, phaseLineHeight: 'short' },
-                { phaseLabel: 'A', phaseId: 'a2', phaseYear: 2029, phaseMonth: 7, phaseLineHeight: 'short' },
                 { phaseLabel: 'B1', phaseId: 'b10', phaseYear: 2029, phaseMonth: 9, phaseLineHeight: 'long' },
                 { phaseLabel: 'B1', phaseId: 'b11', phaseYear: 2029, phaseMonth: 9, phaseLineHeight: 'long' },
-                { phaseLabel: 'B1', phaseId: 'b12', phaseYear: 2029, phaseMonth: 9, phaseLineHeight: 'long' },
                 { phaseLabel: 'D', phaseId: 'd0', phaseYear: 2030, phaseMonth: 4, phaseLineHeight: 'short' },
                 { phaseLabel: 'D', phaseId: 'd1', phaseYear: 2030, phaseMonth: 4, phaseLineHeight: 'short' },
-                { phaseLabel: 'D', phaseId: 'd2', phaseYear: 2030, phaseMonth: 4, phaseLineHeight: 'short' },
                 { phaseLabel: 'C', phaseId: 'c0', phaseYear: 2031, phaseMonth: 0, phaseLineHeight: 'short' },
                 { phaseLabel: 'C', phaseId: 'c1', phaseYear: 2031, phaseMonth: 0, phaseLineHeight: 'short' },
-                { phaseLabel: 'C', phaseId: 'c2', phaseYear: 2031, phaseMonth: 0, phaseLineHeight: 'short' },
                 { phaseLabel: 'B2', phaseId: 'b20', phaseYear: 2031, phaseMonth: 4, phaseLineHeight: 'long' },
                 { phaseLabel: 'B2', phaseId: 'b21', phaseYear: 2031, phaseMonth: 4, phaseLineHeight: 'long' },
-                { phaseLabel: 'B2', phaseId: 'b22', phaseYear: 2031, phaseMonth: 4, phaseLineHeight: 'long' },
                 { phaseLabel: 'End', phaseId: 'end0', phaseYear: 2031, phaseMonth: 10, phaseLineHeight: 'short' },
                 { phaseLabel: 'End', phaseId: 'end1', phaseYear: 2031, phaseMonth: 10, phaseLineHeight: 'short' },
-                { phaseLabel: 'End', phaseId: 'end2', phaseYear: 2031, phaseMonth: 10, phaseLineHeight: 'short' },
             ];
 
             // Create timeline with phases
