@@ -38,7 +38,6 @@ export default class HelpModal {
             if (this._helpModal && 
                 (event.target.id === 'help-modal-close'
                 || event.target.id)) {
-                console.log(event.target.id);
                 parent.playSound3();
                 this.close();
             }
