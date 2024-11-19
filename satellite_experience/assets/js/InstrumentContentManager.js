@@ -8,6 +8,7 @@ export default class InstrumentContentManager {
         this._spaceScene = spaceScene;
         this._mainContainer = mainContainer;
 
+
         this._initialize();
     }
 
@@ -70,7 +71,12 @@ export default class InstrumentContentManager {
     _initialize() {
         // Close button
         document.addEventListener('click', (event) => {
-            if (event.target.id === 'instrument-modal-close') {
+            const instrumentImageContent = document.getElementById('instrument-image');
+            if (instrumentImageContent!== null 
+                && instrumentImageContent.style.display === 'block'
+                && (!event.target.id
+                || event.target.id === 'instrument-modal-close')) {
+                console.log(event.target.id);
                 parent.playSound3();
                 this.close();
             }
