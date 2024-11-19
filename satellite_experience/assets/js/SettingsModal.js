@@ -35,7 +35,11 @@ export default class SettingsModal {
 
         // Close button
         document.addEventListener('click', (event) => {
-            if (event.target.id === 'settings-modal-close') {
+            const container = document.getElementById('modal-container-id');
+            if (this.settingsModal && 
+                (event.target.id === 'settings-modal-close'
+                || !container.contains(event.target))) {
+                console.log(event.target.id);
                 parent.playSound3();
                 this.close();
             }
