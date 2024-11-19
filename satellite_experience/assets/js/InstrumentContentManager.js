@@ -76,7 +76,6 @@ export default class InstrumentContentManager {
                 && instrumentImageContent.style.display === 'block'
                 && (!event.target.id
                 || event.target.id === 'instrument-modal-close')) {
-                console.log(event.target.id);
                 parent.playSound3();
                 this.close();
             }
