@@ -31,8 +31,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (savedVolume !== null) {
         // volumeSlider.value = savedVolume;
         parent.setVolume(savedVolume / 100);
-    } else {
-        parent.setVolume(volumeSlider.value / 100);
     }
     
     // Connect settings modal to help modal inactivity timer
