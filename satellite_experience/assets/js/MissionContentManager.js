@@ -75,6 +75,7 @@ export default class MissionContentManager {
                 if (phaseImage) {
                     phaseImageContent.style.display = 'none';
                 }
+                phaseVideoContent.style.display = 'block';
                 phaseVideoContent.width='320';
                 phaseVideoContent.height='240';
             } else {
