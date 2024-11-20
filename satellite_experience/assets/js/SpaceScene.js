@@ -168,7 +168,7 @@ export default class SpaceScene {
         // Create Sun Sprite
         const sunMaterial = new THREE.SpriteMaterial({
             map: sunTexture,
-            color: 0xFFFFFF,
+            color: 0xFFDF30,
             transparent: true,
             blending: THREE.AdditiveBlending,
         });
