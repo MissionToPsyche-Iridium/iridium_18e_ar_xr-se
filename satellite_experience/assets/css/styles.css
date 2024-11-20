@@ -214,6 +214,17 @@ body {
     margin-bottom: 10px;
 }
 
+#phase-video {
+    /*height: auto;*/
+    height: 100%;
+    max-height: 150px;
+    border-radius: 10px;
+    border: none;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+}
+
 #phase-image {
     height: 100%;
     max-height: 150px;
