@@ -143,7 +143,7 @@ export default class SpaceScene {
         const fov = 60;
         const aspect = window.innerWidth / window.innerHeight;
         const near = 1.0;
-        const far = 1000.0;
+        const far = 15000.0;
         this._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         this._camera.position.set(0, 0, 10); // Set initial camera position for better view of the satellite
     }
@@ -157,50 +157,75 @@ export default class SpaceScene {
     // Setup lighting for scene
     _Lighting() {
         // Ambient Light
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Increase intensity
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
         this._scene.add(ambientLight);
+    
+        // Create Sun Object
+        const sunGeometry = new THREE.SphereGeometry(50, 32, 32); // Sun size
+        const sunMaterial = new THREE.MeshBasicMaterial({
+            color: 0xFFFFA0, // Light yellow
+            emissive: 0xFFFFA0, // Light yellow
+            emissiveIntensity: 1,
+        });
+        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        sun.position.set(-5000, 3000, 5000); // Position sun far from origin
+        this._scene.add(sun);
+    
+        // Directional sunlight from sun
+        const sunLight = new THREE.DirectionalLight(0xFFFFFF, 3);
+        sunLight.position.copy(sun.position);
+        sunLight.castShadow = true;
+        sunLight.shadow.bias = -0.0001;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+    
+        // Sunlight shadow
+        const d = 50;
+        sunLight.shadow.camera.left = -d;
+        sunLight.shadow.camera.right = d;
+        sunLight.shadow.camera.top = d;
+        sunLight.shadow.camera.bottom = -d;
+        sunLight.shadow.camera.near = 1;
+        sunLight.shadow.camera.far = 2000;
+        sunLight.target.position.set(0, 0, 0);
 
-        // Directional Light
-        const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-        directionalLight.position.set(75, 100, 30);
-        directionalLight.castShadow = true;
-        directionalLight.shadow.bias = -0.001;
-        directionalLight.shadow.mapSize.set(2048, 2048);
-        this._scene.add(directionalLight);
-
-        // Point Light
-        const pointLight = new THREE.PointLight(0xffffff, 1.5, 100); // Bright point light
-        pointLight.position.set(0, 10, 10); // Position it above the scene
-        this._scene.add(pointLight);
+        // Add sun to scene
+        this._scene.add(sunLight.target);
+        this._scene.add(sunLight);
     }
 
     // Setup orbit controls around center
     _Controls() {
-        const controls = new OrbitControls(this._camera, this._threejs.domElement);
-        controls.target.set(0, 0, 0); // Center the controls on the satellite
+        this._controls = new OrbitControls(this._camera, this._threejs.domElement);
+        this._controls.target.set(0, 0, 0); // Center the controls on the satellite
 
-        controls.enableZoom = true;
-        controls.minDistance = 3;
-        controls.maxDistance = 1000;
-        controls.enablePan = false;
-        controls.screenSpacePanning = false;
+        this._controls.enableZoom = true;
+        this._controls.minDistance = 3;
+        this._controls.maxDistance = 1000;
+        this._controls.enablePan = false;
+        this._controls.screenSpacePanning = false;
 
-        controls.update();
+        // Rotate the camera
+        this._controls.autoRotate = true;
+        this._controls.autoRotateSpeed = 0.2;
+
+        this._controls.update();
     }
 
     // Load skybox textures and create skybox cube
     _Skybox() {
         const loader = new THREE.CubeTextureLoader();
         const texture = loader.load([
-            '../assets/images/skybox/space_ft.png',
-            '../assets/images/skybox/space_bk.png',
-            '../assets/images/skybox/space_up.png',
-            '../assets/images/skybox/space_dn.png',
-            '../assets/images/skybox/space_lf.png',
-            '../assets/images/skybox/space_rt.png',
+            '../assets/images/skybox/right.png',
+            '../assets/images/skybox/left.png',
+            '../assets/images/skybox/top.png',
+            '../assets/images/skybox/bottom.png',
+            '../assets/images/skybox/front.png',
+            '../assets/images/skybox/back.png',
         ], undefined, undefined, (error) => {
             console.error('Error loading skybox texture:', error);
         });
+
         this._scene.background = texture;
     }
 
@@ -449,6 +474,14 @@ export default class SpaceScene {
             this._scene.add(model); // Add model to scene
             this._model = model;
 
+            // Enable shadow casting
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = false;
+                }
+            });
+
             // Define phases for the timeline
             const phases = [
                 { phaseLabel: 'Launch', phaseId: 'launch', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
@@ -491,10 +524,13 @@ export default class SpaceScene {
         requestAnimationFrame(() => {
             this._RAF();
 
-            // Simple model rotation
-            if (this._model) {
-                this._model.rotation.y += 0.0002;
-            }
+            // // Simple model rotation
+            // if (this._model) {
+            //     this._model.rotation.y += 0.0002;
+            // }
+
+            // Update controls rotation
+            this._controls.update();
 
             // Render the scene and the labels
             this._threejs.render(this._scene, this._camera);
