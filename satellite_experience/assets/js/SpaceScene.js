@@ -5,6 +5,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/renderers/CSS2DRenderer.js';
+import { TextureLoader } from 'https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js';
 
 export default class SpaceScene {
     /*
@@ -160,37 +161,47 @@ export default class SpaceScene {
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
         this._scene.add(ambientLight);
     
-        // Create Sun Object
-        const sunGeometry = new THREE.SphereGeometry(50, 32, 32); // Sun size
-        const sunMaterial = new THREE.MeshBasicMaterial({
-            color: 0xFFFFA0, // Light yellow
-            emissive: 0xFFFFA0, // Light yellow
-            emissiveIntensity: 1,
-        });
-        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-        sun.position.set(-5000, 3000, 5000); // Position sun far from origin
-        this._scene.add(sun);
+        // Load the sun texture
+        const textureLoader = new THREE.TextureLoader();
+        const sunTexture = textureLoader.load('../assets/images/sun.png');
     
-        // Directional sunlight from sun
+        // Create Sun Sprite
+        const sunMaterial = new THREE.SpriteMaterial({
+            map: sunTexture,
+            color: 0xFFFFFF,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+        });
+    
+        const sunSprite = new THREE.Sprite(sunMaterial);
+        sunSprite.scale.set(500, 500, 1);
+        sunSprite.position.set(-5000, 3000, 5000); // Sun distance from origin
+        sunSprite.frustumCulled = false;
+        this._scene.add(sunSprite);
+    
+        // Add Directional Light at the sun's position
         const sunLight = new THREE.DirectionalLight(0xFFFFFF, 3);
-        sunLight.position.copy(sun.position);
+        sunLight.position.copy(sunSprite.position);
         sunLight.castShadow = true;
+    
+        // Configure shadow properties
         sunLight.shadow.bias = -0.0001;
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
     
-        // Sunlight shadow
-        const d = 50;
+        // Adjust the shadow camera to encompass the satellite
+        const d = 100;
         sunLight.shadow.camera.left = -d;
         sunLight.shadow.camera.right = d;
         sunLight.shadow.camera.top = d;
         sunLight.shadow.camera.bottom = -d;
         sunLight.shadow.camera.near = 1;
-        sunLight.shadow.camera.far = 2000;
+        sunLight.shadow.camera.far = 10000;
+    
+        // Set the target of the light to the origin
         sunLight.target.position.set(0, 0, 0);
-
-        // Add sun to scene
         this._scene.add(sunLight.target);
+    
         this._scene.add(sunLight);
     }
 
