@@ -100,6 +100,7 @@ body {
 .distanceInfo {
   background-color: rgba(255, 255, 255, 0.1);
   padding: 25px;
+  width: 95%;
   border-radius: 10px;
   align-self: center;
 }
