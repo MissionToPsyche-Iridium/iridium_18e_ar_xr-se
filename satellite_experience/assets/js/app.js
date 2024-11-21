@@ -32,7 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
         // volumeSlider.value = savedVolume;
         parent.setVolume(savedVolume / 100);
     } else {
-        parent.setVolume(volumeSlider.value / 100);
+        parent.setVolume(1);
     }
 
 
