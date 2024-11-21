@@ -547,6 +547,13 @@ input[type="range"]::-moz-range-thumb {
   outline: none;
 }
 
+.about-link {
+  position: relative;
+  top: 0px;
+  right: 0px;
+  color: white;
+}
+
 .psyche-satellite-img img {
   margin-top: 25px;
   width: 100%;
