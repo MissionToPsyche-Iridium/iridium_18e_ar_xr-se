@@ -31,9 +31,11 @@ export default class SpaceScene {
         // Instrument State
         if (newMainState === 'instrument') {
             this._showBubbles();
+            this._showInstructions();
         } else {
             this.deselectBubbles();
             this._hideBubbles();
+            this._hideInstructions();
         }
 
         // Mission State
@@ -377,6 +379,30 @@ export default class SpaceScene {
         timelineGroup.add(triangle);
     }
 
+    _createInstructions() {
+        // Create instructions group
+        const instructionsGroup = new THREE.Group();
+        instructionsGroup.visible = false;
+        this._instructionsGroup = instructionsGroup;
+        this._camera.add(instructionsGroup);
+        instructionsGroup.position.set(-1.1, 22, -40);
+
+        // Create instructions label
+        const instructionsLabelDiv = document.createElement('div');
+        instructionsLabelDiv.className = 'label';
+        instructionsLabelDiv.textContent = 'Click on a circle to interact with that instrument.';
+        instructionsLabelDiv.style.color = 'white';
+        instructionsLabelDiv.style.opacity = '0.5';
+        //instructionsLabelDiv.style.fontSize = '12px';
+        instructionsLabelDiv.style.fontSize = '14px';
+        instructionsLabelDiv.style.pointerEvents = 'none';
+
+        const instructionsLabel = new CSS2DObject(instructionsLabelDiv);
+        instructionsLabel.position.set(1.05, -0.8, 0);
+        instructionsLabel.visible = false;
+        instructionsGroup.add(instructionsLabel);
+    }
+
     // Create a bubble, bubble label, and bubble progress label
     _createBubble(model, labelText, bubbleId, x, y, z) {
         // Create bubble
@@ -470,6 +496,7 @@ export default class SpaceScene {
 
             // Create timeline with phases
             this._createTimeline(phases);
+            this._createInstructions();
 
             // Create bubble and push to bubble list
             this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -3, 3.5));
@@ -477,6 +504,7 @@ export default class SpaceScene {
             this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -0.5, -2.5, -0.6));
             this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', -0.5, 3.5, -0.6));
             this._bubbles.push(this._createBubble(model, 'Magnetometer', 'detection', -4.75, -3, 1));
+            //this._bubbles.push(this._createBubble(model, 'Click on a circle to interact with that instrument', '', 0, 20, 0));
 
             // Store clickable objects
             this._clickableObjects = this._bubbles.slice();
@@ -546,6 +574,28 @@ export default class SpaceScene {
         if (this._timelineGroup) {
             this._timelineGroup.visible = false;
             this._timelineGroup.traverse((child) => {
+                if (child instanceof CSS2DObject) {
+                    child.visible = false;
+                }
+            });
+        }
+    }
+
+    _showInstructions() {
+        if (this._instructionsGroup) {
+            this._instructionsGroup.visible = true;
+            this._instructionsGroup.traverse((child) => {
+                if (child instanceof CSS2DObject) {
+                    child.visible = true;
+                }
+            });
+        }
+    }
+
+    _hideInstructions() {
+        if (this._instructionsGroup) {
+            this._instructionsGroup.visible = false;
+            this._instructionsGroup.traverse((child) => {
                 if (child instanceof CSS2DObject) {
                     child.visible = false;
                 }
