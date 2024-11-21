@@ -83,7 +83,9 @@ body {
 .distance {
   position: relative;
   width: 80%;
-  justify-content: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: rgba(32, 22, 47, 0.8);
   border-radius: 10px;
   font-size: 16px;
@@ -94,6 +96,12 @@ body {
   margin-bottom: 20px;
   z-index: 5;
   box-sizing: border-box;
+}
+.distanceInfo {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  border-radius: 10px;
+  align-self: center;
 }
 
 #timeRemaining {
@@ -108,7 +116,7 @@ body {
 }
 
 .distanceHeading {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   font-weight: bold;
 }
