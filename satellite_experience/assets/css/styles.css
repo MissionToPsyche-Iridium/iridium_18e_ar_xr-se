@@ -261,6 +261,33 @@ body {
   background-color: rgba(32, 22, 47, 1);
 }
 
+#instrument-transition-button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 600px;
+  margin: 10px auto 0;
+}
+
+#left-instrument-transition-button,
+#right-instrument-transition-button {
+  width: 48%;
+  height: 50px;
+  background-color: rgba(32, 22, 47, 0.8);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  z-index: 5;
+}
+
+#left-instrument-transition-button:hover,
+#right-instrument-transition-button:hover {
+  background-color: rgba(32, 22, 47, 1);
+}
+
 /* Scene Styling */
 #scene {
   position: absolute;
