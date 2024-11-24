@@ -39,7 +39,7 @@ function loop(audioBuffer, startSecond, durationMilliseconds) {
 	}, durationMilliseconds);
 }
 
-function playFirstSound(audioBuffer, time) {
+function playLaunchSound(audioBuffer, time) {
 	const soundSource = audioContext.createBufferSource();
 	soundSource.buffer = audioBuffer;
 	soundSource.connect(gainNode);
@@ -50,26 +50,27 @@ function playFirstSound(audioBuffer, time) {
 }
 
 function initializeSounds() {
-	audioContext = new (window.AudioContext || window.webkitAudioContext)();
+	audioContext = new AudioContext();
+	//audioContext = new (window.AudioContext || window.webkitAudioContext)();
 	gainNode = audioContext.createGain();
 	gainNode.connect(audioContext.destination);
 
 	setupSounds(audioFilePaths).then((response) => {
 		sounds = response;
-		playFirstSound(sounds[0], 0);
+		playLaunchSound(sounds[0], 0);
 	})
 }
 
 // Play specific sounds
-function playSound1() {
+function playOpenSound() {
 	playSound(sounds[1], 0);
 }
 
-function playSound2() {
+function playSelectSound() {
 	playSound(sounds[2], 0);
 }
 
-function playSound3() {
+function playCloseSound() {
 	playSound(sounds[3], 0);
 }
 
@@ -82,6 +83,6 @@ function setVolume(level) {
 
 // Expose volume control functions globally
 window.setVolume = setVolume;
-window.playSound1 = playSound1;
-window.playSound2 = playSound2;
-window.playSound3 = playSound3;
+window.playOpenSound = playOpenSound;
+window.playSelectSound = playSelectSound;
+window.playCloseSound = playCloseSound;

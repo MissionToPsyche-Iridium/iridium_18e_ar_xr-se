@@ -1,6 +1,6 @@
 
 function onClick() {
-    audioContext = new AudioContext();
+    //audioContext = new AudioContext();
     initializeSounds();
 
     let iframe = document.createElement('iframe');

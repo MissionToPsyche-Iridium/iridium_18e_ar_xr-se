@@ -32,9 +32,11 @@ export default class SpaceScene {
         // Instrument State
         if (newMainState === 'instrument') {
             this._showBubbles();
+            this._showInstructions();
         } else {
             this.deselectBubbles();
             this._hideBubbles();
+            this._hideInstructions();
         }
 
         // Mission State
@@ -413,6 +415,30 @@ export default class SpaceScene {
         timelineGroup.add(triangle);
     }
 
+    _createInstructions() {
+        // Create instructions group
+        const instructionsGroup = new THREE.Group();
+        instructionsGroup.visible = false;
+        this._instructionsGroup = instructionsGroup;
+        this._camera.add(instructionsGroup);
+        instructionsGroup.position.set(-1.1, 22, -40);
+
+        // Create instructions label
+        const instructionsLabelDiv = document.createElement('div');
+        instructionsLabelDiv.className = 'label';
+        instructionsLabelDiv.textContent = 'Click on a circle to interact with that instrument.';
+        instructionsLabelDiv.style.color = 'white';
+        instructionsLabelDiv.style.opacity = '0.5';
+        //instructionsLabelDiv.style.fontSize = '12px';
+        instructionsLabelDiv.style.fontSize = '14px';
+        instructionsLabelDiv.style.pointerEvents = 'none';
+
+        const instructionsLabel = new CSS2DObject(instructionsLabelDiv);
+        instructionsLabel.position.set(1.05, -0.8, 0);
+        instructionsLabel.visible = false;
+        instructionsGroup.add(instructionsLabel);
+    }
+
     // Create a bubble, bubble label, and bubble progress label
     _createBubble(model, labelText, bubbleId, x, y, z) {
         // Create bubble
@@ -502,18 +528,27 @@ export default class SpaceScene {
 
             // Define phases for the timeline
             const phases = [
-                { phaseLabel: 'Launch', phaseId: 'launch', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
-                { phaseLabel: 'Gravity Assist', phaseId: 'assist', phaseYear: 2026, phaseMonth: 3, phaseLineHeight: 'short' },
-                { phaseLabel: 'A', phaseId: 'a', phaseYear: 2029, phaseMonth: 7, phaseLineHeight: 'short' },
-                { phaseLabel: 'B1', phaseId: 'b1', phaseYear: 2029, phaseMonth: 9, phaseLineHeight: 'long' },
-                { phaseLabel: 'D', phaseId: 'd', phaseYear: 2030, phaseMonth: 4, phaseLineHeight: 'short' },
-                { phaseLabel: 'C', phaseId: 'c', phaseYear: 2031, phaseMonth: 0, phaseLineHeight: 'short' },
-                { phaseLabel: 'B2', phaseId: 'b2', phaseYear: 2031, phaseMonth: 4, phaseLineHeight: 'long' },
-                { phaseLabel: 'End', phaseId: 'end', phaseYear: 2031, phaseMonth: 10, phaseLineHeight: 'short' },
+                { phaseLabel: 'Launch', phaseId: 'launch0', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
+                { phaseLabel: 'Launch', phaseId: 'launch1', phaseYear: 2023, phaseMonth: 9, phaseLineHeight: 'long' },
+                { phaseLabel: 'Gravity Assist', phaseId: 'assist0', phaseYear: 2026, phaseMonth: 3, phaseLineHeight: 'short' },
+                { phaseLabel: 'Gravity Assist', phaseId: 'assist1', phaseYear: 2026, phaseMonth: 3, phaseLineHeight: 'short' },
+                { phaseLabel: 'A', phaseId: 'a0', phaseYear: 2029, phaseMonth: 7, phaseLineHeight: 'short' },
+                { phaseLabel: 'A', phaseId: 'a1', phaseYear: 2029, phaseMonth: 7, phaseLineHeight: 'short' },
+                { phaseLabel: 'B1', phaseId: 'b10', phaseYear: 2029, phaseMonth: 9, phaseLineHeight: 'long' },
+                { phaseLabel: 'B1', phaseId: 'b11', phaseYear: 2029, phaseMonth: 9, phaseLineHeight: 'long' },
+                { phaseLabel: 'D', phaseId: 'd0', phaseYear: 2030, phaseMonth: 4, phaseLineHeight: 'short' },
+                { phaseLabel: 'D', phaseId: 'd1', phaseYear: 2030, phaseMonth: 4, phaseLineHeight: 'short' },
+                { phaseLabel: 'C', phaseId: 'c0', phaseYear: 2031, phaseMonth: 0, phaseLineHeight: 'short' },
+                { phaseLabel: 'C', phaseId: 'c1', phaseYear: 2031, phaseMonth: 0, phaseLineHeight: 'short' },
+                { phaseLabel: 'B2', phaseId: 'b20', phaseYear: 2031, phaseMonth: 4, phaseLineHeight: 'long' },
+                { phaseLabel: 'B2', phaseId: 'b21', phaseYear: 2031, phaseMonth: 4, phaseLineHeight: 'long' },
+                { phaseLabel: 'End', phaseId: 'end0', phaseYear: 2031, phaseMonth: 10, phaseLineHeight: 'short' },
+                { phaseLabel: 'End', phaseId: 'end1', phaseYear: 2031, phaseMonth: 10, phaseLineHeight: 'short' },
             ];
 
             // Create timeline with phases
             this._createTimeline(phases);
+            this._createInstructions();
 
             // Create bubble and push to bubble list
             this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -3, 3.5));
@@ -600,6 +635,28 @@ export default class SpaceScene {
         }
     }
 
+    _showInstructions() {
+        if (this._instructionsGroup) {
+            this._instructionsGroup.visible = true;
+            this._instructionsGroup.traverse((child) => {
+                if (child instanceof CSS2DObject) {
+                    child.visible = true;
+                }
+            });
+        }
+    }
+
+    _hideInstructions() {
+        if (this._instructionsGroup) {
+            this._instructionsGroup.visible = false;
+            this._instructionsGroup.traverse((child) => {
+                if (child instanceof CSS2DObject) {
+                    child.visible = false;
+                }
+            });
+        }
+    }
+
     _updatePhaseSelection() {
         this._phases.forEach((phase, index) => {
             const isSelected = index === this._currentPhaseIndex;
@@ -625,7 +682,7 @@ export default class SpaceScene {
 
             // If a bubble was selected
             if (selectedBubble) {
-                parent.playSound1();
+                parent.playOpenSound();
                 // Mark the selected bubble as viewed
                 selectedBubble.bubbleProgressLabel.element.textContent = '(viewed)';
 
