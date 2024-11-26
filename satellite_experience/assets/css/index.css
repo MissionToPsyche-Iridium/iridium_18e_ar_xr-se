@@ -113,25 +113,32 @@ body {
   font-size: 20px;
   color: white;
   font-weight: bold;
-  background-color: #f9a000;
+  background: linear-gradient(to right, #f9a000, #f98400);
   border: 2px 50% black;
-  border-radius: 16px;
+  border-radius: 20px;
   height: 50px;
   width: 75%;
   cursor: pointer;
   transition:
     background-color 0.3s,
     transform 0.1s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 #launch-button:active {
   background: rgba(255, 255, 255, 0.5);
+  color: #f9a000;
   transform: scale(0.95);
   border: none;
 }
 
 #launch-button:focus {
-  outline: none;
+  outline: 3px solid #80bdff;
+  outline-offset: 2px;
+}
+
+#launch-button:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);
 }
 
 .psyche-satellite-img img {
@@ -166,3 +173,4 @@ body {
 .psyche-info-line {
   margin: 10px 0;
 }
+
