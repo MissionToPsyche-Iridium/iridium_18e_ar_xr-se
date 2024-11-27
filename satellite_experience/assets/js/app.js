@@ -10,18 +10,18 @@ window.addEventListener("DOMContentLoaded", () => {
     const mainContainer = document.getElementById('main-container');
     const upperButton = document.getElementById('upper-button');
     const lowerButton = document.getElementById('lower-button');
-    
 
 
+
+    const helpModal = new HelpModal();
     // Initialize SpaceScene
     let spaceScene = new SpaceScene({
         updateInstrumentContent: (id) => instrumentContentManager.updateInstrumentContent(id),
-    });
+    }, helpModal);
 
     // Initialize UI
     const instrumentContentManager = new InstrumentContentManager(spaceScene, mainContainer);
     const missionContentManager = new MissionContentManager(spaceScene, mainContainer);
-    const helpModal = new HelpModal();
     const settingsModal = new SettingsModal();
     const mainStateManager = new MainStateManager(spaceScene, mainContainer, upperButton, lowerButton, missionContentManager);
 
@@ -32,9 +32,10 @@ window.addEventListener("DOMContentLoaded", () => {
         // volumeSlider.value = savedVolume;
         parent.setVolume(savedVolume / 100);
     } else {
-        parent.setVolume(volumeSlider.value / 100);
+        parent.setVolume(1);
     }
-    
+
+
     // Connect settings modal to help modal inactivity timer
     settingsModal.resetInactivityTimer = () => helpModal._setupInactivityTimer();
 });

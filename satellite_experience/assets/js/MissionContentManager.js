@@ -37,20 +37,26 @@ export default class MissionContentManager {
         }
 
         const phaseImageMap = {
-            'launch': '../assets/images/spectrometers.png',
+            'launch': '../assets/images/psyche_launch.jpg',
         };
+
+        const phaseVideoMap = {
+            'launch': 'https://www.youtube.com/embed/AwCiHscmEQE?si=tpt9JAahRNdKdGyZ',
+        }
 
         const phaseTitle = phaseTitleMap[phaseId] || 'No Title';
         const phaseDescription = phaseDescriptionMap[phaseId] || 'No description.';
         const phaseImage = phaseImageMap[phaseId] || '';
+        const phaseVideo = phaseVideoMap[phaseId] || '';
 
         // Content
         const phaseTitleContent = document.getElementById('phase-title');
         const phaseDescriptionContent = document.getElementById('phase-description');
         const phaseImageContent = document.getElementById('phase-image');
+        const phaseVideoContent = document.getElementById('phase-video');
 
         // Update content
-        if (phaseTitleContent && phaseDescriptionContent && phaseImageContent) {
+        if (phaseTitleContent && phaseDescriptionContent && phaseVideoContent  && phaseImageContent) {
             phaseTitleContent.textContent = phaseTitle;
             phaseDescriptionContent.textContent = phaseDescription;
 
@@ -62,6 +68,21 @@ export default class MissionContentManager {
                 phaseImageContent.src = '';
                 phaseImageContent.alt = '';
                 phaseImageContent.style.display = 'none';
+            }
+
+            if (phaseVideo && phaseTitle === "Launch") {
+                phaseVideoContent.src = phaseVideo;
+                if (phaseImage) {
+                    phaseImageContent.style.display = 'none';
+                }
+                phaseVideoContent.style.display = 'block';
+                phaseVideoContent.width='320';
+                phaseVideoContent.height='240';
+            } else {
+                phaseVideoContent.src = '';
+                phaseVideoContent.style.display = 'none';
+                phaseVideoContent.width='';
+                phaseVideoContent.height='';
             }
 
             this._mainContainer.style.display = 'block';

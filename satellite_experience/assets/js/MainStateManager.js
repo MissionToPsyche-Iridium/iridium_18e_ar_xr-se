@@ -37,6 +37,27 @@ function getCurrentDateFormatted() {
     return `${year}-${month}-${day}`;
 }
 
+var missionCompletionTime = new Date("2029-Jun-16").getTime();
+var x = setInterval(function() {
+  var currentDate = new Date().getTime();
+  var distance = missionCompletionTime - currentDate;
+
+  var years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24)) - (years*365);
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("timeRemaining").innerHTML = "Mission Accomplished: " + years + "y " + days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("timeRemaining").innerHTML = "Mission Accomplished"
+  }
+}, 1000);
+
+
 export default class MainStateManager {
     /*
      * Public methods
@@ -151,14 +172,15 @@ export default class MainStateManager {
                     if (xhr.status === 200) {
                         this._mainContainer.innerHTML = xhr.responseText;
                         const distanceTag = this._mainContainer.querySelector("#distanceTag");
+                        const distanceLeft = this._mainContainer.querySelector("#distanceLeft");
+                        let distance1 = await findDistanceByDateFromFile(getCurrentDateFormatted());
+                        let units = " million km";
                         if (distanceTag) {
-                            let text = "Distance Traveled ";
-                            let distance1 = findDistanceByDateFromFile(getCurrentDateFormatted());
-                            let outOf = "/";
-                            let distance2 = findDistanceByDateFromFile("2029-Jun-16");
-                            let units = " Million Kilometers";
-                            text = text.concat(await distance1, outOf, await distance2, units);
-                            distanceTag.textContent = text;
+                            distanceTag.textContent = distance1 + units;
+                        }
+                        if (distanceLeft) {
+                            let distance2 = (await findDistanceByDateFromFile("2029-Jun-16")) - distance1;
+                            distanceLeft.textContent = distance2.toFixed(4) + units;
                         }
                         resolve(); // Resolve the promise when content is loaded
                     } else {
