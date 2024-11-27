@@ -46,29 +46,30 @@ body {
 /* Navigation Buttons Styling */
 .navigation-button-container {
   position: absolute;
-  bottom: 20px;
+  bottom: 2%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 80%;
+  flex-direction: row;
+  align-items: baseline;
+  width: 95%;
   max-width: 800px;
   z-index: 5;
+  justify-content: space-around;
 }
 
 .navigation-button {
-  width: 50%;
+  width: 45%;
   max-width: 300px;
-  height: 60px;
+  height: 50px;
   background-color: rgba(32, 22, 47, 0.8);
   color: #fff;
   border: none;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .navigation-button:last-child {
@@ -86,7 +87,7 @@ body {
   justify-content: left;
   background-color: rgba(32, 22, 47, 0.8);
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 14px;
   font-family: "OCR A Std, monospace";
   padding: 20px;
   margin-left: 10px;
@@ -108,7 +109,7 @@ body {
 }
 
 .distanceHeading {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -170,17 +171,18 @@ body {
 /* Mission Content Styling */
 #mission-content {
   position: relative;
-  width: 80%;
+  width: 90%;
   max-width: 600px;
   background-color: rgba(32, 22, 47, 0.8);
   border-radius: 10px;
   color: #fff;
   font-size: 16px;
-  padding: 20px;
+  padding: 15px;
   margin: 0 auto;
   margin-top: 150px;
   z-index: 5;
   box-sizing: border-box;
+  bottom: 7%;
 }
 
 #phase-title-container {
@@ -237,20 +239,20 @@ body {
 #phase-transition-button-container {
   display: flex;
   justify-content: space-between;
-  width: 80%;
+  width: 100%;
   max-width: 600px;
   margin: 10px auto 0;
 }
 
 #left-phase-transition-button,
 #right-phase-transition-button {
-  width: 48%;
-  height: 50px;
+  width: 42%;
+  height: 40px;
   background-color: rgba(32, 22, 47, 0.8);
   color: #fff;
   border: none;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   text-align: center;
   z-index: 5;
