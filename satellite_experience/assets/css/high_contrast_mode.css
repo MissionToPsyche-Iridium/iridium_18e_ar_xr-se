@@ -34,34 +34,42 @@ body {
   box-sizing: border-box;
 }
 
+#distanceFields {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+}
+
 /* Navigation Buttons Styling */
 .navigation-button-container {
   position: absolute;
-  bottom: 20px;
+  bottom: 2%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 80%;
+  flex-direction: row;
+  align-items: baseline;
+  width: 95%;
   max-width: 800px;
   z-index: 5;
+  justify-content: space-around;
 }
 
 .navigation-button {
-  width: 50%;
+  width: 45%;
   max-width: 300px;
-  height: 60px;
+  height: 50px;
   background-color: rgba(32, 22, 47, 0.8);
   color: #fff;
   border: 1px !important;
   border-style: solid !important;
   border-color: #ffffff !important;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .navigation-button:last-child {
@@ -73,21 +81,43 @@ body {
 }
 
 /* Instrument Content Styling */
-#distanceTag {
+.distance {
   position: relative;
   width: 80%;
-  max-width: 600px;
+  justify-content: left;
   background-color: rgba(32, 22, 47, 0.8);
-  border: 1px;
-  border-style: solid;
-  border-color: #ffffff;
   border-radius: 10px;
-  color: #fff;
-  font-size: 16px;
+  font-size: 14px;
+  font-family: "OCR A Std, monospace";
   padding: 20px;
-  margin: 0 auto;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
   z-index: 5;
   box-sizing: border-box;
+  border: 1px !important;
+  border-style: solid !important;
+  border-color: #ffffff !important;
+}
+
+#timeRemaining {
+  font-size: 16px;
+  font-family: "OCR A Std, monospace";
+  justify-self: center !important;
+  width: 90%;
+  background-color: rgba(32, 22, 47, 0.2);
+  padding: 10px;
+  margin-left: 5%;
+  margin-right: 5%;
+  border: 1px !important;
+  border-style: solid !important;
+  border-color: #ffffff !important;
+}
+
+.distanceHeading {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 #instrument-content {
@@ -153,7 +183,7 @@ body {
 /* Mission Content Styling */
 #mission-content {
   position: relative;
-  width: 80%;
+  width: 90%;
   max-width: 600px;
   background-color: rgba(32, 22, 47, 0.8);
   border: 1px;
@@ -162,11 +192,12 @@ body {
   border-radius: 10px;
   color: #fff;
   font-size: 16px;
-  padding: 20px;
+  padding: 15px;
   margin: 0 auto;
   margin-top: 150px;
   z-index: 5;
   box-sizing: border-box;
+  bottom:7%;
 }
 
 #phase-title-container {
@@ -215,6 +246,35 @@ body {
 #phase-transition-button-container {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto 0;
+}
+
+#left-phase-transition-button,
+#right-phase-transition-button {
+  width: 42%;
+  height: 40px;
+  background-color: rgba(32, 22, 47, 0.8);
+  color: #fff;
+  border: 1px !important;
+  border-style: solid !important;
+  border-color: #ffffff !important;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  z-index: 5;
+}
+
+#left-phase-transition-button:hover,
+#right-phase-transition-button:hover {
+  background-color: rgba(32, 22, 47, 1);
+}
+
+#instrument-transition-button-container {
+  display: flex;
+  justify-content: space-between;
   width: 80%;
   max-width: 600px;
   margin: 10px auto 0;
@@ -223,8 +283,8 @@ body {
   border-color: #ffffff !important;
 }
 
-#left-phase-transition-button,
-#right-phase-transition-button {
+#left-instrument-transition-button,
+#right-instrument-transition-button {
   width: 48%;
   height: 50px;
   background-color: rgba(32, 22, 47, 0.8);
@@ -239,8 +299,8 @@ body {
   z-index: 5;
 }
 
-#left-phase-transition-button:hover,
-#right-phase-transition-button:hover {
+#left-instrument-transition-button:hover,
+#right-instrument-transition-button:hover {
   background-color: rgba(32, 22, 47, 1);
 }
 
@@ -572,8 +632,8 @@ input[type="range"]::-moz-range-thumb {
   width: 75%;
   cursor: pointer;
   transition:
-          background-color 0.3s,
-          transform 0.1s;
+    background-color 0.3s,
+    transform 0.1s;
 }
 
 #launch-button:active {
@@ -602,8 +662,8 @@ input[type="range"]::-moz-range-thumb {
   opacity: 0;
   transform: translateY(20px);
   transition:
-          opacity 1s ease-out,
-          transform 1s ease-out;
+    opacity 1s ease-out,
+    transform 1s ease-out;
 }
 
 .fade-in-section.visible {
