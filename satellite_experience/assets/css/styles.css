@@ -499,9 +499,6 @@ input[type="range"]::-moz-range-thumb {
   /*  slider progress  */
   box-shadow: -407px 0 0 400px #f9a001;
 }
-
-<<<<<<< HEAD
-=======
 /* End of Settings Page/Modal */
 
 /* Launch Page */
@@ -690,7 +687,6 @@ input[type="range"]::-moz-range-thumb {
   margin: 10px 0;
 }
 
->>>>>>> US187Task212
 /* Loading container styling */
 #loading-container {
   position: fixed;
