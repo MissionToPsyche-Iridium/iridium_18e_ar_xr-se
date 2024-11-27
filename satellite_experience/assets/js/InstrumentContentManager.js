@@ -7,7 +7,8 @@ export default class InstrumentContentManager {
     constructor(spaceScene, mainContainer) {
         this._spaceScene = spaceScene;
         this._mainContainer = mainContainer;
-
+        this._currentBubble = 0;
+        this._instrumentIds = ['spectrometer', 'antenna', 'imager', 'communication', 'detection'];
 
         this._initialize();
     }
@@ -24,6 +25,11 @@ export default class InstrumentContentManager {
         const instrumentTitleMap = {};
         const instrumentDescriptionMap = {};
         const instrumentImageMap = {};
+
+        console.log("here");
+        console.log(bubbleId);
+
+        this._currentBubble = this._instrumentIds.indexOf(bubbleId);
 
         fetch('../assets/data/instruments.json')
             .then(response => response.json())
@@ -72,12 +78,38 @@ export default class InstrumentContentManager {
         // Close button
         document.addEventListener('click', (event) => {
             const instrumentImageContent = document.getElementById('instrument-image');
-            if (instrumentImageContent!== null 
+            if (instrumentImageContent !== null
                 && instrumentImageContent.style.display === 'block'
                 && (!event.target.id
-                || event.target.id === 'instrument-modal-close')) {
+                    || event.target.id === 'instrument-modal-close')) {
                 parent.playSound3();
                 this.close();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (event.target.id === 'left-instrument-transition-button') {
+                parent.playSound2();
+                this._currentBubble -= 1;
+                if (this._currentBubble > 5) {
+                    this._currentBubble = 0;
+                } else if (this._currentBubble < 0) {
+                    this._currentBubble = 4;
+                }
+                this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (event.target.id === 'right-instrument-transition-button') {
+                parent.playSound2();
+                this._currentBubble += 1;
+                if (this._currentBubble > 4) {
+                    this._currentBubble = 0;
+                } else if (this._currentBubble < 0) {
+                    this._currentBubble = 4;
+                }
+                this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
             }
         });
     }
