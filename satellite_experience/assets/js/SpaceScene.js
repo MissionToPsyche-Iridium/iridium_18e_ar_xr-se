@@ -49,6 +49,7 @@ export default class SpaceScene {
 
     // Unhighlight bubbles
     deselectBubbles() {
+        /*
         if (this._bubbles) {
             this._bubbles.forEach(bubble => {
                 const bubbleMaterial = bubble.material;
@@ -60,6 +61,7 @@ export default class SpaceScene {
                 bubbleProgressLabelDiv.style.opacity = '0.5';
             });
         }
+        */
     }
 
     // Go to next phase
@@ -436,7 +438,7 @@ export default class SpaceScene {
         const bubbleMaterial = new THREE.SpriteMaterial({
             map: bubbleTexture,
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.8,
         });
         const bubble = new THREE.Sprite(bubbleMaterial);
         bubble.scale.set(2, 2, 2); // Set bubble scale
@@ -450,7 +452,7 @@ export default class SpaceScene {
         bubbleLabelDiv.className = 'label';
         bubbleLabelDiv.textContent = labelText;
         bubbleLabelDiv.style.color = 'white';
-        bubbleLabelDiv.style.opacity = '0.5';
+        bubbleLabelDiv.style.opacity = '0.8';
         bubbleLabelDiv.style.fontSize = '14px';
         bubbleLabelDiv.style.maxWidth = '200px';
         bubbleLabelDiv.style.textAlign = 'center';
@@ -465,7 +467,7 @@ export default class SpaceScene {
         bubbleProgressLabelDiv.className = 'label';
         bubbleProgressLabelDiv.textContent = ''; // Initially empty
         bubbleProgressLabelDiv.style.color = 'white';
-        bubbleProgressLabelDiv.style.opacity = '0.5';
+        bubbleProgressLabelDiv.style.opacity = '0.8';
         bubbleProgressLabelDiv.style.fontSize = '12px';
         bubbleProgressLabelDiv.style.maxWidth = '200px';
         bubbleProgressLabelDiv.style.textAlign = 'center';
@@ -627,14 +629,16 @@ export default class SpaceScene {
             if (selectedBubble) {
                 parent.playSound1();
                 // Mark the selected bubble as viewed
-                selectedBubble.bubbleProgressLabel.element.textContent = '(viewed)';
+                selectedBubble.material.opacity = 0.2;
+                selectedBubble.bubbleLabel.element.style.opacity = '0.2';
+                selectedBubble.bubbleProgressLabel.element.style.opacity = '0.2';
 
                 // Deselect other bubbles
                 this._bubbles.forEach(bubble => {
                     const bubbleMaterial = bubble.material;
                     const bubbleLabelDiv = bubble.bubbleLabel.element;
                     const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
-
+                    /*
                     // Selected bubble
                     if (bubble === selectedBubble) {
                         bubbleMaterial.opacity = 0.9;
@@ -643,10 +647,11 @@ export default class SpaceScene {
 
                         // Unselected bubbles
                     } else {
-                        bubbleMaterial.opacity = 0.5;
+                        bubbleMaterial.opacity = 0.3;
                         bubbleLabelDiv.style.opacity = '0.5';
                         bubbleProgressLabelDiv.style.opacity = '0.5';
                     }
+                    */
                 });
 
                 // Update instrument content based on selected bubble

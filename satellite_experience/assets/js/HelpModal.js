@@ -36,7 +36,7 @@ export default class HelpModal {
         // Close button or offscreen
         document.addEventListener('click', (event) => {
             const container = document.getElementById('help-modal-container-id');
-            if (this._helpModal && 
+            if (container !== null && this._helpModal && 
                 (event.target.id === 'help-modal-close'
                 || !container.contains(event.target))) {
                 parent.playSound3();
