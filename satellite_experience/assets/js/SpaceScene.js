@@ -64,6 +64,20 @@ export default class SpaceScene {
         */
     }
 
+    click(bubbleId) {
+        this._bubbles.forEach(bubble => {
+                const bubbleMaterial = bubble.material;
+                const bubbleLabelDiv = bubble.bubbleLabel.element;
+                const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
+
+                if(bubble.bubbleId===bubbleId) {
+                    bubbleMaterial.opacity = 0.2;
+                    bubbleLabelDiv.style.opacity = '0.2';
+                    bubbleProgressLabelDiv.style.opacity = '0.2';
+                }
+            });
+    }
+
     // Go to next phase
     prevPhase() {
         this._currentPhaseIndex--;

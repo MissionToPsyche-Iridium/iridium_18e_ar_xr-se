@@ -25,8 +25,9 @@ export default class InstrumentContentManager {
         const instrumentTitleMap = {};
         const instrumentDescriptionMap = {};
         const instrumentImageMap = {};
-        
+
         this._currentBubble = this._instrumentIds.indexOf(bubbleId);
+        this._spaceScene.click(bubbleId);
 
         fetch('../assets/data/instruments.json')
             .then(response => response.json())
