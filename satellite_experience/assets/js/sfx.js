@@ -1,7 +1,7 @@
 let audioContext;
 let gainNode;
 let sounds;
-const audioFilePaths = ["../audio/launch.mp3",
+const audioFilePaths = ["../audio/dunes.mp3",
 						"../audio/open.mp3",
 						"../audio/select.mp3",
 						"../audio/close.mp3"]
@@ -45,8 +45,8 @@ function playFirstSound(audioBuffer, time) {
 	soundSource.connect(gainNode);
 	soundSource.start(time);
 	setTimeout(function() {
-		loop(audioBuffer, 10, 62000);
-	}, 72000);
+		loop(audioBuffer, 10, 324000);
+	}, 334000);
 }
 
 function initializeSounds() {
