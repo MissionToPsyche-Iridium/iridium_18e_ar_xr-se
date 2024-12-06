@@ -198,7 +198,7 @@ export default class SpaceScene {
     
         const sunSprite = new THREE.Sprite(sunMaterial);
         sunSprite.scale.set(500, 500, 1);
-        sunSprite.position.set(-5000, 3000, 5000); // Sun distance from origin
+        sunSprite.position.set(-5000, 3000, 1000); // Sun distance from origin
         sunSprite.frustumCulled = false;
         this._scene.add(sunSprite);
     
@@ -232,17 +232,31 @@ export default class SpaceScene {
     _Controls() {
         this._controls = new OrbitControls(this._camera, this._threejs.domElement);
         this._controls.target.set(0, 0, 0); // Center the controls on the satellite
-
+    
+        // Set initial camera rotation
+        const radius = 10;
+        const theta = THREE.MathUtils.degToRad(195);
+        const phi = THREE.MathUtils.degToRad(75);
+        this._camera.position.set(
+            radius * Math.sin(phi) * Math.cos(theta),
+            radius * Math.cos(phi),
+            radius * Math.sin(phi) * Math.sin(theta)
+        );
+    
+        // Ensure the camera is looking at the target
+        this._camera.lookAt(this._controls.target);
+    
         this._controls.enableZoom = true;
         this._controls.minDistance = 3;
         this._controls.maxDistance = 1000;
         this._controls.enablePan = false;
         this._controls.screenSpacePanning = false;
-
-        // Rotate the camera
+    
+        // Rotate the camera automatically
         this._controls.autoRotate = true;
         this._controls.autoRotateSpeed = 0.2;
-
+    
+        // Update controls to reflect the new position and rotation
         this._controls.update();
     }
 
@@ -532,15 +546,15 @@ export default class SpaceScene {
             this._createTimeline(phases);
 
             // Create bubble and push to bubble list
-            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -2, -3, 3.5));
-            this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', -3.75, 0, 2.75));
-            this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -0.5, -2.5, -0.6));
-            this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', -0.5, 3.5, -0.6));
-            this._bubbles.push(this._createBubble(model, 'Magnetometer', 'detection', -4.75, -3, 1));
-            this._bubbles.push(this._createBubble(model, 'SPT-140 Engines', 'propulsion', 1, 4.5, -1.75));
-            this._bubbles.push(this._createBubble(model, 'SPT-140 Engines', 'propulsion', 2, -2.25, -2.75));
-            this._bubbles.push(this._createBubble(model, 'Left Solar Array', 'arrays', 9, 1, 9));
-            this._bubbles.push(this._createBubble(model, 'Right Solar Array', 'arrays', -10, 1, -10));
+            this._bubbles.push(this._createBubble(model, 'Gamma Ray and Neutron Spectrometer', 'spectrometer', -4.5, -2, 1.75));
+            this._bubbles.push(this._createBubble(model, 'X-Band High Gain Antenna', 'antenna', -4.5, 1, 0));
+            this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -0.5, -3, 0));
+            this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', -0.5, 2.5, 0));
+            this._bubbles.push(this._createBubble(model, 'Magnetometer', 'detection', -4.5, -2, -1.75));
+            this._bubbles.push(this._createBubble(model, 'SPT-140 Engines', 'propulsion', 3, 3, 0));
+            this._bubbles.push(this._createBubble(model, 'SPT-140 Engines', 'propulsion', 3, -3.5, 0));
+            this._bubbles.push(this._createBubble(model, 'Solar Array', 'arrays', 1, 0, 13));
+            this._bubbles.push(this._createBubble(model, 'Solar Array', 'arrays', 1, 0, -13));
 
             // Store clickable objects
             this._clickableObjects = this._bubbles.slice();
