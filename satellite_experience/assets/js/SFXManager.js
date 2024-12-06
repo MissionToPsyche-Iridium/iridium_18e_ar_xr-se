@@ -4,7 +4,7 @@ export default class SFXManager {
 		this.gainNode = null;
 		this.sounds = new Map();
 		this.audioFilePaths = {
-			launch: "../assets/audio/launch.mp3",
+			launch: "../assets/audio/dunes.mp3",
 			open: "../assets/audio/open.mp3",
 			select: "../assets/audio/select.mp3",
 			close: "../assets/audio/close.mp3"
