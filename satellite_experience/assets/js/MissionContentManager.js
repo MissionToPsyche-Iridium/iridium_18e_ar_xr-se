@@ -83,7 +83,7 @@ export default class MissionContentManager {
         // Previous Phase button
         document.addEventListener('click', (event) => {
             if (event.target.id === 'left-phase-transition-button') {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 this._spaceScene.prevPhase();
                 this.updateMissionContent(this._spaceScene.getCurrentPhase());
             }
@@ -92,7 +92,7 @@ export default class MissionContentManager {
         // Next Phase button
         document.addEventListener('click', (event) => {
             if (event.target.id === 'right-phase-transition-button') {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 this._spaceScene.nextPhase();
                 this.updateMissionContent(this._spaceScene.getCurrentPhase());
             }

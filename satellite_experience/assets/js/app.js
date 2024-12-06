@@ -4,16 +4,16 @@ import HelpModal from './HelpModal.js';
 import SettingsModal from './SettingsModal.js';
 import InstrumentContentManager from './InstrumentContentManager.js';
 import MissionContentManager from './MissionContentManager.js';
+import SFXManager from './SFXManager.js';
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
     // Main elements
     const mainContainer = document.getElementById('main-container');
     const upperButton = document.getElementById('upper-button');
     const lowerButton = document.getElementById('lower-button');
 
-
-
     const helpModal = new HelpModal();
+
     // Initialize SpaceScene
     let spaceScene = new SpaceScene({
         updateInstrumentContent: (id) => instrumentContentManager.updateInstrumentContent(id),
@@ -25,17 +25,23 @@ window.addEventListener("DOMContentLoaded", () => {
     const settingsModal = new SettingsModal();
     const mainStateManager = new MainStateManager(spaceScene, mainContainer, upperButton, lowerButton, missionContentManager);
 
+    // Initialize SFX Manager
+    const sfxManager = new SFXManager();
+    await sfxManager.initialize();
+
     // Volume
-    // set initial volume from local storage
     const savedVolume = localStorage.getItem("volumeSetting");
     if (savedVolume !== null) {
         // volumeSlider.value = savedVolume;
-        parent.setVolume(savedVolume / 100);
+        sfxManager.setVolume(savedVolume / 100);
     } else {
-        parent.setVolume(0.5);
+        sfxManager.setVolume(0.5);
     }
 
+    // Make SFXManager global
+    window.sfxManager = sfxManager;
 
     // Connect settings modal to help modal inactivity timer
     settingsModal.resetInactivityTimer = () => helpModal._setupInactivityTimer();
+    upperButton.addEventListener('click', () => sfxManager.playSound('select'))
 });

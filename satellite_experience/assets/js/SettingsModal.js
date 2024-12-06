@@ -40,7 +40,7 @@ export default class SettingsModal {
                 (event.target.id === 'settings-modal-close'
                 || !container.contains(event.target))) {
                 console.log(event.target.id);
-                parent.playSound3();
+                window.sfxManager.playSound("close");
                 this.close();
             }
         });
@@ -48,7 +48,7 @@ export default class SettingsModal {
 
     // Load settings modal content
     _loadSettingsModalContent() {
-        parent.playSound1();
+        window.sfxManager.playSound("open");
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'settings_modal.html', true);
         xhr.onreadystatechange = () => {
@@ -75,7 +75,7 @@ export default class SettingsModal {
 
         radioSetting.forEach(radio => {
             radio.addEventListener('change', () => {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 if (document.getElementById('default-mode').checked) {
                     this.cssFile.href = '../assets/css/styles.css';
                     localStorage.setItem('theme', "default-mode");
@@ -106,7 +106,7 @@ export default class SettingsModal {
         // event listener for changes in volume slider
         volumeSlider.addEventListener("input", function() {
             const volumeValue = volumeSlider.value;
-            parent.setVolume(volumeValue / 100);
+            window.sfxManager.setVolume(volumeValue / 100);
             localStorage.setItem("volumeSetting", volumeValue);
         });
     }
