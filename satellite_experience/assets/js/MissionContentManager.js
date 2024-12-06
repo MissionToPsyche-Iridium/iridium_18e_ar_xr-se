@@ -64,6 +64,7 @@ export default class MissionContentManager {
                         phaseVideoContent.src = phaseVideo;
                         phaseVideoContent.alt = phaseTitle;
                         phaseVideoContent.style.display = 'block';
+                        // window.sfxManager.initializeYouTubePlayerIfNeeded('phase-video');
                     } else {
                         phaseVideoContent.src = '';
                         phaseVideoContent.alt = '';

@@ -36,11 +36,13 @@ export default class HelpModal {
         // Close button or offscreen
         document.addEventListener('click', (event) => {
             const container = document.getElementById('help-modal-container-id');
-            if (container !== null && this._helpModal && 
-                (event.target.id === 'help-modal-close'
-                || !container.contains(event.target))) {
+            if (this._helpModal && this._helpModal.style.display === 'flex') {
+                if (container !== null && 
+                    (event.target.id === 'help-modal-close'
+                    || !container.contains(event.target))) {
                     window.sfxManager.playSound("close");
-                this.close();
+                    this.close();
+                }
             }
         });
 

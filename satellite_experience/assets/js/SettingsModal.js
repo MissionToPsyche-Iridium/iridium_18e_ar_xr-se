@@ -36,12 +36,12 @@ export default class SettingsModal {
         // Close button
         document.addEventListener('click', (event) => {
             const container = document.getElementById('modal-container-id');
-            if (container !== null && this.settingsModal && 
-                (event.target.id === 'settings-modal-close'
-                || !container.contains(event.target))) {
-                console.log(event.target.id);
-                window.sfxManager.playSound("close");
-                this.close();
+            if (this.settingsModal && this.settingsModal.style.display !== 'none') {
+                if (event.target.id === 'settings-modal-close' || 
+                    (container && !container.contains(event.target))) {
+                    window.sfxManager.playSound("close");
+                    this.close();
+                }
             }
         });
     }
@@ -99,9 +99,9 @@ export default class SettingsModal {
         const savedVolume = localStorage.getItem("volumeSetting");
         if (savedVolume !== null) {
             volumeSlider.value = savedVolume;
-            parent.setVolume(savedVolume / 100);
+            window.sfxManager.setVolume(savedVolume / 100);
         } else {
-            parent.setVolume(volumeSlider.value / 100);
+            window.sfxManager.setVolume(volumeSlider.value / 100);
         }
         // event listener for changes in volume slider
         volumeSlider.addEventListener("input", function() {

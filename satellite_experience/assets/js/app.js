@@ -28,17 +28,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     // Initialize SFX Manager
     const sfxManager = new SFXManager();
     await sfxManager.initialize();
-
-    // Volume
-    const savedVolume = localStorage.getItem("volumeSetting");
-    if (savedVolume !== null) {
-        // volumeSlider.value = savedVolume;
-        sfxManager.setVolume(savedVolume / 100);
-    } else {
-        sfxManager.setVolume(0.5);
-    }
-
-    // Make SFXManager global
     window.sfxManager = sfxManager;
 
     // Connect settings modal to help modal inactivity timer
