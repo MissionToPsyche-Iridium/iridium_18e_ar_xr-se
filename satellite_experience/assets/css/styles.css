@@ -90,7 +90,6 @@ body {
   background-color: rgba(32, 22, 47, 0.8);
   border-radius: 10px;
   font-size: 14px;
-  font-family: "OCR A Std, monospace";
   padding: 20px;
   margin-left: 10px;
   margin-right: 10px;
@@ -108,7 +107,6 @@ body {
 
 #timeRemaining {
   font-size: 16px;
-  font-family: "OCR A Std, monospace";
   justify-self: center !important;
   width: 90%;
   background-color: rgba(32, 22, 47, 0.2);

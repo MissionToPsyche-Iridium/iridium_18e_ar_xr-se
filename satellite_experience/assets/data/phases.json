@@ -2,49 +2,56 @@
     {
         "name": "launch",
         "title": "Launch",
-        "description": "Psyche launched from a SpaceX Falcon Heavy rocket at NASA's Kennedy Space Center in Florida. After launch, Psyche is expected to 'cruise' using its solar electric propulsion system until encountering the gravitational field of Mars in 2026.",
+        "description": "Psyche started its journey by launching on a SpaceX Falcon Heavy rocket from Florida. It will use sunlight to power its thrusters as it travels toward Mars, which it will reach in 2026.",
         "img": "",
         "video": "https://www.youtube.com/embed/AwCiHscmEQE?si=tpt9JAahRNdKdGyZ"
-    },{
+    },
+    {
         "name": "assist",
         "title": "Gravity Assist",
-        "description": "In spring of 2026, Psyche will power down its thrusters as it approaches Mars and use the planet's gravity to slingshot itself, setting its trajectory toward the asteroid. Psyche will then resume thruster usage and cruise until its approach in 2029.",
+        "description": "In 2026, Psyche will fly near Mars and use the planet’s gravity like a slingshot to aim itself toward the asteroid. After this boost, it will continue cruising until it reaches Psyche in 2029.",
         "img": "../assets/images/phases/gravity_assist.png",
         "video": ""
-    },{
+    },
+    {
         "name": "a",
         "title": "Orbit A",
-        "description": "After traveling roughly 2.4 billion kilometers (~1.5 billion miles), Psyche will spend 56 days performing magnetic field characterization and preliminary mapping during its outermost 41 orbits. The asteroid's spin axis and rotation will also be studied.",
+        "description": "In 2029, Psyche will start orbiting the asteroid. Its first orbit will last 56 days, studying the asteroid’s magnetic field, spin, and surface from far away.",
         "img": "../assets/images/phases/magnetic_field.png",
         "video": ""
-    },{
+    },
+    {
         "name": "b1",
         "title": "Orbit B1",
-        "description": "Orbit 'B' is the next closest orbit and is split into two parts due to gradual diminishing of sunlight upon the asteroid's surface when this orbit begins. Psyche will spend 92 days (190 orbits) performing topography mapping and more magnetic field characterization.",
+        "description": "Psyche will move closer for Orbit B1, spending 92 days mapping the asteroid’s surface and measuring its magnetic field. This orbit is split into two parts because it requires strong sunlight which is limited.",
         "img": "../assets/images/phases/topography.png",
         "video": ""
-    },{
+    },
+    {
         "name": "d",
         "title": "Orbit D",
-        "description": "Orbit D is the 3rd orbit phase and the closest Psyche will get to the asteroid during the mission. Psyche will spend 100 days (666 orbits) performing elemental mapping to determine the asteroid's chemical composition.",
+        "description": "Orbit D is the closest Psyche will get to the asteroid. For 100 days, it will analyze the asteroid’s elements to understand its chemical makeup.",
         "img": "../assets/images/phases/metal_content.jpg",
         "video": ""
-    },{
+    },
+    {
         "name": "c",
         "title": "Orbit C",
-        "description": "Orbit C is the 4th orbit and is located between orbits B and D. During this orbital phase Psyche will spend another 100 days (333 orbits) performing gravity investigations and continued magnetic field characterization.",
+        "description": "In Orbit C, Psyche will spend 100 days investigating the asteroid’s gravity and continuing its study of the magnetic field..",
         "img": "../assets/images/phases/orbits.jpg",
         "video": ""
-    },{
+    },
+    {
         "name": "b2",
         "title": "Orbit B2",
-        "description": "For the final orbital phase of the mission, Psyche will return to orbit B to continue and conclude its topography mapping and magnetic field characterization. Psyche will spend 100 days (206 orbits) in this phase.",
+        "description": "Psyche will return to Orbit B for its final phase. For 100 days, it will complete its mapping of the asteroid’s surface and its magnetic field under strong sunlight.",
         "img": "../assets/images/phases/asteroid_surface.png",
         "video": ""
-    },{
+    },
+    {
         "name": "end",
         "title": "End of Mission",
-        "description": "The Psyche mission is expected to end in November 2031 where it will be left to orbit the asteroid. During this phase the mission team will provide all remaining deliverables and safely decommission the space flight systems.",
+        "description": "In 2031, the Psyche mission will end. The spacecraft will be left orbiting the asteroid while scientists finish their studies and turn off its systems safely.",
         "img": "../assets/images/phases/psyche_asteroid.jpg",
         "video": ""
     }
