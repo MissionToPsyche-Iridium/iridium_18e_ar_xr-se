@@ -8,7 +8,7 @@ export default class InstrumentContentManager {
         this._spaceScene = spaceScene;
         this._mainContainer = mainContainer;
         this._currentBubble = 0;
-        this._instrumentIds = ['spectrometer', 'antenna', 'imager', 'communication', 'detection'];
+        this._instrumentIds = ['spectrometer', 'antenna', 'imager', 'communication', 'detection', 'propulsion', 'arrays'];
 
         this._initialize();
     }
@@ -87,10 +87,10 @@ export default class InstrumentContentManager {
             if (event.target.id === 'left-instrument-transition-button') {
                 window.sfxManager.playSound("select");
                 this._currentBubble -= 1;
-                if (this._currentBubble > 5) {
+                if (this._currentBubble > 7) {
                     this._currentBubble = 0;
                 } else if (this._currentBubble < 0) {
-                    this._currentBubble = 4;
+                    this._currentBubble = 6;
                 }
                 this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
             }
@@ -100,10 +100,10 @@ export default class InstrumentContentManager {
             if (event.target.id === 'right-instrument-transition-button') {
                 window.sfxManager.playSound("select");
                 this._currentBubble += 1;
-                if (this._currentBubble > 4) {
+                if (this._currentBubble > 6) {
                     this._currentBubble = 0;
                 } else if (this._currentBubble < 0) {
-                    this._currentBubble = 4;
+                    this._currentBubble = 6;
                 }
                 this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
             }

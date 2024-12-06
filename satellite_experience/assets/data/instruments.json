@@ -3,13 +3,13 @@
         "name": "spectrometer",
         "title": "Gamma Ray and Neutron Spectrometer",
         "description": "This tool helps figure out what the asteroid is made of by detecting gamma rays and neutrons. Cosmic rays hit the asteroid, and this instrument measures the energy that bounces back.",
-        "img": "../assets/images/spectrometers.png"
+        "img": "../assets/images/instruments/spectrometers.png"
     },
     {
         "name": "antenna",
         "title": "X-Band High Gain Antenna",
         "description": "This dish-shaped antenna points at Earth and sends pictures and data back at high-speeds using X-band radio waves, across the vastness of space.",
-        "img": "../assets/images/antenna.png"
+        "img": "../assets/images/instruments/antenna.png"
     },
     {
         "name": "imager",
@@ -28,5 +28,17 @@
         "title": "Magnetometer",
         "description": "This instrument looks for magnetic clues around the asteroid. It has two sensitive sensors on a long boom to measure the asteroid’s magnetic field which will uncover its history.",
         "img": "../assets/images/instruments/psyche-magnetometer.jpg"
+    },
+    {
+        "name": "propulsion",
+        "title": "SPT-140 Engines",
+        "description": "Psyche uses unique thrusters that run on electricity from its solar panels. They gently push the spacecraft through space by shooting out charged atoms, guiding it through its long mission.",
+        "img": "../assets/images/instruments/propulsion.jpg"
+    },
+    {
+        "name": "arrays",
+        "title": "Solar Arrays",
+        "description": "Psyche uses large X-shaped solar panel arrays that capture sunlight to power all its instruments and systems. Even far from the Sun, these panels provide enough energy for the spacecraft’s needs.",
+        "img": "../assets/images/instruments/arrays.jpg"
     }
 ]
