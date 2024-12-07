@@ -34,14 +34,6 @@ html {
   /* margin-bottom: 50vh; */
 }
 
-.logo {
-  position: absolute;
-  top: 2vh;
-  left: 2vw;
-  height: 75px;
-  width: 75px;
-}
-
 .team {
   font-size: 25px;
 }
@@ -54,16 +46,36 @@ html {
 }
 
 .about-title {
-  height: 20vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-self: center;
+  background-image: linear-gradient(to right, #302144, #000000);
+  align-items: stretch;
+  height: 15%;
   width: 100%;
-  margin-left: 0;
+  padding-left: 5%;
+  padding-right: 5%;
   text-align: center;
-  color: white;
-  background-color: #20162f;
+}
+
+.logo {
+  position: absolute;
+  left: 0;
+  align-self: center;
+  max-height: 75px;
+  max-width: 75px;
+  min-height: 75px;
+  min-width: 75px;
+  height: 15%;
+  width: 15%;
+  margin-left: 5%;
 }
 
 h1 {
-  padding: 60px;
+  padding: 30px;
+  align-self: center;
+  color: white;
 }
 
 .team-member {
@@ -86,11 +98,15 @@ h1 {
 .pfp-container {
   width: 75px;
   height: 75px;
+  min-width: 75px;
+  min-height: 75px;
   margin-right: auto;
   background-color: #d9d9d9;
   border-radius: 50%;
 }
-
+.name {
+  font-weight: 600;
+}
 .name-container {
   flex-grow: 1;
   text-align: left;
@@ -111,4 +127,12 @@ h1 {
 
 .citation-section-title {
   padding-top: 10px;
+}
+
+.pfp-icon {
+  position: relative;
+  height: 70%;
+  width: 70%;
+  left: 11px;
+  top: 8px;
 }
