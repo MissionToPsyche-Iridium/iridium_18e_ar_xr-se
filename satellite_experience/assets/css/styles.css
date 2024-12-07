@@ -47,7 +47,7 @@ body {
 .navigation-button-container {
   position: absolute;
   bottom: 2%;
-  left: 50%;
+  left: 48%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: row;
@@ -190,6 +190,18 @@ body {
   z-index: 5;
   box-sizing: border-box;
   bottom: 7%;
+}
+
+@media only screen and (min-height: 700px) {
+  #mission-content {
+    bottom: 0%;
+  }
+}
+
+@media only screen and (min-height: 1000px) {
+  #mission-content {
+    bottom: -10%;
+  }
 }
 
 #phase-title-container {
