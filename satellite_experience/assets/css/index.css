@@ -168,3 +168,41 @@ h1 {
   margin: 10px 0;
 }
 
+.about-link {
+  text-decoration: none;
+  color: white;
+}
+
+.about-button {
+  margin-top: 10px;
+  margin-bottom: 25px;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  background-color: gray;
+  /* background-color: #f9a000;#20162f; */
+  border: 2px 50% black;
+  border-radius: 16px;
+  height: 40px;
+  width: 50%;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.1s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.about-button:active {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0.95);
+  border: none;
+}
+
+.about-button:focus {
+  outline: none;
+}
+
+.about-button:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);
+}
+

@@ -641,7 +641,7 @@ export default class SpaceScene {
 
             // If a bubble was selected
             if (selectedBubble) {
-                parent.playSound1();
+                window.sfxManager.playSound("select");
                 // Mark the selected bubble as viewed
                 selectedBubble.material.opacity = 0.2;
                 selectedBubble.bubbleLabel.element.style.opacity = '0.2';

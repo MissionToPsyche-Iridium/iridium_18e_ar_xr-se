@@ -75,19 +75,17 @@ export default class InstrumentContentManager {
     _initialize() {
         // Close button
         document.addEventListener('click', (event) => {
-            const instrumentImageContent = document.getElementById('instrument-image');
-            if (instrumentImageContent !== null
-                && instrumentImageContent.style.display === 'block'
-                && (!event.target.id
-                    || event.target.id === 'instrument-modal-close')) {
-                parent.playSound3();
+            if (event.target.id === 'instrument-modal-close' 
+                && this._mainContainer.style.display === 'block') {
+                
+                window.sfxManager.playSound("close");
                 this.close();
             }
         });
 
         document.addEventListener('click', (event) => {
             if (event.target.id === 'left-instrument-transition-button') {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 this._currentBubble -= 1;
                 if (this._currentBubble > 5) {
                     this._currentBubble = 0;
@@ -100,7 +98,7 @@ export default class InstrumentContentManager {
 
         document.addEventListener('click', (event) => {
             if (event.target.id === 'right-instrument-transition-button') {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 this._currentBubble += 1;
                 if (this._currentBubble > 4) {
                     this._currentBubble = 0;
