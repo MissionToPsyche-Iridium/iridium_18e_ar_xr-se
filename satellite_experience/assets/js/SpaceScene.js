@@ -537,6 +537,10 @@ export default class SpaceScene {
             this._bubbles.push(this._createBubble(model, 'Multispectral Imager', 'imager', -0.5, -2.5, -0.6));
             this._bubbles.push(this._createBubble(model, 'Deep Space Optical Communication', 'communication', -0.5, 3.5, -0.6));
             this._bubbles.push(this._createBubble(model, 'Magnetometer', 'detection', -4.75, -3, 1));
+            this._bubbles.push(this._createBubble(model, 'SPT-140 Engines', 'propulsion', 1, 4.5, -1.75));
+            this._bubbles.push(this._createBubble(model, 'SPT-140 Engines', 'propulsion', 2, -2.25, -2.75));
+            this._bubbles.push(this._createBubble(model, 'Left Solar Array', 'arrays', 9, 1, 9));
+            this._bubbles.push(this._createBubble(model, 'Right Solar Array', 'arrays', -10, 1, -10));
 
             // Store clickable objects
             this._clickableObjects = this._bubbles.slice();
