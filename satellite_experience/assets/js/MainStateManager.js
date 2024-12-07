@@ -126,6 +126,7 @@ export default class MainStateManager {
             // Update bubbles in space scene
             if (this._spaceScene) {
                 this._spaceScene.updateState(this.mainState);
+                this._spaceScene.exitInstrumentDetail();
             }
 
         } catch (error) {

@@ -14,7 +14,7 @@ export default class InstrumentContentManager {
     // Close instrument content
     close() {
         this._mainContainer.style.display = 'none';
-        this._spaceScene.deselectBubbles();
+        this._spaceScene.exitInstrumentDetail();
     }
 
     // Update content based on bubble id
