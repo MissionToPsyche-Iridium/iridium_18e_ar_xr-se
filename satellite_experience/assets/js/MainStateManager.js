@@ -51,8 +51,11 @@ var x = setInterval(function() {
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  document.getElementById("timeRemaining").innerHTML = "Mission Accomplished: " + years + "y " + days + "d " + hours + "h "
-  + minutes.toString() + "m " + seconds + "s ";
+  if(document.getElementById("timeRemaining")!==null) {
+
+      document.getElementById("timeRemaining").innerHTML = "Mission Accomplished: " + years + "y " + days + "d " + hours + "h "
+      + minutes.toString() + "m " + seconds + "s ";
+  }
 
   if (distance < 0) {
     clearInterval(x);
@@ -144,7 +147,7 @@ export default class MainStateManager {
     _setupEventListeners() {
         // Upper button
         this._upperButton.addEventListener('click', () => {
-            parent.playSound2();
+            window.sfxManager.playSound("select");
             if (this.mainState === 'main') {
                 this.updateMainState('mission');
             } else {
@@ -154,7 +157,7 @@ export default class MainStateManager {
 
         // Lower button
         this._lowerButton.addEventListener('click', () => {
-            parent.playSound2();
+            window.sfxManager.playSound("select");
             if (this.mainState === 'main') {
                 this.updateMainState('instrument');
             } else if (this.mainState === 'mission') {

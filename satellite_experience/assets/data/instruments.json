@@ -1,7 +1,44 @@
 [
-    {"name": "spectrometer", "title": "Gamma Ray and Neutron Spectrometer", "description": "Detects gamma rays and neutrons that are emitted when cosmic rays interact with atoms. Measuring these emissions will identify the composition of the asteroid without direct sampling.", "img": "../assets/images/spectrometers.png"},
-    {"name": "antenna", "title": "X-Band High Gain Antenna", "description": "Enables high-speed communication with Earth. The dish shaped antenna is aimed precisely at earth and transmits images and telemetry using X-Band frequency across the vastness of space.", "img": "../assets/images/antenna.png"},
-    {"name": "imager", "title": "Multispectral Imager", "description": "Provides high-resolution images using filters to discriminate between Psyche’s metallic and silicate constituents. The instrument consists of a pair of identical cameras designed to acquire geologic, compositional, and topographic data.", "img": "../assets/images/instruments/multispectral-imager.jpg"},
-    {"name": "communication", "title": "Deep Space Optical Communication", "description": "A sophisticated new laser communication technology that encodes data in photons (rather than radio waves) to communicate between a probe in deep space and Earth. Using light instead of radio allows the spacecraft to communicate more data in a given amount of time.", "img": "../assets/images/instruments/psyche-dsoc.jpg"},
-    {"name": "detection", "title": "Magnetometer", "description": "Designed to detect and measure the remanent magnetic field of the asteroid. It is composed of two identical high-sensitivity magnetic field sensors located at the middle and outer end of a 6-foot (2-meter) boom.", "img": "../assets/images/instruments/psyche-magnetometer.jpg"}
+    {
+        "name": "spectrometer",
+        "title": "Gamma Ray and Neutron Spectrometer",
+        "description": "This tool helps figure out what the asteroid is made of by detecting gamma rays and neutrons. Cosmic rays hit the asteroid, and this instrument measures the energy that bounces back.",
+        "img": "../assets/images/instruments/spectrometers.png"
+    },
+    {
+        "name": "antenna",
+        "title": "X-Band High Gain Antenna",
+        "description": "This dish-shaped antenna points at Earth and sends pictures and data back at high-speeds using X-band radio waves, across the vastness of space.",
+        "img": "../assets/images/instruments/antenna.png"
+    },
+    {
+        "name": "imager",
+        "title": "Multispectral Imager",
+        "description": "These cameras take high quality pictures of the asteroid. They use filters to tell the difference between metal and rock, helping scientists understand its shape, makeup, and surface.",
+        "img": "../assets/images/instruments/multispectral-imager.jpg"
+    },
+    {
+        "name": "communication",
+        "title": "Deep Space Optical Communication",
+        "description": "This complex new laser system sends messages using light instead of traditional radio waves. It’s faster and can send more information across space.",
+        "img": "../assets/images/instruments/psyche-dsoc.jpg"
+    },
+    {
+        "name": "detection",
+        "title": "Magnetometer",
+        "description": "This instrument looks for magnetic clues around the asteroid. It has two sensitive sensors on a long boom to measure the asteroid’s magnetic field which will uncover its history.",
+        "img": "../assets/images/instruments/psyche-magnetometer.jpg"
+    },
+    {
+        "name": "propulsion",
+        "title": "SPT-140 Engines",
+        "description": "Psyche uses unique thrusters that run on electricity from its solar panels. They gently push the spacecraft through space by shooting out charged atoms, guiding it through its long mission.",
+        "img": "../assets/images/instruments/propulsion.jpg"
+    },
+    {
+        "name": "arrays",
+        "title": "Solar Arrays",
+        "description": "Psyche uses large X-shaped solar panel arrays that capture sunlight to power all its instruments and systems. Even far from the Sun, these panels provide enough energy for the spacecraft’s needs.",
+        "img": "../assets/images/instruments/arrays.jpg"
+    }
 ]

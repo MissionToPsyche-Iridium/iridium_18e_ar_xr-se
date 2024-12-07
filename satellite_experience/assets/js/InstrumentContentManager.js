@@ -8,7 +8,7 @@ export default class InstrumentContentManager {
         this._spaceScene = spaceScene;
         this._mainContainer = mainContainer;
         this._currentBubble = 0;
-        this._instrumentIds = ['spectrometer', 'antenna', 'imager', 'communication', 'detection'];
+        this._instrumentIds = ['spectrometer', 'antenna', 'imager', 'communication', 'detection', 'propulsion', 'arrays'];
 
         this._initialize();
     }
@@ -26,10 +26,8 @@ export default class InstrumentContentManager {
         const instrumentDescriptionMap = {};
         const instrumentImageMap = {};
 
-        console.log("here");
-        console.log(bubbleId);
-
         this._currentBubble = this._instrumentIds.indexOf(bubbleId);
+        this._spaceScene.click(bubbleId);
 
         fetch('../assets/data/instruments.json')
             .then(response => response.json())
@@ -77,24 +75,22 @@ export default class InstrumentContentManager {
     _initialize() {
         // Close button
         document.addEventListener('click', (event) => {
-            const instrumentImageContent = document.getElementById('instrument-image');
-            if (instrumentImageContent !== null
-                && instrumentImageContent.style.display === 'block'
-                && (!event.target.id
-                    || event.target.id === 'instrument-modal-close')) {
-                parent.playSound3();
+            if (event.target.id === 'instrument-modal-close' 
+                && this._mainContainer.style.display === 'block') {
+                
+                window.sfxManager.playSound("close");
                 this.close();
             }
         });
 
         document.addEventListener('click', (event) => {
             if (event.target.id === 'left-instrument-transition-button') {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 this._currentBubble -= 1;
-                if (this._currentBubble > 5) {
+                if (this._currentBubble > 7) {
                     this._currentBubble = 0;
                 } else if (this._currentBubble < 0) {
-                    this._currentBubble = 4;
+                    this._currentBubble = 6;
                 }
                 this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
             }
@@ -102,12 +98,12 @@ export default class InstrumentContentManager {
 
         document.addEventListener('click', (event) => {
             if (event.target.id === 'right-instrument-transition-button') {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 this._currentBubble += 1;
-                if (this._currentBubble > 4) {
+                if (this._currentBubble > 6) {
                     this._currentBubble = 0;
                 } else if (this._currentBubble < 0) {
-                    this._currentBubble = 4;
+                    this._currentBubble = 6;
                 }
                 this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
             }

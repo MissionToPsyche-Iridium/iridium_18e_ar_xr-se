@@ -2,6 +2,7 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: white;
+  background: white;
   color: white;
   text-align: center;
   display: flex;
@@ -9,7 +10,6 @@ body {
   margin: 0;
   width: 100%;
   position: absolute;
-  background: #000000;
   margin: 0;
   padding: 0;
   overscroll-behavior: none;
@@ -22,13 +22,12 @@ body {
   background-color: #ffffff;
   align-items: center;
   margin-left: 0vh;
+  width: 100%;
   margin-right: 0vh;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-top: 25px;
-  padding-bottom: 25px;
   text-align: center;
 }
+
+
 #body {
   display: flex;
   flex-direction: column;
@@ -41,23 +40,21 @@ body {
 #psyche-header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  align-self: center;
   background-image: linear-gradient(to right, #302144, #000000);
-  align-items: stretch;
-  width: calc(100% + 15px);
-  margin-left: -50px;
-  margin-right: -50px;
-  margin-top: -25px;
-  height: 15%;
-  padding-top: 5%;
-  padding-bottom: 25px;
-  padding-left: 10px;
-  padding-right: 75px;
+  align-items: center;
+  min-height: 5%;
+  width: 100%;
   text-align: center;
 }
 
 #psyche-icon {
+  position: absolute;
+  left: 0;
   align-self: center;
+  max-height: 75px;
+  max-width: 75px;
   min-height: 75px;
   min-width: 75px;
   height: 15%;
@@ -65,11 +62,15 @@ body {
   margin-left: 5%;
 }
 
-#disclaimer {
-  font-size: 12px;
-  color: grey;
-  border-color: grey;
-  border-width: 20px;
+#header {
+  align-self: center;
+  margin-left: 100px !important;
+  margin-right: 100px !important;
+}
+
+h1 {
+  margin-left: 100px;
+  margin-right: 100px;
 }
 
 .psyche-info {
@@ -143,14 +144,7 @@ body {
 
 .psyche-satellite-img img {
   margin-top: 25px;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  #container {
-    margin-left: 25%;
-    margin-right: 25%;
-  }
+  width: 75%;
 }
 
 .fade-in-section {
