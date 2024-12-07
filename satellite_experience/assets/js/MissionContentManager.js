@@ -7,7 +7,6 @@ export default class MissionContentManager {
     constructor(spaceScene, mainContainer) {
         this._spaceScene = spaceScene;
         this._mainContainer = mainContainer;
-        this._phaseIds = ['launch', 'assist', 'a', 'b1', 'd', 'c', 'b2', 'end'];
 
         this._initialize();
     }
@@ -20,7 +19,6 @@ export default class MissionContentManager {
         const phaseImageMap = {};
         const phaseVideoMap = {};
 
-        this._currentBubble = this._phaseIds.indexOf(phaseId);
         this._spaceScene.click(phaseId);
 
         fetch('../assets/data/phases.json')

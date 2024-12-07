@@ -7,8 +7,6 @@ export default class InstrumentContentManager {
     constructor(spaceScene, mainContainer) {
         this._spaceScene = spaceScene;
         this._mainContainer = mainContainer;
-        this._currentBubble = 0;
-        this._instrumentIds = ['spectrometer', 'antenna', 'imager', 'communication', 'detection', 'propulsion', 'arrays'];
 
         this._initialize();
     }
@@ -26,7 +24,6 @@ export default class InstrumentContentManager {
         const instrumentDescriptionMap = {};
         const instrumentImageMap = {};
 
-        this._currentBubble = this._instrumentIds.indexOf(bubbleId);
         this._spaceScene.click(bubbleId);
 
         fetch('../assets/data/instruments.json')
@@ -77,7 +74,6 @@ export default class InstrumentContentManager {
         document.addEventListener('click', (event) => {
             if (event.target.id === 'instrument-modal-close' 
                 && this._mainContainer.style.display === 'block') {
-                
                 window.sfxManager.playSound("close");
                 this.close();
             }
@@ -86,26 +82,16 @@ export default class InstrumentContentManager {
         document.addEventListener('click', (event) => {
             if (event.target.id === 'left-instrument-transition-button') {
                 window.sfxManager.playSound("select");
-                this._currentBubble -= 1;
-                if (this._currentBubble > 7) {
-                    this._currentBubble = 0;
-                } else if (this._currentBubble < 0) {
-                    this._currentBubble = 6;
-                }
-                this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
+                this._spaceScene.prevInstrument();
+                this.updateInstrumentContent(this._spaceScene.getCurrentInstrument());
             }
         });
 
         document.addEventListener('click', (event) => {
             if (event.target.id === 'right-instrument-transition-button') {
                 window.sfxManager.playSound("select");
-                this._currentBubble += 1;
-                if (this._currentBubble > 6) {
-                    this._currentBubble = 0;
-                } else if (this._currentBubble < 0) {
-                    this._currentBubble = 6;
-                }
-                this.updateInstrumentContent(this._instrumentIds[this._currentBubble]);
+                this._spaceScene.nextInstrument();
+                this.updateInstrumentContent(this._spaceScene.getCurrentInstrument());
             }
         });
     }

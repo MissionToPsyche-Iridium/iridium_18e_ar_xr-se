@@ -16,6 +16,7 @@ export default class SpaceScene {
     // Constructor
     constructor(options = {}, helpModal) {
         this._bubbles = [];
+        this._currentInstrumentIndex = 0;
         this._phases = [];
         this._currentPhaseIndex = 0;
         this._updateInstrumentContent = options.updateInstrumentContent;
@@ -33,7 +34,6 @@ export default class SpaceScene {
         if (newMainState === 'instrument') {
             this._showBubbles();
         } else {
-            this.deselectBubbles();
             this._hideBubbles();
         }
 
@@ -47,22 +47,6 @@ export default class SpaceScene {
         }
     }
 
-    // Unhighlight bubbles
-    deselectBubbles() {
-        /*
-        if (this._bubbles) {
-            this._bubbles.forEach(bubble => {
-                const bubbleMaterial = bubble.material;
-                const bubbleLabelDiv = bubble.bubbleLabel.element;
-                const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
-
-                bubbleMaterial.opacity = 0.5;
-                bubbleLabelDiv.style.opacity = '0.5';
-                bubbleProgressLabelDiv.style.opacity = '0.5';
-            });
-        }
-        */
-    }
 
     click(bubbleId) {
         this._bubbles.forEach(bubble => {
@@ -99,6 +83,29 @@ export default class SpaceScene {
     // Get current phase id
     getCurrentPhase() {
         return this._phases[this._currentPhaseIndex].phaseId;
+    }
+
+    // Go to next instrument
+    prevInstrument() {
+        this._currentInstrumentIndex--;
+        if (this._currentInstrumentIndex < 0) {
+            this._currentInstrumentIndex = this._bubbles.length - 1;
+        }
+        this._updateBubbleSelection();
+    }
+
+    // Go to previous instrument
+    nextInstrument() {
+        this._currentInstrumentIndex++;
+        if (this._currentInstrumentIndex >= this._bubbles.length) {
+            this._currentInstrumentIndex = 0;
+        }
+        this._updateBubbleSelection();
+    }
+
+    // Get current instrument id
+    getCurrentInstrument() {
+        return this._bubbles[this._currentInstrumentIndex].bubbleId;
     }
 
     /*
@@ -643,6 +650,21 @@ export default class SpaceScene {
         });
     }
 
+    _updateBubbleSelection() {
+        this._bubbles.forEach(bubble => {
+            const isSelected = index === this._currentPhaseIndex;
+            if(isSelected) {
+                const bubbleMaterial = bubble.material;
+                const bubbleLabelDiv = bubble.bubbleLabel.element;
+                const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
+    
+                bubbleMaterial.opacity = 0.2;
+                bubbleLabelDiv.style.opacity = '0.2';
+                bubbleProgressLabelDiv.style.opacity = '0.2';
+            }
+        });
+    }
+
     // Check for intersection with clickable objects at position
     _performRaycast(normalizedPosition) {
         const raycaster = new THREE.Raycaster();
@@ -664,27 +686,6 @@ export default class SpaceScene {
                 selectedBubble.material.opacity = 0.2;
                 selectedBubble.bubbleLabel.element.style.opacity = '0.2';
                 selectedBubble.bubbleProgressLabel.element.style.opacity = '0.2';
-
-                // Deselect other bubbles
-                this._bubbles.forEach(bubble => {
-                    const bubbleMaterial = bubble.material;
-                    const bubbleLabelDiv = bubble.bubbleLabel.element;
-                    const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
-                    /*
-                    // Selected bubble
-                    if (bubble === selectedBubble) {
-                        bubbleMaterial.opacity = 0.9;
-                        bubbleLabelDiv.style.opacity = '0.9';
-                        bubbleProgressLabelDiv.style.opacity = '0.9';
-
-                        // Unselected bubbles
-                    } else {
-                        bubbleMaterial.opacity = 0.3;
-                        bubbleLabelDiv.style.opacity = '0.5';
-                        bubbleProgressLabelDiv.style.opacity = '0.5';
-                    }
-                    */
-                });
 
                 // Update instrument content based on selected bubble
                 this._updateInstrumentContent(selectedBubble.bubbleId);
