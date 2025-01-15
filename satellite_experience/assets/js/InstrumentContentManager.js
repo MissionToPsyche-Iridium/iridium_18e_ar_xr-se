@@ -8,14 +8,13 @@ export default class InstrumentContentManager {
         this._spaceScene = spaceScene;
         this._mainContainer = mainContainer;
 
-
         this._initialize();
     }
 
     // Close instrument content
     close() {
         this._mainContainer.style.display = 'none';
-        this._spaceScene.deselectBubbles();
+        this._spaceScene.exitInstrumentDetail();
     }
 
     // Update content based on bubble id
@@ -24,6 +23,8 @@ export default class InstrumentContentManager {
         const instrumentTitleMap = {};
         const instrumentDescriptionMap = {};
         const instrumentImageMap = {};
+
+        this._spaceScene.click(bubbleId);
 
         fetch('../assets/data/instruments.json')
             .then(response => response.json())
@@ -71,13 +72,26 @@ export default class InstrumentContentManager {
     _initialize() {
         // Close button
         document.addEventListener('click', (event) => {
-            const instrumentImageContent = document.getElementById('instrument-image');
-            if (instrumentImageContent!== null 
-                && instrumentImageContent.style.display === 'block'
-                && (!event.target.id
-                || event.target.id === 'instrument-modal-close')) {
-                parent.playSound3();
+            if (event.target.id === 'instrument-modal-close' 
+                && this._mainContainer.style.display === 'block') {
+                window.sfxManager.playSound("close");
                 this.close();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (event.target.id === 'left-instrument-transition-button') {
+                window.sfxManager.playSound("select");
+                this._spaceScene.prevInstrument();
+                this.updateInstrumentContent(this._spaceScene.getCurrentInstrument());
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (event.target.id === 'right-instrument-transition-button') {
+                window.sfxManager.playSound("select");
+                this._spaceScene.nextInstrument();
+                this.updateInstrumentContent(this._spaceScene.getCurrentInstrument());
             }
         });
     }

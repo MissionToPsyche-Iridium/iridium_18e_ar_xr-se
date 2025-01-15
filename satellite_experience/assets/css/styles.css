@@ -46,29 +46,30 @@ body {
 /* Navigation Buttons Styling */
 .navigation-button-container {
   position: absolute;
-  bottom: 20px;
-  left: 50%;
+  bottom: 2%;
+  left: 48%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
   width: 80%;
   max-width: 800px;
   z-index: 5;
+  justify-content: space-around;
 }
 
 .navigation-button {
-  width: 50%;
+  width: 45%;
   max-width: 300px;
-  height: 60px;
+  height: 50px;
   background-color: rgba(32, 22, 47, 0.8);
   color: #fff;
   border: none;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .navigation-button:last-child {
@@ -83,11 +84,12 @@ body {
 .distance {
   position: relative;
   width: 80%;
-  justify-content: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: rgba(32, 22, 47, 0.8);
   border-radius: 10px;
-  font-size: 16px;
-  font-family: "OCR A Std, monospace";
+  font-size: 14px;
   padding: 20px;
   margin-left: 10px;
   margin-right: 10px;
@@ -95,10 +97,16 @@ body {
   z-index: 5;
   box-sizing: border-box;
 }
+.distanceInfo {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  width: 95%;
+  border-radius: 10px;
+  align-self: center;
+}
 
 #timeRemaining {
   font-size: 16px;
-  font-family: "OCR A Std, monospace";
   justify-self: center !important;
   width: 90%;
   background-color: rgba(32, 22, 47, 0.2);
@@ -108,7 +116,7 @@ body {
 }
 
 .distanceHeading {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -170,17 +178,30 @@ body {
 /* Mission Content Styling */
 #mission-content {
   position: relative;
-  width: 80%;
+  width: 90%;
   max-width: 600px;
   background-color: rgba(32, 22, 47, 0.8);
   border-radius: 10px;
   color: #fff;
   font-size: 16px;
-  padding: 20px;
+  padding: 15px;
   margin: 0 auto;
   margin-top: 150px;
   z-index: 5;
   box-sizing: border-box;
+  bottom: 7%;
+}
+
+@media only screen and (min-height: 700px) {
+  #mission-content {
+    bottom: 0%;
+  }
+}
+
+@media only screen and (min-height: 1000px) {
+  #mission-content {
+    bottom: -10%;
+  }
 }
 
 #phase-title-container {
@@ -237,13 +258,40 @@ body {
 #phase-transition-button-container {
   display: flex;
   justify-content: space-between;
-  width: 80%;
+  width: 100%;
   max-width: 600px;
   margin: 10px auto 0;
 }
 
 #left-phase-transition-button,
 #right-phase-transition-button {
+  width: 42%;
+  height: 40px;
+  background-color: rgba(32, 22, 47, 0.8);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  z-index: 5;
+}
+
+#left-phase-transition-button:hover,
+#right-phase-transition-button:hover {
+  background-color: rgba(32, 22, 47, 1);
+}
+
+#instrument-transition-button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 600px;
+  margin: 10px auto 0;
+}
+
+#left-instrument-transition-button,
+#right-instrument-transition-button {
   width: 48%;
   height: 50px;
   background-color: rgba(32, 22, 47, 0.8);
@@ -256,8 +304,8 @@ body {
   z-index: 5;
 }
 
-#left-phase-transition-button:hover,
-#right-phase-transition-button:hover {
+#left-instrument-transition-button:hover,
+#right-instrument-transition-button:hover {
   background-color: rgba(32, 22, 47, 1);
 }
 
@@ -460,6 +508,193 @@ input[type="range"]::-moz-range-thumb {
   border: 1px solid #f9a001;
   /*  slider progress  */
   box-shadow: -407px 0 0 400px #f9a001;
+}
+/* End of Settings Page/Modal */
+
+/* Launch Page */
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+  align-items: center;
+  margin-left: 0vh;
+  margin-right: 0vh;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  text-align: center;
+}
+#body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#psyche-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-image: linear-gradient(to right, #302144, #000000);
+  align-items: stretch;
+  width: calc(100% + 15px);
+  margin-left: -50px;
+  margin-right: -50px;
+  margin-top: -25px;
+  height: 15%;
+  padding-top: 5%;
+  padding-bottom: 25px;
+  padding-left: 10px;
+  padding-right: 75px;
+  text-align: center;
+}
+
+#psyche-icon {
+  align-self: center;
+  min-height: 75px;
+  min-width: 75px;
+  height: 15%;
+  width: 15%;
+  margin-left: 5%;
+}
+
+#disclaimer {
+  font-size: 12px;
+  color: grey;
+  border-color: grey;
+  border-width: 20px;
+}
+
+.psyche-info {
+  margin-top: 50px;
+  font-weight: bold;
+  border: 2px solid white;
+  color: black;
+}
+
+.psyche-info-line {
+  font-family: "Helvetica", sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 1.4;
+  text-align: center;
+  color: #302144;
+  letter-spacing: -1px;
+}
+
+.psyche-info-headline {
+  font-family: "Helvetica", sans-serif;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 1.4;
+  text-align: center;
+  color: #302144;
+  letter-spacing: -1px;
+}
+
+.psyche-info-list {
+  font-weight: normal;
+  color: black;
+  text-align: left;
+  align-self: center;
+  list-style-type: disc;
+}
+
+#launch-button {
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  background-color: #f9a000;
+  border: 2px 50% black;
+  border-radius: 16px;
+  height: 50px;
+  width: 75%;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.1s;
+}
+
+#launch-button:active {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0.95);
+  border: none;
+}
+
+#launch-button:focus {
+  outline: none;
+}
+
+.about-link {
+  color: white;
+  text-decoration: none;
+}
+
+.about-button {
+  margin-top: 10px;
+  margin-bottom: 25px;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  background-color: gray;
+  /* background-color: #f9a000;#20162f; */
+  border: 2px 50% black;
+  border-radius: 16px;
+  height: 40px;
+  width: 50%;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.1s;
+}
+
+.about-button:active {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0.95);
+  border: none;
+}
+
+.about-button:focus {
+  outline: none;
+}
+
+.psyche-satellite-img img {
+  margin-top: 25px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  #container {
+    margin-left: 25%;
+    margin-right: 25%;
+  }
+}
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 1s ease-out,
+    transform 1s ease-out;
+}
+
+.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.psyche-info {
+  margin: 20px 0;
+}
+
+.psyche-info-line {
+  margin: 10px 0;
 }
 
 /* Loading container styling */

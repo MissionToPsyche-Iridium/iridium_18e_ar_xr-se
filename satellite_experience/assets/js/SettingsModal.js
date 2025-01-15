@@ -36,19 +36,19 @@ export default class SettingsModal {
         // Close button
         document.addEventListener('click', (event) => {
             const container = document.getElementById('modal-container-id');
-            if (this.settingsModal && 
-                (event.target.id === 'settings-modal-close'
-                || !container.contains(event.target))) {
-                console.log(event.target.id);
-                parent.playSound3();
-                this.close();
+            if (this.settingsModal && this.settingsModal.style.display !== 'none') {
+                if (event.target.id === 'settings-modal-close' || 
+                    (container && !container.contains(event.target))) {
+                    window.sfxManager.playSound("close");
+                    this.close();
+                }
             }
         });
     }
 
     // Load settings modal content
     _loadSettingsModalContent() {
-        parent.playSound1();
+        window.sfxManager.playSound("open");
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'settings_modal.html', true);
         xhr.onreadystatechange = () => {
@@ -75,7 +75,7 @@ export default class SettingsModal {
 
         radioSetting.forEach(radio => {
             radio.addEventListener('change', () => {
-                parent.playSound2();
+                window.sfxManager.playSound("select");
                 if (document.getElementById('default-mode').checked) {
                     this.cssFile.href = '../assets/css/styles.css';
                     localStorage.setItem('theme', "default-mode");
@@ -99,14 +99,14 @@ export default class SettingsModal {
         const savedVolume = localStorage.getItem("volumeSetting");
         if (savedVolume !== null) {
             volumeSlider.value = savedVolume;
-            parent.setVolume(savedVolume / 100);
+            window.sfxManager.setVolume(savedVolume / 100);
         } else {
-            parent.setVolume(volumeSlider.value / 100);
+            window.sfxManager.setVolume(volumeSlider.value / 100);
         }
         // event listener for changes in volume slider
         volumeSlider.addEventListener("input", function() {
             const volumeValue = volumeSlider.value;
-            parent.setVolume(volumeValue / 100);
+            window.sfxManager.setVolume(volumeValue / 100);
             localStorage.setItem("volumeSetting", volumeValue);
         });
     }

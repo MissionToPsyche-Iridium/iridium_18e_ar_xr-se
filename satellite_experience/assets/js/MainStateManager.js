@@ -27,6 +27,7 @@ async function findDistanceByDateFromFile(targetDate) {
     }
 
 }
+
 function getCurrentDateFormatted() {
     const date = new Date();
 
@@ -37,9 +38,11 @@ function getCurrentDateFormatted() {
     return `${year}-${month}-${day}`;
 }
 
-var missionCompletionTime = new Date("2029-Jun-16").getTime();
+//var missionCompletionTime = new Date("2029-Jun-16").getTime();
+var missionCompletionTime = 1876262400000;
 var x = setInterval(function() {
-  var currentDate = new Date().getTime();
+  //var currentDate = new Date().getTime();
+  var currentDate = Date.now();
   var distance = missionCompletionTime - currentDate;
 
   var years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
@@ -48,15 +51,17 @@ var x = setInterval(function() {
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  document.getElementById("timeRemaining").innerHTML = "Mission Accomplished: " + years + "y " + days + "d " + hours + "h "
-  + minutes + "m " + seconds + "s ";
+  if(document.getElementById("timeRemaining")!==null) {
+
+      document.getElementById("timeRemaining").innerHTML = "Mission Accomplished: " + years + "y " + days + "d " + hours + "h "
+      + minutes.toString() + "m " + seconds + "s ";
+  }
 
   if (distance < 0) {
     clearInterval(x);
     document.getElementById("timeRemaining").innerHTML = "Mission Accomplished"
   }
 }, 1000);
-
 
 export default class MainStateManager {
     /*
@@ -121,6 +126,7 @@ export default class MainStateManager {
             // Update bubbles in space scene
             if (this._spaceScene) {
                 this._spaceScene.updateState(this.mainState);
+                this._spaceScene.exitInstrumentDetail();
             }
 
         } catch (error) {
@@ -142,7 +148,7 @@ export default class MainStateManager {
     _setupEventListeners() {
         // Upper button
         this._upperButton.addEventListener('click', () => {
-            parent.playSound2();
+            window.sfxManager.playSound("select");
             if (this.mainState === 'main') {
                 this.updateMainState('mission');
             } else {
@@ -152,7 +158,7 @@ export default class MainStateManager {
 
         // Lower button
         this._lowerButton.addEventListener('click', () => {
-            parent.playSound2();
+            window.sfxManager.playSound("select");
             if (this.mainState === 'main') {
                 this.updateMainState('instrument');
             } else if (this.mainState === 'mission') {

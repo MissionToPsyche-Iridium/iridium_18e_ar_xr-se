@@ -6,110 +6,86 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Launch Page</title>
     <link rel="stylesheet" href="../assets/css/index.css" />
-    <script src="../assets/js/sfx.js"></script>
     <script src="../assets/js/index.js" defer></script>
   </head>
 
   <body>
+    <!-- Launch Page Psyche Icon and Title -->
     <div id="container">
       <div id="psyche-header">
-        <div id="psyche-icon">
-          <img
-            src="../assets/images/Psyche_Icon_Color-SVG.svg"
-            alt="Psyche Icon"
-          />
-        </div>
+        <img
+          src="../assets/images/Psyche_Icon_Color-SVG.svg"
+          alt="Psyche Icon"
+          id="psyche-icon"
+        />
         <header>
           <h1>Psyche Satellite Mission AR Experience</h1>
         </header>
       </div>
 
+      <!-- Experience Information -->
       <div class="psyche-info">
+        <!-- Experience Description -->
         <div class="psyche-info-headline">Understand the Mission.</div>
         <div class="psyche-info-headline">See Psyche's course,</div>
         <div class="psyche-info-headline">from launch to arrival.</div>
         <div class="psyche-info-headline">Explore the Mission.</div>
+        
+        <!-- Launch Button -->
         <button id="launch-button" type="button" onclick="onClick()">
           Launch AR Experience
         </button>
+
+        <!-- About Button -->
+        <button class="about-button" type="button">
+          <a class="about-link" href="about_page.html">About the Team</a>
+        </button>
       </div>
 
+      <!-- Instructions -->
       <div class="psyche-info" style="margin-top: 0px">
         Clicking the Launch AR Experience button will start an interactive
         experience that will explore the Psyche Mission.
       </div>
 
+      <!-- Main Content Section -->
       <div class="fade-in-section">
-        <div class="psyche-info">
-          <div class="psyche-info-line">
-            Explore the current mission progress
+          <div class="psyche-info">
+              <div class="psyche-info-line"> Explore the current mission progress</div>
+              <div class="psyche-info-line"> See the distance traveled.</div>
+              <div class="psyche-info-line"> Countdown to the arrival.</div>
           </div>
-          <div class="psyche-info-line">See the distance traveled.</div>
-          <div class="psyche-info-line">Countdown to the arrival.</div>
-        </div>
-        <div class="psyche-satellite-img">
-          <img
-            src="../assets/images/main_content.png"
-            alt="Psyche Satellite Image"
-          />
-        </div>
+
+          <div class="psyche-satellite-img">
+              <img src="../assets/images/main_content.png" alt="Psyche Satellite Image" />
+          </div>
       </div>
 
+      <!-- Instrument Content Section -->
       <div class="fade-in-section">
-        <div class="psyche-info">
-          <div class="psyche-info-line">
-            Explore the spacecraft with your phone.
+          <div class="psyche-info">
+              <div class="psyche-info-line"> Explore the spacecraft with your phone.</div>
+              <div class="psyche-info-line"> Checkout the spacecraft's equipment</div>
+              <div class="psyche-info-line"> Learn of the mission's experiments</div>
           </div>
-          <div class="psyche-info-line">
-            Checkout the spacecraft's equipment
+
+          <div class="psyche-satellite-img">
+              <img src="../assets/images/instruments_content.png" alt="Psyche Satellite Image" />
           </div>
-          <div class="psyche-info-line">Learn of the mission's experiments</div>
-        </div>
-        <div class="psyche-satellite-img">
-          <img
-            src="../assets/images/instruments_content.png"
-            alt="Psyche Satellite Image"
-          />
-        </div>
       </div>
-        <div class="fade-in-section">
-            <div class="psyche-info">
-                <div class="psyche-info-line"> Explore the current mission progress</div>
-                <div class="psyche-info-line"> See the distance traveled.</div>
-                <div class="psyche-info-line"> Countdown to the arrival.</div>
-            </div>
-            <div class="psyche-satellite-img">
-                <img src="../assets/images/main_content.png" alt="Psyche Satellite Image" />
-            </div>
-        </div>
 
-        <div class="fade-in-section">
-            <div class="psyche-info">
-                <div class="psyche-info-line"> Explore the spacecraft with your phone.</div>
-                <div class="psyche-info-line"> Checkout the spacecraft's equipment</div>
-                <div class="psyche-info-line"> Learn of the mission's experiments</div>
-            </div>
-            <div class="psyche-satellite-img">
-                <img src="../assets/images/instruments_content.png" alt="Psyche Satellite Image" />
-            </div>
-        </div>
-
-        <div class="fade-in-section">
-            <div class="psyche-info">
-                <div class="psyche-info-line"> Explore the full mission.</div>
-                <div class="psyche-info-line"> Watch the launch of the spacecraft.</div>
-                <div class="psyche-info-line"> View the approach of Psyche.</div>
-                <div class="psyche-info-line"> Watch as we uncover the origins of Psyche</div>
-            </div>
-            <div class="psyche-satellite-img">
-                <img src="../assets/images/mission_content.png" alt="Psyche Satellite Image" />
-            </div>
-        </div>
-
-        <div id="disclaimer">
-            This work was created in partial fulfillment of Arizona State University Capstone Course SER 401. The work is a result of the Psyche Student Collaborations component of NASA’s Psyche Mission (https://psyche.asu.edu).
-            “Psyche: A Journey to a Metal World” [Contract number NNM16AA09C] is part of the NASA Discovery Program mission to solar system targets. Trade names and trademarks of ASU and NASA are used in this work for identification only. Their usage does not constitute an official endorsement, either expressed or implied, by Arizona State University or National Aeronautics and Space Administration. The content is solely the responsibility of the authors and does not necessarily represent the official views of ASU or NASA.
-        </div>
+      <!-- Mission Content Section -->
+      <div class="fade-in-section">
+          <div class="psyche-info">
+              <div class="psyche-info-line"> Explore the full mission.</div>
+              <div class="psyche-info-line"> Watch the launch of the spacecraft.</div>
+              <div class="psyche-info-line"> View the approach of Psyche.</div>
+              <div class="psyche-info-line"> Watch as we uncover the origins of Psyche</div>
+          </div>
+          <div class="psyche-satellite-img">
+              <img src="../assets/images/mission_content.png" alt="Psyche Satellite Image" />
+          </div>
+      </div>
     </div>
   </body>
 </html>
