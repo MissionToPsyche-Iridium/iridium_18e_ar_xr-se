@@ -98,6 +98,29 @@ const telescopeLens = new THREE.Mesh(telescopeLensGeometry, telescopeLensMateria
 telescopeLens.position.set(0, -2, 3.1);
 scene.add(telescopeLens);
 
+// Circle behavior
+const scope = document.getElementById('scope');
+
+function moveScope(event) {
+    scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
+    scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
+}
+
+document.addEventListener('mousedown', (event) => {
+    scope.style.display = 'block';
+    moveScope(event);
+});
+
+document.addEventListener('mousemove', (event) => {
+    if (scope.style.display === 'block') {
+        moveScope(event);
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    scope.style.display = 'none';
+});
+
 // Animate the scene
 function animate() {
     requestAnimationFrame(animate);
