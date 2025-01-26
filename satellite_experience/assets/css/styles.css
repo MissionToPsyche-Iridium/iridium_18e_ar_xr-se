@@ -433,6 +433,7 @@ body {
 .settings-modal-light-mode,
 .settings-modal-color-blind-mode,
 .settings-modal-volume {
+  position: relative;
   width: 100%;
   text-align: left;
   margin-bottom: 1px;
@@ -446,6 +447,18 @@ body {
 
 .settings-modal-default-mode {
   margin-top: 20%;
+}
+
+.invisibuttons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  padding: 15px 10px;
+  border-radius: 5px;
+  background: transparent;
+  border: none;
 }
 
 #default-mode,
