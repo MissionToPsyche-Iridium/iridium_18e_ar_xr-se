@@ -66,6 +66,10 @@ export default class SettingsModal {
         const settingThemeLink = document.getElementById('setting-theme');
         const radioSetting = document.querySelectorAll('input[name="setting"]');
         const savedSelection = localStorage.getItem('theme');
+        const button0 = document.getElementById("button0");
+        const button1 = document.getElementById("button1");
+        const button2 = document.getElementById("button2");
+        const button3 = document.getElementById("button3");
         if (savedSelection) {
             const radioToSelect = document.querySelector(`input[name="setting"][value="${savedSelection}"]`);
             if (radioToSelect) {
@@ -109,5 +113,10 @@ export default class SettingsModal {
             window.sfxManager.setVolume(volumeValue / 100);
             localStorage.setItem("volumeSetting", volumeValue);
         });
+
+        button0.addEventListener('click', () => document.getElementById('default-mode').click());
+        button1.addEventListener('click', () => document.getElementById('high-contrast-mode').click());
+        button2.addEventListener('click', () => document.getElementById('light-mode').click());
+        button3.addEventListener('click', () => document.getElementById('color-blind-mode').click());
     }
 }
