@@ -14,24 +14,18 @@ html {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  /* min-width: 100%; */
-  /* min-height: 100vh; */
   margin: 0;
-  /* background-color: #ffffff; */
 }
 
 .about-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* height: 50vh; */
   width: 100%;
   top: 0;
   left: 0;
   justify-content: center;
   margin: 0;
-  /* gap: 10px; */
-  /* margin-bottom: 50vh; */
 }
 
 .team {
@@ -39,7 +33,7 @@ html {
 }
 
 .team-container {
-  width: 400px;
+  width: 350px;
   text-align: left;
   padding-bottom: 30px;
   padding-top: 10px;
@@ -76,6 +70,8 @@ h1 {
   padding: 30px;
   align-self: center;
   color: white;
+  margin-left: 100px;
+  margin-right: 100px;
 }
 
 .team-member {
@@ -86,7 +82,7 @@ h1 {
   text-align: left;
   align-items: center;
   justify-content: center;
-  width: 400px;
+  width: 350px;
   gap: 40px;
 }
 
@@ -117,12 +113,11 @@ h1 {
 }
 
 .citation-container {
-  margin-top: 150px;
+  margin-top: 30px;
   display: flex;
-  width: 400px;
+  width: 350px;
   text-align: left;
   flex-direction: column;
-  /* align-items: center; */
 }
 
 .citation-section-title {
@@ -135,4 +130,17 @@ h1 {
   width: 70%;
   left: 11px;
   top: 8px;
+}
+
+.disclaimer {
+  color: white;
+  font-size: 9px;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.content-container {
+  margin: 10px;
 }

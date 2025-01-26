@@ -27,7 +27,6 @@ body {
   text-align: center;
 }
 
-
 #body {
   display: flex;
   flex-direction: column;
@@ -206,3 +205,20 @@ h1 {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);
 }
 
+.footer {
+  background-image: linear-gradient(to right, #302144, #000000);
+  width: 100%;
+  justify-content: center;
+}
+
+.footer-links {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  text-align: left;
+  width: 20%;
+  left: 50%;
+  margin: 0 auto;
+}
+.footer-links a {
+  color: white;
+}
