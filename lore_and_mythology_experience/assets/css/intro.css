@@ -10,33 +10,33 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    height: auto;
+    width: 90%;
     max-width: 500px;
-    background: url('../images/papyrus_scroll_vertical.png') no-repeat center center;
+    background: url('../images/papyrus_scroll_intro.png') no-repeat center center;
     background-size: contain;
-    display: none;
     z-index: 1000;
-    padding: 20px;
+    padding: 50%; /* Adjusted for better scaling */
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.5s;
 }
 
-.popup-content {
-    text-align: center;
-    color: #000;
-    font-size: 12px;
-    padding: 35% 10%;
-    border-radius: 10px;
-    max-width: 100%;
-    margin: 10%;
+/* Adjustments for smaller screens */
+@media (max-width: 600px) {
+    .popup-container {
+        top: 50%;
+        width: 95%;
+        padding: 40%;
+    }
 }
 
-.close-btn {
-    position: absolute;
-    top: 15%;
-    right: 15%;
-    font-size: 24px;
-    cursor: pointer;
-    color: #000;
+/* Adjustments for larger screens */
+@media (min-width: 1024px) {
+    .popup-container {
+        width: 60%;
+        max-width: 600px;
+        padding: 45%;
+    }
 }
