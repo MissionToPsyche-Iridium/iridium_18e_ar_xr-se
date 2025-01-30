@@ -54,14 +54,15 @@ const stars = createStarField();
 scene.add(stars);
 
 // Add a glowing metorite
-const planetGeometry = new THREE.SphereGeometry(1, 32, 32);
-const planetMaterial = new THREE.MeshStandardMaterial({
+const metoriteGeometry = new THREE.SphereGeometry(1, 32, 32);
+const metoriteMaterial = new THREE.MeshStandardMaterial({
     color: 0x0088ff,
     emissive: 0x002244,
 });
-const planet = new THREE.Mesh(planetGeometry, planetMaterial);
-planet.position.set(2, 0, -3);
-scene.add(planet);
+const metorite = new THREE.Mesh(metoriteGeometry, metoriteMaterial);
+metorite.position.set(2, 0, -3);
+scene.add(metorite);
+metorite.visible = false;
 
 // Add lighting
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
@@ -98,12 +99,31 @@ const telescopeLens = new THREE.Mesh(telescopeLensGeometry, telescopeLensMateria
 telescopeLens.position.set(0, -2, 3.1);
 scene.add(telescopeLens);
 
-// Circle behavior
+// Scope behavior
 const scope = document.getElementById('scope');
+
+// Raycaster setup
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2()
 
 function moveScope(event) {
     scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
     scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
+
+    // Convert to world position
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Perform raycast
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(metorite);
+
+    // hide/show metorite
+    if (intersects.length > 0) {
+        metorite.visible = true;
+    } else {
+        metorite.visible = false;
+    }
 }
 
 document.addEventListener('mousedown', (event) => {
@@ -119,6 +139,8 @@ document.addEventListener('mousemove', (event) => {
 
 document.addEventListener('mouseup', () => {
     scope.style.display = 'none';
+    // hide metorite
+    metorite.visible = false;
 });
 
 // Animate the scene
@@ -128,7 +150,7 @@ function animate() {
     stars.rotation.x += 0.0005;
     stars.rotation.y += 0.0005;
 
-    planet.rotation.y += 0.01;
+    metorite.rotation.y += 0.01;
 
     renderer.render(scene, camera);
 }
