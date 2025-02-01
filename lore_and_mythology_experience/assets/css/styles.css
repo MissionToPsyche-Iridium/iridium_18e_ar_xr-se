@@ -17,7 +17,7 @@ canvas {
   background: transparent;
   visibility: hidden;
   opacity: 0;
-  transition: 0.5s;
+  transition: 1.5s;
 }
 /* Icon Button Styling */
 #help-icon-button {
