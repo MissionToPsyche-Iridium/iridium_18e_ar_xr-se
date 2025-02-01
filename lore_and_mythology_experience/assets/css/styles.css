@@ -46,3 +46,88 @@ canvas {
   pointer-events: none;
   display: none;
 }
+
+#help_modal {
+  display: none;
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /*background-color: transparent;*/
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#papyrus_horizontal {
+  /*background-color: transparent;*/
+  background-color: rgba(32, 22, 47, 0.8);
+  width: 80vw;
+  height: calc(0.75 * 80vw);
+  border-radius: 12px;
+  position: relative;
+  top: calc((100vh - 0.75 * 80vw) / 2);
+  left: calc((100vw - 80vw) / 2);
+}
+
+#close_help {
+  position: absolute;
+  top: calc((0.09 * 0.75 * 80vw) + (0.5 * 100vh) - (0.5 * 0.75 * 80vw));
+  left: calc(0.9 * 80vw);
+  font-family: "Papyrus", fantasy;
+  font-size: calc(0.04 * 0.75 * 80vw);
+  cursor: pointer;
+}
+
+#help_modal_title {
+  position: absolute;
+  top: calc((0.22 * 0.75 * 80vw) + (0.5 * 100vh) - (0.5 * 0.75 * 80vw));
+  left: calc(0.57 * 80vw);
+  /*color: black;*/
+  font-family: "Papyrus", fantasy;
+  font-size: calc(0.06 * 0.75 * 80vw);
+}
+
+.swipe {
+  position: absolute;
+  top: calc((0.48 * 0.75 * 80vw) + (0.5 * 100vh) - (0.5 * 0.75 * 80vw));
+  left: calc(0.42 * 80vw);
+  display: flex;
+  flex-direction: column;
+  font-family: "Papyrus", fantasy;
+}
+
+#swipe {
+  width: calc(0.12 * 80vw);
+  align-self: center;
+}
+
+.tap {
+  position: absolute;
+  top: calc((0.46 * 0.75 * 80vw) + (0.5 * 100vh) - (0.5 * 0.75 * 80vw));
+  left: calc(0.67 * 80vw);
+  display: flex;
+  flex-direction: column;
+  font-family: "Papyrus", fantasy;
+}
+
+#tap {
+  width: calc(0.12 * 80vw);
+  align-self: center;
+  padding: 0.6vw;
+}
+
+.text_box {
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  border-radius: 5px;
+  padding: 1vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.instructions {
+  text-align: center;
+  font-size: calc(0.02 * 0.75 * 80vw);
+}
