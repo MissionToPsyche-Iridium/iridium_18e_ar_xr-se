@@ -1,6 +1,6 @@
 
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
-// import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 // import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 // import {
 //     CSS2DRenderer,
@@ -106,6 +106,15 @@ const scope = document.getElementById('scope');
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2()
 
+// OrbitControls 
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.enableRotate = false;
+controls.enablePan = false;
+controls.enableZoom = false;
+
+let isZoom = false;
+
 function moveScope(event) {
     scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
     scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
@@ -118,29 +127,63 @@ function moveScope(event) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(metorite);
 
+
     // hide/show metorite
     if (intersects.length > 0) {
+        // pause zoom
+        if (isZoom) return;
+        isZoom = true;
+        scope.style.display = 'none';
+
         metorite.visible = true;
-    } else {
-        metorite.visible = false;
+        const targetPoint = intersects[0].point;
+
+        // Move the camera closer instead of directly to the point
+        const zoomFactor = 0.5;
+        const newCameraPosition = camera.position.clone().lerp(targetPoint, zoomFactor);
+
+        // Animate the zoom effect
+        const duration = 1000;
+        const startTime = performance.now();
+        const startPos = camera.position.clone();
+        const startTarget = controls.target.clone();
+
+        function animateZoom(time) {
+            const elapsed = time - startTime;
+            const t = Math.min(elapsed / duration, 1);
+
+            // Interpolate camera position and focus target
+            camera.position.lerpVectors(startPos, newCameraPosition, t);
+            controls.target.lerpVectors(startTarget, targetPoint, t);
+            controls.update();
+
+            if (t < 1) {
+                requestAnimationFrame(animateZoom);
+            } else {
+                isZoom = false;
+            }
+        }
+
+        requestAnimationFrame(animateZoom);
     }
 }
 
 document.addEventListener('mousedown', (event) => {
+    if (isZoom) return;
     scope.style.display = 'block';
     moveScope(event);
 });
 
 document.addEventListener('mousemove', (event) => {
+    if (isZoom) return;
     if (scope.style.display === 'block') {
         moveScope(event);
     }
 });
 
 document.addEventListener('mouseup', () => {
+    if (isZoom) return;
     scope.style.display = 'none';
-    // hide metorite
-    metorite.visible = false;
 });
 
 // Animate the scene
