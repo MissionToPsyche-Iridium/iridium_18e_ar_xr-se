@@ -1,4 +1,4 @@
-
+import SettingsModal from './SettingsModal.js';
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 // import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 // import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
@@ -134,6 +134,8 @@ function animate() {
 }
 
 animate();
+
+const settingsModal = new SettingsModal();
 
 // Handle window resizing
 window.addEventListener("resize", () => {
