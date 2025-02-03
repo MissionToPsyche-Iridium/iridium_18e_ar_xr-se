@@ -6,18 +6,37 @@ canvas {
   display: block;
 }
 
-.main-title {
-  position: absolute;
+.main-text-container {
+  position: fixed;
+  top: 20%;
   left: 50%;
-  top: 10%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-  background: transparent;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  max-width: 500px;
+  background: url('../images/papyrus_scroll_main_text2.png') no-repeat center center;
+  background-size: contain;
   visibility: hidden;
+  padding: 10%;
   opacity: 0;
   transition: 1.5s;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 600px) {
+  .main-text-container {
+      top: 15%;
+      width: 95%;
+      padding: 50%;
+  }
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 1024px) {
+  .main-text-container {
+      width: 60%;
+      max-width: 600px;
+      padding: 20%;
+  }
 }
 /* Icon Button Styling */
 #help-icon-button {

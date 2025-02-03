@@ -14,7 +14,7 @@ export function closePopup() {
         popup.style.opacity = "0";
     }
 
-    const mainTitle = document.querySelector(".main-title");
+    const mainTitle = document.querySelector(".main-text-container");
     if (mainTitle) {
         mainTitle.style.visibility = "visible";
         mainTitle.style.opacity = "1";
