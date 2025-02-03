@@ -127,7 +127,6 @@ function moveScope(event) {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(metorite);
 
-
     // hide/show metorite
     if (intersects.length > 0) {
         // pause zoom
@@ -160,7 +159,7 @@ function moveScope(event) {
             if (t < 1) {
                 requestAnimationFrame(animateZoom);
             } else {
-                isZoom = false;
+                starFieldTransistion();
             }
         }
 
@@ -168,21 +167,56 @@ function moveScope(event) {
     }
 }
 
+const starTransistionGeometry = new THREE.BufferGeometry();
+let isStarTransition = false;
+
+function starFieldTransistion() {
+    scene.remove(stars);
+
+    // Starfield parameters
+    const starCount = 2000;
+    const starPositions = new Float32Array(starCount * 3);
+
+    for (let i = 0; i < starCount; i++) {
+        let x = (Math.random() - 0.5) * 2000;
+        let y = (Math.random() - 0.5) * 2000;
+        let z = Math.random() * 2000;
+        starPositions[i * 3] = x;
+        starPositions[i * 3 + 1] = y;
+        starPositions[i * 3 + 2] = z;
+    }
+
+    starTransistionGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+
+    const starMaterial = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 2,
+        transparent: true,
+        opacity: 0.8
+    });
+
+    const starTransistion = new THREE.Points(starTransistionGeometry, starMaterial);
+    scene.add(starTransistion);
+    isStarTransition = true;
+
+    // Camera position adjustment
+    camera.position.z += 1000;
+    metorite.position.z += 1000;
+    pointLight.position.z += 1000;
+}
+
 document.addEventListener('mousedown', (event) => {
-    if (isZoom) return;
     scope.style.display = 'block';
     moveScope(event);
 });
 
 document.addEventListener('mousemove', (event) => {
-    if (isZoom) return;
     if (scope.style.display === 'block') {
         moveScope(event);
     }
 });
 
 document.addEventListener('mouseup', () => {
-    if (isZoom) return;
     scope.style.display = 'none';
 });
 
@@ -190,11 +224,27 @@ document.addEventListener('mouseup', () => {
 function animate() {
     requestAnimationFrame(animate);
 
-    stars.rotation.x += 0.0005;
-    stars.rotation.y += 0.0005;
+    if (isStarTransition) {
+        // Move stars toward the camera (warp effect)
+        const positions = starTransistionGeometry.attributes.position.array;
+        for (let i = 0; i < positions.length; i += 3) {
+            // move forward
+            positions[i + 2] -= 10;
 
-    metorite.rotation.y += 0.01;
+            // Reset stars when they pass the camera
+            if (positions[i + 2] < 0) {
+                positions[i] = (Math.random() - 0.5) * 2000;
+                positions[i + 1] = (Math.random() - 0.5) * 2000;
+                positions[i + 2] = 2000;
+            }
+        }
+        starTransistionGeometry.attributes.position.needsUpdate = true;
+    } else {
+        stars.rotation.x += 0.0005;
+        stars.rotation.y += 0.0005;
 
+        metorite.rotation.y += 0.01;
+    }
     renderer.render(scene, camera);
 }
 
