@@ -1,4 +1,3 @@
-
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 // import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 // import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
@@ -140,4 +139,19 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+});
+
+// load papyrus scroll introduction
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('intro.html')
+        .then(response => response.text())
+        .then(data => {
+            document.body.insertAdjacentHTML('beforeend', data);
+
+            import('./intro.js')
+                .then(module => {
+                    module.openPopup();
+                })
+                .catch(error => console.error("Failed to load intro.js:", error));
+        });
 });
