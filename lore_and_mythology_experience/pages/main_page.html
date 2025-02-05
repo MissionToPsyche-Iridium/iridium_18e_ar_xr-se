@@ -14,11 +14,26 @@
     <div class="main-title">Find the Psyche Metorite To Start the Journey.</div>
 
     <!-- Help Icon Button -->
-    <img
-      src="../assets/images/help_icon.png"
-      alt="Help Icon"
-      id="help-icon-button"
-    />
+    <img src="../assets/images/help_icon.png" onclick="document.getElementById('help_modal').style.display='block'" id="help-icon-button"/>
+      <div id="help_modal">
+        <img src="../assets/images/papyrus_scroll_horizontal.png" id="papyrus_horizontal"/>
+        <span onclick="document.getElementById('help_modal').style.display='none'" id="close_help">X</span>
+        <p id="help_modal_title">Help</p>
+        <div class="swipe">
+          <img src="../assets/images/swipe.png" id="swipe"/>
+          <div class="text_box">
+            <span class="instructions">Swipe to Control</span>
+            <span class="instructions">Telescope View</span>
+          </div>
+        </div>
+        <div class="tap">
+          <img src="../assets/images/tap.png" id="tap"/>
+          <div class="text_box">
+            <span class="instructions">Tap Explore Buttons</span>
+            <span class="instructions">to Continue</span>
+          </div>
+        </div>
+      </div>
 
     <!-- Settings Icon Button -->
     <img
