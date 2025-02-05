@@ -51,7 +51,7 @@ canvas {
 
 .modal-popup {
   background: url("../images/old_page.png") no-repeat center center;
-  background-size: cover;
+  background-size: 100% 100%;
   font-family: 'Lucida Calligraphy', 'Brush Script MT', cursive;
   margin: 10% auto;
   padding: 20px;
