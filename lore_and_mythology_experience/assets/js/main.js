@@ -108,20 +108,31 @@ const mouse = new THREE.Vector2()
 
 // OrbitControls 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+controls.enableDamping = false;
 controls.enableRotate = false;
 controls.enablePan = false;
 controls.enableZoom = false;
 
 let isZoom = false;
+let count = 0;
 
 function moveScope(event) {
-    scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
-    scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
+    if (event.touches) {
+        scope.style.left = `${event.touches[event.touches.length - 1].clientX - scope.offsetWidth / 2}px`;
+        scope.style.top = `${event.touches[event.touches.length - 1].clientY - scope.offsetHeight / 2}px`;
 
-    // Convert to world position
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        // Convert to world position
+        mouse.x = (event.touches[event.touches.length - 1].clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.touches[event.touches.length - 1].clientY / window.innerHeight) * 2 + 1;
+
+    } else {
+        scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
+        scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
+        // Convert to world position
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    }
+
 
     // Perform raycast
     raycaster.setFromCamera(mouse, camera);
@@ -165,6 +176,8 @@ function moveScope(event) {
 
         requestAnimationFrame(animateZoom);
     }
+    count = 100;
+
 }
 
 const starTransistionGeometry = new THREE.BufferGeometry();
@@ -210,13 +223,23 @@ document.addEventListener('mousedown', (event) => {
     moveScope(event);
 });
 
-document.addEventListener('mousemove', (event) => {
+
+document.addEventListener('pointermove', (event) => {
     if (scope.style.display === 'block') {
         moveScope(event);
     }
 });
 
 document.addEventListener('mouseup', () => {
+    scope.style.display = 'none';
+});
+
+document.addEventListener('touchstart', (event) => {
+    scope.style.display = 'block';
+    moveScope(event);
+});
+
+document.addEventListener('touchend', () => {
     scope.style.display = 'none';
 });
 
