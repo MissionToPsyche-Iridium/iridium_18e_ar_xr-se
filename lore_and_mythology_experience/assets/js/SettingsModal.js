@@ -21,6 +21,7 @@ export default class SettingsModal {
     // Close settings modal
     close() {
         this.settingsModal.style.display = 'none';
+        window.scopeDisabled = false;
     }
 
     /*
@@ -45,6 +46,38 @@ export default class SettingsModal {
         });
     }
 
+    applyAMPIModalStyles() {
+        const modalPopup = this.settingsModal.querySelector('.modal-popup');
+        if (!modalPopup) return;
+        modalPopup.style.backgroundImage = 'none';
+        modalPopup.style.backgroundColor = 'rgba(229, 243, 255, 0.9)';
+        modalPopup.style.borderRadius = '15px';
+        modalPopup.style.fontFamily = 'Arial, Helvetica, sans-serif';
+
+        const modalLogoContainer = this.settingsModal.querySelector('.modal-logo-container');
+        if (!modalLogoContainer) return;
+        modalLogoContainer.style.top = '10';
+        modalLogoContainer.style.left = '10';
+
+        const modalClose = this.settingsModal.querySelector('.modal-close');
+        if (!modalClose) return;
+        modalClose.style.top = '10';
+        modalClose.style.right = '10';
+
+        const modalContent = this.settingsModal.querySelector('.modal-content');
+        if (!modalContent) return;
+        modalContent.style.maxWidth = '90%';
+        modalContent.style.marginLeft = '0';
+        modalContent.style.margin = '0 auto';
+        modalContent.style.display = 'block'
+        modalContent.style.textAlign = 'center';
+    
+        const textBlocks = modalPopup.querySelectorAll('.modal-text');
+        textBlocks.forEach(tb => {
+          tb.style.color = '#333';
+        });
+    }
+
     // Load settings modal content
     _loadSettingsModalContent() {
         const xhr = new XMLHttpRequest();
@@ -53,6 +86,7 @@ export default class SettingsModal {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 this.settingsModalContent.innerHTML = xhr.responseText;
                 this.settingsModal.style.display = 'flex';
+                window.scopeDisabled = true;
                 this._setupThemeSettings();
             }
         };

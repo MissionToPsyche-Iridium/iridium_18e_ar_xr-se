@@ -28,7 +28,7 @@ canvas {
   width: 30px;
   height: 30px;
   cursor: pointer;
-  z-index: 10;
+  z-index: 20;
 }
 
 #settings-icon-button {
@@ -38,14 +38,14 @@ canvas {
   width: 30px;
   height: 30px;
   cursor: pointer;
-  z-index: 10;
+  z-index: 20;
 }
 
 /* Modal Styling */
 .modal {
   display: none; /* Hide modal by default */
   position: fixed;
-  z-index: 20;
+  z-index: 30;
   left: 0;
   top: 0;
   width: 100%;
@@ -54,7 +54,7 @@ canvas {
 }
 
 .modal-popup {
-  background: url("../images/old_page.png") no-repeat center center;
+  background: url("../images/papyrus_scroll_double_sided_wide_rotated.png") no-repeat center center;
   background-size: 100% 100%;
   font-family: 'Lucida Calligraphy', 'Brush Script MT', cursive;
   margin: 10% auto;
@@ -66,14 +66,14 @@ canvas {
   position: relative;
   max-height: 90vh;
   overflow-y: auto;
-  z-index: 20;
+  z-index: 30;
 }
 
 .modal-logo-container {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 30;
+  top: 30px;
+  left: 70px;
+  z-index: 40;
 }
 
 .modal-logo {
@@ -84,15 +84,15 @@ canvas {
 .modal-title {
   font-size: 24px;
   margin-top: 0;
-  padding-top: 10px;
+  padding-top: 40px;
   text-align: center;
 }
 
 .modal-close {
   color: black;
   position: absolute;
-  top: 10px;
-  right: 20px;
+  top: 30px;
+  right: 70px;
   font-size: 30px;
   font-weight: bold;
   cursor: pointer;
@@ -104,6 +104,8 @@ canvas {
 }
 
 .modal-content {
+  max-width: 70%;
+  margin-left: 80px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -160,13 +162,13 @@ canvas {
   border-radius: 50%;
   pointer-events: auto;
   display: none;
-  z-index: 9999;
+  z-index: 10;
 }
 
 #help_modal {
   display: none;
   position: fixed;
-  z-index: 20;
+  z-index: 30;
   left: 0;
   top: 0;
   width: 100%;
