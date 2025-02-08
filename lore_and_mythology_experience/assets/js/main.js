@@ -279,7 +279,6 @@ function animate() {
     } else {
         stars.rotation.x += 0.0005;
         stars.rotation.y += 0.0005;
-
         metorite.rotation.y += 0.01;
     }
     renderer.render(scene, camera);
