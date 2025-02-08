@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings Page</title>
+    <link id="setting-theme" rel="stylesheet" href="../assets/css/styles.css" />
+  </head>
+  <body>
+    <!-- Settings Container -->
+    <div id = "modal-container-id"class="modal-container">
+      <!-- Logo -->
+      <div class="modal-logo-container">
+        <img
+          src="../assets/images/old_psyche_logo.png"
+          alt="Logo"
+          class="modal-logo"
+        />
+      </div>
+
+      <!-- Settings Title -->
+      <div class="modal-title">Settings</div>
+
+      <!-- Content -->
+      <div class="modal-content">
+        <!-- Default ModeContent -->
+        <div class="settings-modal-default-mode">
+          <input class="invisibuttons" id="button0" type="button"/>
+          <label for="default-mode">
+            <span>Default Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="default-mode"
+            name="setting"
+            value="default-mode"
+          />
+        </div>
+
+        <!-- High Contrast Mode Content -->
+        <div class="settings-modal-high-contrast-mode">
+          <input class="invisibuttons" id="button1" type="button"/>
+          <label for="high-contrast-mode">
+            <span>High Contrast Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="high-contrast-mode"
+            name="setting"
+            value="high-contrast-mode"
+          />
+        </div>
+
+        <!-- Light Mode Content -->
+        <div class="settings-modal-light-mode">
+          <input class="invisibuttons" id="button2" type="button"/>
+          <label for="light-mode">
+            <span>Light Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="light-mode"
+            name="setting"
+            value="high-mode"
+          />
+        </div>
+
+        <!-- Color-blind Mode Content -->
+        <div class="settings-modal-color-blind-mode">
+          <input class="invisibuttons" id="button3" type="button"/>
+          <label for="color-blind-mode">
+            <span>Color-blind Mode</span>
+          </label>
+          <input
+            type="radio"
+            id="color-blind-mode"
+            name="setting"
+            value="color-blind-mode"
+          />
+        </div>
+
+        <!-- Volume Content -->
+        <div class="settings-modal-volume">
+          <label for="volume-slider">
+            <span>Volume</span>
+          </label>
+          <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  id="volume-slider"
+                  name="volume-setting"
+                  value="50"
+          />
+        </div>
+
+      </div>
+    </div>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>

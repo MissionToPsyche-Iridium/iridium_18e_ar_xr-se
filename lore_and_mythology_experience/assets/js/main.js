@@ -1,4 +1,5 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
+import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
 // import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
@@ -122,8 +123,12 @@ controls.enableRotate = false;
 controls.enablePan = false;
 controls.enableZoom = false;
 
+const settingsModal = new SettingsModal();
+
 let isZoom = false;
 let count = 0;
+
+window.scopeDisabled = false;
 
 function moveScope(event) {
     if (event.touches) {
@@ -177,6 +182,7 @@ function moveScope(event) {
             if (t < 1) {
                 requestAnimationFrame(animateZoom);
             } else {
+                settingsModal.applyAMPIModalStyles();
                 starFieldTransistion();
             }
         }
@@ -233,27 +239,37 @@ function starFieldTransistion() {
 }
 
 document.addEventListener('mousedown', (event) => {
+    if (window.scopeDisabled) return;
+
     scope.style.display = 'block';
     moveScope(event);
 });
 
 
 document.addEventListener('pointermove', (event) => {
+    if (window.scopeDisabled) return;
+
     if (scope.style.display === 'block') {
         moveScope(event);
     }
 });
 
 document.addEventListener('mouseup', () => {
+    if (window.scopeDisabled) return;
+
     scope.style.display = 'none';
 });
 
 document.addEventListener('touchstart', (event) => {
+    if (window.scopeDisabled) return;
+
     scope.style.display = 'block';
     moveScope(event);
 });
 
 document.addEventListener('touchend', () => {
+    if (window.scopeDisabled) return;
+
     scope.style.display = 'none';
 });
 
