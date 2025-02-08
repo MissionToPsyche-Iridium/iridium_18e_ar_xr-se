@@ -1,6 +1,7 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
+import { startPhases } from "./phases.js";
 // import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 // import {
 //     CSS2DRenderer,
@@ -145,8 +146,6 @@ function moveScope(event) {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
-
-
     // Perform raycast
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(metorite);
@@ -187,11 +186,9 @@ function moveScope(event) {
                 starFieldTransistion();
             }
         }
-
         requestAnimationFrame(animateZoom);
     }
     count = 100;
-
 }
 
 const starTransistionGeometry = new THREE.BufferGeometry();
@@ -230,6 +227,15 @@ function starFieldTransistion() {
     camera.position.z += 1000;
     metorite.position.z += 1000;
     pointLight.position.z += 1000;
+
+    setTimeout(() => {
+        camera.position.z = 0;
+        pointLight.position.z = 0;
+        isStarTransition = false;
+        metorite.visible = false;
+        console.log('Transitioning to phases');
+        startPhases();
+    }, 2000);
 }
 
 document.addEventListener('mousedown', (event) => {
@@ -289,7 +295,6 @@ function animate() {
     } else {
         stars.rotation.x += 0.0005;
         stars.rotation.y += 0.0005;
-
         metorite.rotation.y += 0.01;
     }
     renderer.render(scene, camera);
