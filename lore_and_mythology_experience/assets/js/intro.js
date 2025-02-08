@@ -3,7 +3,7 @@ export function openPopup() {
     if (popup) {
         popup.style.visibility = "visible";
         popup.style.opacity = "1";
-        setTimeout(closePopup, 1000); // Close after 1 second
+        setTimeout(closePopup, 1500); // Close after 1.5 second
     }
 }
 

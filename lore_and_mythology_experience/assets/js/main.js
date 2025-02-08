@@ -181,12 +181,7 @@ function moveScope(event) {
             }
         }
         requestAnimationFrame(animateZoom);
-    } else {
-            document.getElementById("phase_modal").setAttribute("style", "display: 'none';");
-            document.getElementById("phase").setAttribute("style", "display: 'none';");
-            document.getElementById("papyrus_scroll").setAttribute("style", "display: 'none';");
-            document.getElementById("scroll_text_box").setAttribute("style", "display: 'none';");
-        }
+    }
     count = 100;
 }
 
@@ -229,12 +224,12 @@ function starFieldTransistion() {
 
     setTimeout(() => {
         camera.position.z = 0;
-        metorite.position.z = 0;
         pointLight.position.z = 0;
         isStarTransition = false;
+        metorite.visible = false;
         console.log('Transitioning to phases');
         startPhases();
-    }, 1000);
+    }, 2000);
 }
 
 document.addEventListener('mousedown', (event) => {
