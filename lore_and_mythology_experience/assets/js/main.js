@@ -2,7 +2,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
-// import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -61,18 +61,19 @@ scene.add(stars);
 const cameraHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
 const cameraWidth = cameraHeight * camera.aspect;
 
-// Add a glowing metorite
-const metoriteX = Math.random() * cameraWidth - cameraWidth / 2;
-const metoriteY = Math.random() * cameraHeight - cameraHeight / 2;
-const metoriteGeometry = new THREE.SphereGeometry(1, 32, 32);
-const metoriteMaterial = new THREE.MeshStandardMaterial({
-    color: 0x0088ff,
-    emissive: 0x002244,
+// Add an astroid 
+const asteroidX = Math.random() * cameraWidth - cameraWidth / 2;
+const asteroidY = Math.random() * cameraHeight - cameraHeight / 2;
+
+const loader = new GLTFLoader();
+var asteroid;
+loader.load('../assets/models/asteroid.glb', (gltf) => {
+    asteroid = gltf.scene;
+    asteroid.scale.set(0.25, 0.25, 0.25);
+    asteroid.position.set(asteroidX, asteroidY, 0);
+    asteroid.visible = false;
+    scene.add(asteroid);
 });
-const metorite = new THREE.Mesh(metoriteGeometry, metoriteMaterial);
-metorite.position.set(metoriteX, metoriteY, -3);
-scene.add(metorite);
-metorite.visible = false;
 
 // Add lighting
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
@@ -148,16 +149,16 @@ function moveScope(event) {
     }
     // Perform raycast
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(metorite);
+    const intersects = raycaster.intersectObject(asteroid, true);
 
-    // hide/show metorite
+    // hide/show asteroid
     if (intersects.length > 0) {
         // pause zoom
         if (isZoom) return;
         isZoom = true;
         scope.style.display = 'none';
 
-        metorite.visible = true;
+        asteroid.visible = true;
         const targetPoint = intersects[0].point;
 
         // Move the camera closer instead of directly to the point
@@ -225,14 +226,14 @@ function starFieldTransistion() {
 
     // Camera position adjustment
     camera.position.z += 1000;
-    metorite.position.z += 1000;
+    asteroid.position.z += 1000;
     pointLight.position.z += 1000;
 
     setTimeout(() => {
         camera.position.z = 0;
         pointLight.position.z = 0;
         isStarTransition = false;
-        metorite.visible = false;
+        asteroid.visible = false;
         console.log('Transitioning to phases');
         startPhases();
     }, 2000);
@@ -295,7 +296,6 @@ function animate() {
     } else {
         stars.rotation.x += 0.0005;
         stars.rotation.y += 0.0005;
-        metorite.rotation.y += 0.01;
     }
     renderer.render(scene, camera);
 }
@@ -310,7 +310,7 @@ window.addEventListener("resize", () => {
 });
 
 // load papyrus scroll introduction
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     fetch('intro.html')
         .then(response => response.text())
         .then(data => {
