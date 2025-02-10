@@ -53,7 +53,35 @@ html {
   text-align: center;
 }
 
+/*.logo {*/
+/*  position: absolute;*/
+/*  left: 0;*/
+/*  align-self: center;*/
+/*  max-height: 75px;*/
+/*  max-width: 75px;*/
+/*  min-height: 75px;*/
+/*  min-width: 75px;*/
+/*  height: 15%;*/
+/*  width: 15%;*/
+/*  margin-left: 5%;*/
+/*  */
+/*}*/
+
 .logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: center;
+  width: 90px; /* Explicit width */
+  height: auto;
+  margin-right: 20px; /* Spacing from header */
+}
+
+#psyche-icon {
   position: absolute;
   left: 0;
   align-self: center;
@@ -66,11 +94,21 @@ html {
   margin-left: 5%;
 }
 
+.back-link {
+  font-size: 14px;
+  color: white;
+  text-decoration: none;
+  margin: 22px;
+  position: absolute;
+  left: 5%;
+  align-self: center;
+  margin-top: 120px;
+}
+
 h1 {
   padding: 30px;
   align-self: center;
   color: white;
-  margin-left: 100px;
   margin-right: 100px;
 }
 
