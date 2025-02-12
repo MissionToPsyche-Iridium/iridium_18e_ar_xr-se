@@ -27,32 +27,203 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Create stars
-function createStarField() {
-    const starGeometry = new THREE.BufferGeometry();
-    const starMaterial = new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 0.05,
-    });
-
-    const starVertices = [];
-    for (let i = 0; i < 10000; i++) {
-        const x = (Math.random() - 0.5) * 1000;
-        const y = (Math.random() - 0.5) * 1000;
-        const z = (Math.random() - 0.5) * 1000;
-        starVertices.push(x, y, z);
+// Common Fractal Noise algorithm implementation using perlin
+function fractalNoise2(x, y, octaves=4, lacunarity=2, persistence=0.5) {
+    let frequency = 1.0;
+    let amplitude = 1.0;
+    let sum = 0.0;
+    let maxValue = 0.0;
+  
+    for (let i = 0; i < octaves; i++) {
+        const val = noise.perlin2(x * frequency, y * frequency);
+        sum += val * amplitude;
+    
+        maxValue += amplitude;
+        amplitude *= persistence;
+        frequency *= lacunarity;
     }
 
-    starGeometry.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(starVertices, 3),
-    );
-
-    return new THREE.Points(starGeometry, starMaterial);
+    return sum / maxValue;
 }
 
+function generateSpaceCloudTexture(width, height, scale = 2.0) {
+    const size = width * height;
+    const data = new Uint8Array(4 * size);
+    
+    // Generate texture image
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            // Use fractal noise to get background texture value
+            const nx = x / width - 0.5;
+            const ny = y / height - 0.5;
+            const val = fractalNoise2(
+                nx * scale,
+                ny * scale,
+                5,
+                2.0,
+                0.5
+            );
+            const v = (val + 1) / 2.0;
+    
+            // Map values to color
+            const r = 0.0 + 0.12* v;
+            const g = 0.0 + 0.07 * v;
+            const b = 0.0 + 0.2 * v;
+            
+            // Assign pixels
+            const i = (y * width + x) * 4;
+            data[i + 0] = Math.floor(r * 255);
+            data[i + 1] = Math.floor(g * 255);
+            data[i + 2] = Math.floor(b * 255);
+            data[i + 3] = 255;
+        }
+    }
+  
+    // Convert to a texture
+    const texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
+    texture.wrapS = THREE.MirroredRepeatWrapping;
+    texture.wrapT = THREE.MirroredRepeatWrapping;
+    texture.needsUpdate = true;
+  
+    return texture;
+}
+
+function createSpaceClouds() {
+    // Generate cloud texture using fractal noise
+    const cloudTexture = generateSpaceCloudTexture(1024, 1024, 25.0);
+  
+    // Turn into a mesh
+    const cloudMaterial = new THREE.MeshBasicMaterial({
+        map: cloudTexture,
+        side: THREE.BackSide,
+    });
+  
+    // Create space cloud sphere
+    const sphereGeometry = new THREE.SphereGeometry(800, 64, 64);
+    const spaceCloudSphere = new THREE.Mesh(sphereGeometry, cloudMaterial);
+  
+    return spaceCloudSphere;
+}
+
+function createStarField() {
+    const starCount = 10000; // Number of stars
+    const minDistance = 50; // Minimum distance from origin (camera)
+
+    // Initialize star field data
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(starCount * 3);
+    const colors = new Float32Array(starCount * 3);
+    const sizes = new Float32Array(starCount);
+
+    // For each star
+    for (let i = 0; i < starCount; i++) {
+        // Calculate star position
+        let x, y, z;
+        do {
+            x = (Math.random() - 0.5) * 1000;
+            y = (Math.random() - 0.5) * 1000;
+            z = (Math.random() - 0.5) * 1000;
+        } while (Math.sqrt(x * x + y * y + z * z) < minDistance);
+
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+
+        // Calculate star size
+        sizes[i] = 2.0 + Math.random() * 1.5; 
+
+        // Calculate star tint
+        const tint = Math.random();
+        let r, g, b;
+        // White-Yellow
+        if (tint > 0.7) {
+            r = 1.0;
+            g = 0.85 + Math.random() * 0.15;
+            b = 0.7 + Math.random() * 0.1;
+        // Yellow-Orange
+        } else if (tint > 0.1) {
+            r = 1.0;
+            g = 0.7 + Math.random() * 0.3;
+            b = 0.4 + Math.random() * 0.2;
+        // White-Blue
+        } else {
+            r = 0.9;
+            g = 0.9;
+            b = 0.95 + Math.random() * 0.05;
+        }
+
+        colors[i * 3] = r;
+        colors[i * 3 + 1] = g;
+        colors[i * 3 + 2] = b;
+    }
+
+    // Assign attributes to geometry
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+
+    // Vertex shader
+    const vertexShader = `
+        precision highp float;
+        attribute float size;
+        varying vec3 vColor;
+
+        void main() {
+            vColor = color;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = size * (600.0 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+        }
+    `;
+
+    // Fragment shader
+    const fragmentShader = `
+        precision highp float;
+        varying vec3 vColor;
+
+        void main() {
+            // Calculate star limits
+            vec2 coord = gl_PointCoord - vec2(0.5);
+            float dist = length(coord);
+            if (dist > 0.5) {
+                discard;
+            }
+
+            // Star core
+            float core = 1.0 - smoothstep(0.0, 0.08, dist);
+
+            // Star glow
+            float glow = 1.0 - smoothstep(0.08, 0.5, dist);
+            glow *= 0.5;
+
+            // Combine alphas
+            float alpha = core + glow;
+
+            // Set fragment (pixel)
+            gl_FragColor = vec4(vColor, alpha);
+        }
+    `;
+
+    // Material
+    const starMaterial = new THREE.ShaderMaterial({
+        vertexColors: true,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        vertexShader,
+        fragmentShader
+    });
+
+    return new THREE.Points(geometry, starMaterial);
+}
+
+// Add star field
 const stars = createStarField();
 scene.add(stars);
+
+// Add space clouds
+const spaceCloudSphere = createSpaceClouds();
+scene.add(spaceCloudSphere);
 
 // Get the camera's aspect ratio, FOV, and near/far planes
 // const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
@@ -196,38 +367,7 @@ const starTransistionGeometry = new THREE.BufferGeometry();
 let isStarTransition = false;
 
 function starFieldTransistion() {
-    scene.remove(stars);
-
-    // Starfield parameters
-    const starCount = 2000;
-    const starPositions = new Float32Array(starCount * 3);
-
-    for (let i = 0; i < starCount; i++) {
-        let x = (Math.random() - 0.5) * 2000;
-        let y = (Math.random() - 0.5) * 2000;
-        let z = Math.random() * 2000;
-        starPositions[i * 3] = x;
-        starPositions[i * 3 + 1] = y;
-        starPositions[i * 3 + 2] = z;
-    }
-
-    starTransistionGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
-
-    const starMaterial = new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 2,
-        transparent: true,
-        opacity: 0.8
-    });
-
-    const starTransistion = new THREE.Points(starTransistionGeometry, starMaterial);
-    scene.add(starTransistion);
     isStarTransition = true;
-
-    // Camera position adjustment
-    camera.position.z += 1000;
-    asteroid.position.z += 1000;
-    pointLight.position.z += 1000;
 
     setTimeout(() => {
         camera.position.z = 0;
@@ -279,23 +419,17 @@ function animate() {
     requestAnimationFrame(animate);
 
     if (isStarTransition) {
-        // Move stars toward the camera (warp effect)
-        const positions = starTransistionGeometry.attributes.position.array;
-        for (let i = 0; i < positions.length; i += 3) {
-            // move forward
-            positions[i + 2] -= 10;
-
-            // Reset stars when they pass the camera
-            if (positions[i + 2] < 0) {
-                positions[i] = (Math.random() - 0.5) * 2000;
-                positions[i + 1] = (Math.random() - 0.5) * 2000;
-                positions[i + 2] = 2000;
-            }
+        // Just warp the existing star geometry
+        const starPos = stars.geometry.attributes.position.array;
+        for (let i = 0; i < starPos.length; i += 3) {
+          // warp effect
+          starPos[i + 2] -= 0.5;
+          asteroid.rotation.y += 0.0000001;
         }
-        starTransistionGeometry.attributes.position.needsUpdate = true;
-    } else {
-        stars.rotation.x += 0.0005;
-        stars.rotation.y += 0.0005;
+        stars.geometry.attributes.position.needsUpdate = true;
+      } else {
+        stars.rotation.x += 0.00002;
+        stars.rotation.y += 0.00002;
     }
     renderer.render(scene, camera);
 }
