@@ -3,6 +3,7 @@ import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
+
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -28,16 +29,16 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Common Fractal Noise algorithm implementation using perlin
-function fractalNoise2(x, y, octaves=4, lacunarity=2, persistence=0.5) {
+function fractalNoise2(x, y, octaves = 4, lacunarity = 2, persistence = 0.5) {
     let frequency = 1.0;
     let amplitude = 1.0;
     let sum = 0.0;
     let maxValue = 0.0;
-  
+
     for (let i = 0; i < octaves; i++) {
         const val = noise.perlin2(x * frequency, y * frequency);
         sum += val * amplitude;
-    
+
         maxValue += amplitude;
         amplitude *= persistence;
         frequency *= lacunarity;
@@ -49,7 +50,7 @@ function fractalNoise2(x, y, octaves=4, lacunarity=2, persistence=0.5) {
 function generateSpaceCloudTexture(width, height, scale = 2.0) {
     const size = width * height;
     const data = new Uint8Array(4 * size);
-    
+
     // Generate texture image
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
@@ -64,12 +65,12 @@ function generateSpaceCloudTexture(width, height, scale = 2.0) {
                 0.5
             );
             const v = (val + 1) / 2.0;
-    
+
             // Map values to color
-            const r = 0.0 + 0.12* v;
+            const r = 0.0 + 0.12 * v;
             const g = 0.0 + 0.07 * v;
             const b = 0.0 + 0.2 * v;
-            
+
             // Assign pixels
             const i = (y * width + x) * 4;
             data[i + 0] = Math.floor(r * 255);
@@ -78,32 +79,34 @@ function generateSpaceCloudTexture(width, height, scale = 2.0) {
             data[i + 3] = 255;
         }
     }
-  
+
     // Convert to a texture
     const texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
     texture.wrapS = THREE.MirroredRepeatWrapping;
     texture.wrapT = THREE.MirroredRepeatWrapping;
     texture.needsUpdate = true;
-  
+
     return texture;
 }
 
 function createSpaceClouds() {
     // Generate cloud texture using fractal noise
     const cloudTexture = generateSpaceCloudTexture(1024, 1024, 25.0);
-  
+
     // Turn into a mesh
     const cloudMaterial = new THREE.MeshBasicMaterial({
         map: cloudTexture,
         side: THREE.BackSide,
     });
-  
+
     // Create space cloud sphere
     const sphereGeometry = new THREE.SphereGeometry(800, 64, 64);
     const spaceCloudSphere = new THREE.Mesh(sphereGeometry, cloudMaterial);
-  
+
     return spaceCloudSphere;
 }
+
+let starMaterial;
 
 function createStarField() {
     const starCount = 10000; // Number of stars
@@ -130,7 +133,7 @@ function createStarField() {
         positions[i * 3 + 2] = z;
 
         // Calculate star size
-        sizes[i] = 2.0 + Math.random() * 1.5; 
+        sizes[i] = 2.0 + Math.random() * 1.5;
 
         // Calculate star tint
         const tint = Math.random();
@@ -140,12 +143,12 @@ function createStarField() {
             r = 1.0;
             g = 0.85 + Math.random() * 0.15;
             b = 0.7 + Math.random() * 0.1;
-        // Yellow-Orange
+            // Yellow-Orange
         } else if (tint > 0.1) {
             r = 1.0;
             g = 0.7 + Math.random() * 0.3;
             b = 0.4 + Math.random() * 0.2;
-        // White-Blue
+            // White-Blue
         } else {
             r = 0.9;
             g = 0.9;
@@ -180,38 +183,67 @@ function createStarField() {
     const fragmentShader = `
         precision highp float;
         varying vec3 vColor;
+        uniform vec2 uCirclePos; 
+        uniform float uCircleRadius;
+        uniform bool uBlurEnabled;
+        uniform vec2 uResolution;
 
         void main() {
-            // Calculate star limits
             vec2 coord = gl_PointCoord - vec2(0.5);
             float dist = length(coord);
+
             if (dist > 0.5) {
                 discard;
             }
 
-            // Star core
+            // Star core and glow
             float core = 1.0 - smoothstep(0.0, 0.08, dist);
-
-            // Star glow
             float glow = 1.0 - smoothstep(0.08, 0.5, dist);
             glow *= 0.5;
-
-            // Combine alphas
             float alpha = core + glow;
 
-            // Set fragment (pixel)
-            gl_FragColor = vec4(vColor, alpha);
+            // Convert fragment position to normalized coordinates (0 to 1)
+            vec2 fragPos = gl_FragCoord.xy / uResolution;
+
+            // Calculate the aspect ratio of the screen (x / y)
+            float aspectRatio = uResolution.x / uResolution.y;
+
+            // Adjust the radius based on aspect ratio
+            // Using the smaller dimension (height or width) for the radius
+            float minDim = min(uResolution.x, uResolution.y);
+            float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
+
+            // Calculate distance from draggable circle (center and radius)
+            float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
+            float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
+            float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
+
+            // Default star color
+            vec4 starColor = vec4(vColor, alpha);
+
+            // Apply blur effect outside the circle (simulated by reducing brightness)
+            if (uBlurEnabled && screenDist > 1.0) {
+                starColor.rgb *= 0.3; 
+            }
+
+            gl_FragColor = starColor;
         }
     `;
 
     // Material
-    const starMaterial = new THREE.ShaderMaterial({
+    starMaterial = new THREE.ShaderMaterial({
         vertexColors: true,
         transparent: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         vertexShader,
-        fragmentShader
+        fragmentShader,
+        uniforms: {
+            uCirclePos: { value: new THREE.Vector2(0.5, 0.5) },
+            uCircleRadius: { value: 0.085 },
+            uBlurEnabled: { value: false },
+            uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+        }
     });
 
     return new THREE.Points(geometry, starMaterial);
@@ -224,9 +256,6 @@ scene.add(stars);
 // Add space clouds
 const spaceCloudSphere = createSpaceClouds();
 scene.add(spaceCloudSphere);
-
-// Get the camera's aspect ratio, FOV, and near/far planes
-// const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 // Define the camera's vertical and horizontal bounds
 const cameraHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
@@ -302,7 +331,9 @@ let count = 0;
 
 window.scopeDisabled = false;
 
+
 function moveScope(event) {
+
     if (event.touches) {
         scope.style.left = `${event.touches[event.touches.length - 1].clientX - scope.offsetWidth / 2}px`;
         scope.style.top = `${event.touches[event.touches.length - 1].clientY - scope.offsetHeight / 2}px`;
@@ -318,6 +349,9 @@ function moveScope(event) {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
+    let x = event.clientX / window.innerWidth;
+    let y = 1.0 - event.clientY / window.innerHeight;
+    starMaterial.uniforms.uCirclePos.value.set(x, y);
     // Perform raycast
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(asteroid, true);
@@ -381,8 +415,8 @@ function starFieldTransistion() {
 
 document.addEventListener('mousedown', (event) => {
     if (window.scopeDisabled) return;
-
     scope.style.display = 'block';
+    starMaterial.uniforms.uBlurEnabled.value = true;
     moveScope(event);
 });
 
@@ -398,19 +432,20 @@ document.addEventListener('pointermove', (event) => {
 document.addEventListener('mouseup', () => {
     if (window.scopeDisabled) return;
 
+    starMaterial.uniforms.uBlurEnabled.value = false;
     scope.style.display = 'none';
 });
 
 document.addEventListener('touchstart', (event) => {
     if (window.scopeDisabled) return;
-
+    starMaterial.uniforms.uBlurEnabled.value = true;
     scope.style.display = 'block';
     moveScope(event);
 });
 
 document.addEventListener('touchend', () => {
     if (window.scopeDisabled) return;
-
+    starMaterial.uniforms.uBlurEnabled.value = false;
     scope.style.display = 'none';
 });
 
@@ -422,12 +457,12 @@ function animate() {
         // Just warp the existing star geometry
         const starPos = stars.geometry.attributes.position.array;
         for (let i = 0; i < starPos.length; i += 3) {
-          // warp effect
-          starPos[i + 2] -= 0.5;
-          asteroid.rotation.y += 0.0000001;
+            // warp effect
+            starPos[i + 2] -= 0.5;
+            asteroid.rotation.y += 0.0000001;
         }
         stars.geometry.attributes.position.needsUpdate = true;
-      } else {
+    } else {
         stars.rotation.x += 0.00002;
         stars.rotation.y += 0.00002;
     }
@@ -440,6 +475,7 @@ animate();
 window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
+    starMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     camera.updateProjectionMatrix();
 });
 
