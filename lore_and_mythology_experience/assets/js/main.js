@@ -553,7 +553,22 @@ function warpStars() {
 
     stars.geometry.attributes.position.needsUpdate = true;
 }
-  
+
+function initializeAutoHelp() {
+    ['mousemove', 'keydown', 'click', 'touchstart', 'scroll'].forEach(event => {
+        window.addEventListener(event, resetAutoHelp);
+    });
+}
+function triggerAutoHelp() {
+    document.getElementById("help-icon-button").click();
+}
+function resetAutoHelp() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(triggerAutoHelp, 70000);
+}
+let inactivityTimer = setTimeout(triggerAutoHelp, 70000);
+initializeAutoHelp();
+
 
 // Handle window resizing
 window.addEventListener("resize", () => {
