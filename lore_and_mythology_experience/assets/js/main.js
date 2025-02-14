@@ -340,6 +340,11 @@ function starFieldTransistion() {
         isStarTransition = false;
         asteroid.visible = false;
         console.log('Transitioning to phases');
+        const mainTitle = document.querySelector(".main-title");
+        if (mainTitle) {
+            mainTitle.style.visibility = "hidden";
+            mainTitle.style.opacity = "0";
+        }
         startPhases();
     }, 2000);
 }

@@ -19,7 +19,14 @@ canvas {
   visibility: hidden;
   opacity: 0;
   transition: 1.5s;
+  user-select: all; /* allow copying */
 }
+
+.main-title::selection {
+  background: transparent; /* remove highlight effect */
+  color: inherit; /* keep text color unchanged */
+}
+
 /* Icon Button Styling */
 #help-icon-button {
   position: fixed;
@@ -29,6 +36,12 @@ canvas {
   height: 30px;
   cursor: pointer;
   z-index: 20;
+  user-select: all; /* allow copying */
+}
+
+#help-icon-button::selection {
+  background: transparent; /* remove highlight effect */
+  color: inherit; /* keep text color unchanged */
 }
 
 #settings-icon-button {
@@ -39,6 +52,12 @@ canvas {
   height: 30px;
   cursor: pointer;
   z-index: 20;
+  user-select: all; /* allow copying */
+}
+
+#settings-icon-button::selection {
+  background: transparent; /* remove highlight effect */
+  color: inherit; /* keep text color unchanged */
 }
 
 /* Modal Styling */
