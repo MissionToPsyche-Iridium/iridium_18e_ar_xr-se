@@ -232,18 +232,42 @@ scene.add(spaceCloudSphere);
 const cameraHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
 const cameraWidth = cameraHeight * camera.aspect;
 
-// Add an astroid 
-const asteroidX = Math.random() * cameraWidth - cameraWidth / 2;
-const asteroidY = Math.random() * cameraHeight - cameraHeight / 2;
+// Asteroid distance from edges of screen
+const MIN_X = 50;
+const MAX_X = window.innerWidth - 50;
+const MIN_Y = 100;
+const MAX_Y = window.innerHeight - 500;
 
+// Get random point within boundaries
+const asteroidX = Math.random() * (MAX_X - MIN_X) + MIN_X;
+const asteroidY = Math.random() * (MAX_Y - MIN_Y) + MIN_Y;
+
+// Convert to normalized coordinates
+const normalizedAsteroidX = ( asteroidX / window.innerWidth ) * 2 - 1;
+const normalizedAsteroidY = - ( asteroidY / window.innerHeight ) * 2 + 1;
+
+// Unproject from normalized coordinates to camera
+const asteroidVector = new THREE.Vector3(normalizedAsteroidX, normalizedAsteroidY, 1);
+asteroidVector.unproject(camera);
+
+// The ray from camera
+const cameraRay = asteroidVector.sub(camera.position).normalize();
+
+// Distance from camera to z plane
+const distanceFromCamera = (0 - camera.position.z) / cameraRay.z; 
+
+// Final position at z plane
+const asteroidPosition = camera.position.clone().add(cameraRay.multiplyScalar(distanceFromCamera));
+
+// Load asteroid
 const loader = new GLTFLoader();
-var asteroid;
+let asteroid;
 loader.load('../assets/models/asteroid.glb', (gltf) => {
-    asteroid = gltf.scene;
-    asteroid.scale.set(0.25, 0.25, 0.25);
-    asteroid.position.set(asteroidX, asteroidY, 0);
-    asteroid.visible = false;
-    scene.add(asteroid);
+  asteroid = gltf.scene;
+  asteroid.scale.set(0.06, 0.06, 0.06);
+  asteroid.position.copy(asteroidPosition);
+  asteroid.visible = false;
+  scene.add(asteroid);
 });
 
 // Add lighting
@@ -297,75 +321,16 @@ controls.enableZoom = false;
 
 const settingsModal = new SettingsModal();
 
-let isZoom = false;
-let count = 0;
+let holdTime = 0.0; // Time on asteroid
+const holdThreshold = 3.0; // Time to trigger zoom
+let isLockOn = false; // Scope is locked on
+let isZoom = false; // Camera zoom starts
 
 window.scopeDisabled = false;
 
-function moveScope(event) {
-    if (event.touches) {
-        scope.style.left = `${event.touches[event.touches.length - 1].clientX - scope.offsetWidth / 2}px`;
-        scope.style.top = `${event.touches[event.touches.length - 1].clientY - scope.offsetHeight / 2}px`;
-
-        // Convert to world position
-        mouse.x = (event.touches[event.touches.length - 1].clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.touches[event.touches.length - 1].clientY / window.innerHeight) * 2 + 1;
-
-    } else {
-        scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
-        scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
-        // Convert to world position
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    }
-    // Perform raycast
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(asteroid, true);
-
-    // hide/show asteroid
-    if (intersects.length > 0) {
-        // pause zoom
-        if (isZoom) return;
-        isZoom = true;
-        scope.style.display = 'none';
-
-        asteroid.visible = true;
-        const targetPoint = intersects[0].point;
-
-        // Move the camera closer instead of directly to the point
-        const zoomFactor = 0.5;
-        const newCameraPosition = camera.position.clone().lerp(targetPoint, zoomFactor);
-
-        // Animate the zoom effect
-        const duration = 1000;
-        const startTime = performance.now();
-        const startPos = camera.position.clone();
-        const startTarget = controls.target.clone();
-
-        function animateZoom(time) {
-            const elapsed = time - startTime;
-            const t = Math.min(elapsed / duration, 1);
-
-            // Interpolate camera position and focus target
-            camera.position.lerpVectors(startPos, newCameraPosition, t);
-            controls.target.lerpVectors(startTarget, targetPoint, t);
-            controls.update();
-
-            if (t < 1) {
-                requestAnimationFrame(animateZoom);
-            } else {
-                settingsModal.applyAMPIModalStyles();
-                starFieldTransistion();
-            }
-        }
-        requestAnimationFrame(animateZoom);
-    }
-    count = 100;
-}
-
+// Star transition
 const starTransistionGeometry = new THREE.BufferGeometry();
 let isStarTransition = false;
-
 function starFieldTransistion() {
     isStarTransition = true;
 
@@ -379,62 +344,216 @@ function starFieldTransistion() {
     }, 2000);
 }
 
-document.addEventListener('mousedown', (event) => {
+// Move scope event
+function moveScope(event) {
+    if (!scope || window.scopeDisabled) return;
+    
+    if (event.touches) {
+        scope.style.left = `${event.touches[0].clientX - scope.offsetWidth / 2}px`;
+        scope.style.top = `${event.touches[0].clientY - scope.offsetHeight / 2}px`;
+    } else {
+        scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
+        scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
+    }
+}
+
+// Pointer events
+function onPointerDown(event) {
     if (window.scopeDisabled) return;
 
     scope.style.display = 'block';
     moveScope(event);
-});
+}
 
-
-document.addEventListener('pointermove', (event) => {
+function onPointerMove(event) {
     if (window.scopeDisabled) return;
 
     if (scope.style.display === 'block') {
         moveScope(event);
     }
-});
-
-document.addEventListener('mouseup', () => {
+}
+  
+function onPointerUp() {
     if (window.scopeDisabled) return;
 
     scope.style.display = 'none';
-});
+}
 
-document.addEventListener('touchstart', (event) => {
-    if (window.scopeDisabled) return;
+// Attach pointer events
+document.addEventListener('mousedown', onPointerDown);
+document.addEventListener('pointermove', onPointerMove);
+document.addEventListener('mouseup', onPointerUp);
 
-    scope.style.display = 'block';
-    moveScope(event);
-});
-
-document.addEventListener('touchend', () => {
-    if (window.scopeDisabled) return;
-
-    scope.style.display = 'none';
-});
+document.addEventListener('touchstart', onPointerDown);
+document.addEventListener('touchmove', onPointerMove);
+document.addEventListener('touchend', onPointerUp);
 
 // Animate the scene
+let lastTime = performance.now();
 function animate() {
     requestAnimationFrame(animate);
 
+    const now = performance.now();
+    const delta = (now - lastTime) / 1000.0;
+    lastTime = now;
+
+    // Star transition
     if (isStarTransition) {
-        // Just warp the existing star geometry
-        const starPos = stars.geometry.attributes.position.array;
-        for (let i = 0; i < starPos.length; i += 3) {
-          // warp effect
-          starPos[i + 2] -= 0.5;
-          asteroid.rotation.y += 0.0000001;
-        }
-        stars.geometry.attributes.position.needsUpdate = true;
-      } else {
+        warpStars();
+
+    // Normal stars
+    } else {
         stars.rotation.x += 0.00002;
         stars.rotation.y += 0.00002;
     }
+
+    // Check if in scope
+    if (!isLockOn && asteroid && scope.style.display === 'block') {
+        checkAsteroidInScope(delta);
+    }
+
+    // Render
     renderer.render(scene, camera);
 }
-
 animate();
+
+function checkAsteroidInScope(delta) {
+    // Get scope position
+    const scopeRectangle = scope.getBoundingClientRect();
+    const scopeX = scopeRectangle.left + scopeRectangle.width / 2;
+    const scopeY = scopeRectangle.top + scopeRectangle.height / 2;
+    const scopeRadius = scopeRectangle.width / 2;
+  
+    // Distance from scope to asteroid
+    const deltaX = asteroidX - scopeX;
+    const deltaY = asteroidY - scopeY;
+    const distance = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+  
+    // If within scope, increase hold time
+    if (distance <= scopeRadius) {
+        // Make visible
+        asteroid.visible = true;
+
+        // Asteroid rotation
+        asteroid.rotation.x += 0.002;
+        asteroid.rotation.y += 0.002;
+
+        // Increase hold time
+        holdTime += delta;
+    
+        // If in scope long enough, lock on
+        if (holdTime >= holdThreshold) {
+            lockOn();
+        }
+
+    // Reset if asteroid leaves scope
+    } else {
+      asteroid.visible = false;
+      holdTime = 0;
+    }
+}
+
+function lockOn() {
+    isLockOn = true;
+    window.scopeDisabled = true;
+  
+    // Get current scope and asteroid positions
+    const scopeRectangle = scope.getBoundingClientRect();
+    const startLeft = parseFloat(scope.style.left);
+    const startTop = parseFloat(scope.style.top);
+    const endLeft = asteroidX - scopeRectangle.width / 2;
+    const endTop = asteroidY - scopeRectangle.height / 2;
+  
+    const duration = 1000; // ms for scope to move
+    const startTime = performance.now();
+  
+    function animateScopeToAsteroid(tNow) {
+        const elapsed = tNow - startTime;
+        const t = Math.min(elapsed / duration, 1);
+    
+        // Move scope to asteroid
+        const newLeft = startLeft + (endLeft - startLeft) * t;
+        const newTop = startTop + (endTop - startTop) * t;
+        scope.style.left = newLeft + 'px';
+        scope.style.top = newTop + 'px';
+
+        // Asteroid rotation
+        asteroid.rotation.x += 0.002;
+        asteroid.rotation.y += 0.002;
+    
+        // Animate movement
+        if (t < 1) {
+            requestAnimationFrame(animateScopeToAsteroid);
+        
+        // Start camera zoom
+        } else {
+            startCameraZoom();
+        }
+    }
+
+    requestAnimationFrame(animateScopeToAsteroid);
+}
+
+function startCameraZoom() {
+    isZoom = true;
+    scope.style.display = 'none';
+  
+    const duration = 2000;
+    const startTime = performance.now();
+  
+    // Start camera/controls position
+    const startCameraPos = camera.position.clone();
+    const startTarget = controls.target.clone();
+  
+    // End camera/controls positions
+    const endCameraPos = asteroid.position.clone().add(new THREE.Vector3(0, 0, 1.5));
+    const endTarget = asteroid.position.clone();
+  
+    // Start/End asteroid scale
+    const startScale = asteroid.scale.clone();
+    const endScale = new THREE.Vector3(0.25, 0.25, 0.25);
+  
+    function animateZoom(time) {
+        const elapsed = time - startTime;
+        const t = Math.min(elapsed / duration, 1);
+    
+        // Move camera/controls
+        camera.position.lerpVectors(startCameraPos, endCameraPos, t);
+        controls.target.lerpVectors(startTarget, endTarget, t);
+    
+        // Asteroid rotation
+        asteroid.rotation.x += 0.002;
+        asteroid.rotation.y += 0.002;
+
+        // Increase asteroid scale
+        const currentScale = new THREE.Vector3().lerpVectors(startScale, endScale, t);
+        asteroid.scale.copy(currentScale);
+    
+        controls.update();
+    
+        // Animate zoom
+        if (t < 1) {
+            requestAnimationFrame(animateZoom);
+        
+        // Start star field transition
+        } else {
+            settingsModal.applyAMPIModalStyles();
+            starFieldTransistion();
+        }
+    }
+    
+    requestAnimationFrame(animateZoom);
+}
+
+function warpStars() {
+    const starPos = stars.geometry.attributes.position.array;
+    for (let i = 0; i < starPos.length; i += 3) {
+        starPos[i + 2] -= 0.5;
+    }
+
+    stars.geometry.attributes.position.needsUpdate = true;
+}
+  
 
 // Handle window resizing
 window.addEventListener("resize", () => {

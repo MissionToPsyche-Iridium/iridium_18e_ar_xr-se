@@ -156,8 +156,8 @@ canvas {
 
 .scope {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   border: 2px solid white;
   border-radius: 50%;
   pointer-events: auto;
