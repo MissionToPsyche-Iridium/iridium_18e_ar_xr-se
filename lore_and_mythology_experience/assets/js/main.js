@@ -3,7 +3,6 @@ import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
-
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -252,6 +251,32 @@ function createStarField() {
 // Add star field
 const stars = createStarField();
 scene.add(stars);
+
+// create and add asteroid belt
+function createAsteroidBelt(scene) {
+    const numAsteroids = 500;
+    const beltRadius = 50;
+    const beltThickness = 10;
+    const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
+    const asteroidMaterial = new THREE.MeshBasicMaterial({ color: 0x3a3a3a });
+
+    for (let i = 0; i < numAsteroids; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = beltRadius + (Math.random() - 0.5) * beltThickness;
+
+        const x = Math.cos(angle) * distance;
+        const y = (Math.random() - 0.5) * 5;
+        const z = Math.sin(angle) * distance;
+
+        const asteroid = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
+        asteroid.position.set(x, y, z);
+
+        scene.add(asteroid);
+    }
+}
+
+// add asteroid belt
+createAsteroidBelt(scene);
 
 // Add space clouds
 const spaceCloudSphere = createSpaceClouds();
