@@ -1,10 +1,10 @@
 const telescope = document.getElementById("telescope");
 
 function telescopeClickedHandler() {
-    window.location.href = '../../pages/main_page.html'
+    window.location.href = '../pages/main_page.html'
 }
 
-telescope.addEventListener('click',telescopeClickedHandler)
+telescope.addEventListener('click', telescopeClickedHandler)
 
 var opacity = 0;
 var intervalID = 0;
@@ -68,14 +68,14 @@ function blinkTelescope() {
 
     if (opacity < 1 && blinkIn === 0) {
         opacity += 0.05;
-        if(opacity >= 1) {
+        if (opacity >= 1) {
             blinkIn = 1;
             opacity = 1;
         }
         telescopeBackground.style.backgroundColor = `rgba(255, 255, 255, ${opacity})`;
-    }  else {
+    } else {
         opacity -= 0.05;
-        if(opacity <= 0) {
+        if (opacity <= 0) {
             blinkIn = 0;
             opacity = 0;
         }
