@@ -166,68 +166,68 @@ function createStarField() {
 
     // Vertex shader
     const vertexShader = `
-        precision highp float;
-        attribute float size;
-        varying vec3 vColor;
+    precision highp float;
+    attribute float size;
+    varying vec3 vColor;
 
-        void main() {
-            vColor = color;
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = size * (600.0 / -mvPosition.z);
-            gl_Position = projectionMatrix * mvPosition;
-        }
-    `;
+    void main() {
+        vColor = color;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * (600.0 / -mvPosition.z);
+        gl_Position = projectionMatrix * mvPosition;
+    }
+`;
 
     // Fragment shader
     const fragmentShader = `
-        precision highp float;
-        varying vec3 vColor;
-        uniform vec2 uCirclePos; 
-        uniform float uCircleRadius;
-        uniform bool uBlurEnabled;
-        uniform vec2 uResolution;
+    precision highp float;
+    varying vec3 vColor;
+    uniform vec2 uCirclePos; 
+    uniform float uCircleRadius;
+    uniform bool uBlurEnabled;
+    uniform vec2 uResolution;
 
-        void main() {
-            vec2 coord = gl_PointCoord - vec2(0.5);
-            float dist = length(coord);
+    void main() {
+        vec2 coord = gl_PointCoord - vec2(0.5);
+        float dist = length(coord);
 
-            if (dist > 0.5) {
-                discard;
-            }
-
-            // Star core and glow
-            float core = 1.0 - smoothstep(0.0, 0.08, dist);
-            float glow = 1.0 - smoothstep(0.08, 0.5, dist);
-            glow *= 0.5;
-            float alpha = core + glow;
-
-            // Convert fragment position to normalized coordinates (0 to 1)
-            vec2 fragPos = gl_FragCoord.xy / uResolution;
-
-            // Calculate the aspect ratio of the screen (x / y)
-            float aspectRatio = uResolution.x / uResolution.y;
-
-            // Adjust the radius based on aspect ratio
-            // Using the smaller dimension (height or width) for the radius
-            float minDim = min(uResolution.x, uResolution.y);
-            float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
-
-            // Calculate distance from draggable circle (center and radius)
-            float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
-            float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
-            float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
-
-            // Default star color
-            vec4 starColor = vec4(vColor, alpha);
-
-            // Apply blur effect outside the circle (simulated by reducing brightness)
-            if (uBlurEnabled && screenDist > 1.0) {
-                starColor.rgb *= 0.3; 
-            }
-
-            gl_FragColor = starColor;
+        if (dist > 0.5) {
+            discard;
         }
-    `;
+
+        // Star core and glow
+        float core = 1.0 - smoothstep(0.0, 0.08, dist);
+        float glow = 1.0 - smoothstep(0.08, 0.5, dist);
+        glow *= 0.5;
+        float alpha = core + glow;
+
+        // Convert fragment position to normalized coordinates (0 to 1)
+        vec2 fragPos = gl_FragCoord.xy / uResolution;
+
+        // Calculate the aspect ratio of the screen (x / y)
+        float aspectRatio = uResolution.x / uResolution.y;
+
+        // Adjust the radius based on aspect ratio
+        // Using the smaller dimension (height or width) for the radius
+        float minDim = min(uResolution.x, uResolution.y);
+        float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
+
+        // Calculate distance from draggable circle (center and radius)
+        float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
+        float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
+        float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
+
+        // Default star color
+        vec4 starColor = vec4(vColor, alpha);
+
+        // Apply blur effect outside the circle (simulated by reducing brightness)
+        if (uBlurEnabled && screenDist > 1.0) {
+            starColor.rgb *= 0.3; 
+        }
+
+        gl_FragColor = starColor;
+    }
+`;
 
     // Material
     starMaterial = new THREE.ShaderMaterial({
@@ -252,6 +252,28 @@ function createStarField() {
 const stars = createStarField();
 scene.add(stars);
 
+
+// Asteroid distance from edges of screen
+const MIN_X = getMaxX();
+const MAX_X = window.innerWidth - 50;
+const MIN_Y = 100;
+const MAX_Y = window.innerHeight - 500;
+
+let asteroidX;
+let asteroidY;
+let asteroidZ;
+
+function getMaxX() {
+    const camfov = camera.fov * (Math.PI / 180);
+    const aspect = window.innerWidth / window.innerHeight;
+    const zPos = camera.position.z;
+
+    const frustumHeight = 2 * zPos * Math.tan(camfov / 2);
+    const frustumWidth = frustumHeight * aspect;
+
+    return frustumWidth / 2;
+}
+
 // create and add asteroid belt
 function createAsteroidBelt(scene) {
     const numAsteroids = 500;
@@ -259,6 +281,17 @@ function createAsteroidBelt(scene) {
     const beltThickness = 10;
     const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
     const asteroidMaterial = new THREE.MeshBasicMaterial({ color: 0x3a3a3a });
+
+
+    while (true) {
+        const asteroidAngle = Math.random() * Math.PI * 2;
+        const asteroidDistance = beltRadius + (Math.random() - 0.5) * beltThickness;
+
+        asteroidX = Math.cos(asteroidAngle) * asteroidDistance;
+        asteroidY = (Math.random() - 0.5) * 5;
+        asteroidZ = Math.sin(asteroidAngle) * asteroidDistance;
+        if (asteroidX < MAX_X && asteroidX > MIN_X) { break; }
+    }
 
     for (let i = 0; i < numAsteroids; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -286,22 +319,8 @@ scene.add(spaceCloudSphere);
 const cameraHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
 const cameraWidth = cameraHeight * camera.aspect;
 
-// Asteroid distance from edges of screen
-const MIN_X = 50;
-const MAX_X = window.innerWidth - 50;
-const MIN_Y = 100;
-const MAX_Y = window.innerHeight - 500;
-
-// Get random point within boundaries
-const asteroidX = Math.random() * (MAX_X - MIN_X) + MIN_X;
-const asteroidY = Math.random() * (MAX_Y - MIN_Y) + MIN_Y;
-
-// Convert to normalized coordinates
-const normalizedAsteroidX = (asteroidX / window.innerWidth) * 2 - 1;
-const normalizedAsteroidY = - (asteroidY / window.innerHeight) * 2 + 1;
-
 // Unproject from normalized coordinates to camera
-const asteroidVector = new THREE.Vector3(normalizedAsteroidX, normalizedAsteroidY, 1);
+const asteroidVector = new THREE.Vector3(asteroidX, asteroidY, asteroidZ);
 asteroidVector.unproject(camera);
 
 // The ray from camera
@@ -323,6 +342,7 @@ loader.load('../assets/models/asteroid.glb', (gltf) => {
     asteroid.visible = false;
     scene.add(asteroid);
 });
+
 
 // Add lighting
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
