@@ -7,6 +7,10 @@ canvas {
   display: block;
 }
 
+img {
+  pointer-events: none;
+}
+
 .main-title {
   position: absolute;
   left: 50%;
