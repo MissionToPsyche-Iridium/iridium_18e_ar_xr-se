@@ -168,16 +168,12 @@ function displayPhase() {
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
 
     if (phaseIndex >= phaseValues.length) {
-        phaseIndex = 0;
-        setTimeout(afterPhases, phaseValues[phaseIndex].duration);
+        afterPhases();
         return;
     }
 
     const phase = phaseValues[phaseIndex];
     showPhase(phase);
-    phaseIndex++;
-
-    setTimeout(displayPhase, phase.duration);
 }
 
 function afterPhases() {
@@ -186,103 +182,170 @@ function afterPhases() {
 
 let phaseBool = false;
 
-// initialize phase data and display it
-// can put css and html in separate files if needed.
 function showPhase(phase) {
-    if (!phaseBool) {
-        phaseBool = true;
-
-        // set up html and css
-        const phase_div = document.createElement("div");
-        phase_div.setAttribute("id", "phase_modal");
-        phase_div.setAttribute("style", "display: block; position: fixed;" +
-            " z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
-            "background-color: rgba(0, 0, 0); overflow: hidden; transition: 1.5s;");
-
-        let phase_innerHTML = "";
-
-        if (phase.image && phase.image.length > 0) {
-            phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
-        }
-
-        if (phase.scroll && phase.scroll.length > 0) {
-            phase_innerHTML += `<img src="${phase.scroll}" id="papyrus_scroll"/>`;
-
-            if (phase.text.some(line => line !== "")) {
-                phase_innerHTML += `<div id="scroll_text_box">`;
-                phase.text.forEach((line) => {
-                    phase_innerHTML += `<span class="info">${line}</span>`;
-                });
-                phase_innerHTML += `</div>`;
-            }
-        }
-
-        phase_innerHTML += ``;
-
-        phase_div.innerHTML = phase_innerHTML;
-        document.body.appendChild(phase_div);
-
-        // add styles to the phase image and scroll
-        if (phase.image && phase.image.length > 0) {
-            document.getElementById("phase").setAttribute("style",
-                "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: calc(50vw - ((0.8 * 40vh + 10vh) / 2)); z-index: 10; transition: 1.5s;");
-        }
-        if (phase.scroll && phase.scroll.length > 0) {
-            document.getElementById("papyrus_scroll").setAttribute("style",
-                "background-color: transparent; width: 40vh; height: 40vh; border-radius: 12px;" +
-                " position: absolute; top: 50vh; left: calc(50vw - (40vh / 2)); z-index: 5; transition: 1.5s;");
-            if (phase.text.some(line => line !== "")) {
-                document.getElementById("scroll_text_box").setAttribute("style",
-                    "display: flex; flex-direction: column; position: absolute; width: 40vh; " +
-                    "height: calc(40vh / 2); top: calc(50vh + ((40vh / 1.69) / 1.69)); " +
-                    "left: calc(50vw - (40vh / 2)); z-index: 20; transition: 1.5s;");
-            }
-        }
-        var infos = document.getElementsByClassName("info");
-        for (var i = 0; i < infos.length; i++) {
-            infos[i].setAttribute("style", "text-align: center; font-size: calc(0.045 * 40vh);" +
-                " z-index: 21; transition: 1.5s;");
-        }
-
-        // If the phase has additional images, add them
-        if (phase.additionalImages) {
-            phase.additionalImages.forEach((image, index) => {
-                const overlayImage = document.createElement("img");
-                overlayImage.setAttribute("src", image.src);
-                overlayImage.setAttribute("id", image.id);
-                // add position styles for stacking additional images on top of phase image
-                overlayImage.setAttribute("style", `position: ${image.position}; top: ${image.top}; left: ${image.left}; z-index: 15;`);
-                if (index === 0) {
-                    overlayImage.setAttribute("style","width: calc(0.8 * 20vh); height: 30vh;" +
-                        " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 80vh);" +
-                        " left: calc(50vw - ((0.8 * 30vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
-                } else if (index === 1) {
-                    overlayImage.setAttribute("style","width: calc(0.8 * 30vh); height: 20vh;" +
-                        " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 2vh);" +
-                        " left: calc(50vw - ((0.8 * 30vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
-                }
-                document.body.appendChild(overlayImage);
-            });
-        }
-
-        // clear phase after the duration ends
-        setTimeout(() => {
-            // hide phase modal and remove the phase images
-            document.getElementById("phase_modal").remove();
-
-            // remove any overlay images for the phase
-            const overlayImages = document.querySelectorAll(
-                '[id^="chrysalis"], [id^="butterfly"], [id^="chrysalis2"], [id^="butterfly2"]');
-            overlayImages.forEach((img) => img.remove());
-
-            phaseBool = false;
-
-        }, phase.duration);
-    } else {
-        // Hide the current phase modal if it's already showing
-        document.getElementById("phase_modal").setAttribute("style", "display: none;");
-        phaseBool = false;
+    // Remove phase if still active
+    if (phaseBool) {
+      removeCurrentPhase();
     }
+  
+    phaseBool = true;
+  
+    // Create modal container
+    const phase_div = document.createElement("div");
+    phase_div.setAttribute("id", "phase_modal");
+    phase_div.setAttribute(
+        "style",
+        "display: block; position: fixed;" +
+        "z-index: 20; left: 0; top: 0; width: 100%; height: 100%;" +
+        "background-color: rgba(0, 0, 0); overflow: hidden; transition: 1.5s;"
+    );
+  
+    // Main image
+    let phase_innerHTML = "";
+    if (phase.image && phase.image.length > 0) {
+        phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
+    }
+  
+    // Scroll image/text
+    if (phase.scroll && phase.scroll.length > 0) {
+        phase_innerHTML += `<img src="${phase.scroll}" id="papyrus_scroll"/>`;
+    
+        if (phase.text.some((line) => line !== "")) {
+            phase_innerHTML += `<div id="scroll_text_box">`;
+
+            phase.text.forEach((line) => {
+                phase_innerHTML += `<span class="info">${line}</span>`;
+            });
+
+            phase_innerHTML += `</div>`;
+        }
+    }
+  
+    // Insert into modal div
+    phase_div.innerHTML = phase_innerHTML;
+    document.body.appendChild(phase_div);
+  
+    // Style the main phase image
+    if (phase.image && phase.image.length > 0) {
+        document.getElementById("phase").setAttribute(
+            "style",
+            "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
+            "border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
+            "left: calc(50vw - ((0.8 * 40vh + 10vh) / 2)); z-index: 10; transition: 1.5s;"
+        );
+    }
+
+    // Style the scroll
+    if (phase.scroll && phase.scroll.length > 0) {
+        document.getElementById("papyrus_scroll").setAttribute(
+            "style",
+            "background-color: transparent; width: 40vh; height: 40vh; border-radius: 12px;" +
+            "position: absolute; top: 50vh; left: calc(50vw - (40vh / 2)); z-index: 5; transition: 1.5s;"
+        );
+        if (phase.text.some((line) => line !== "")) {
+            document.getElementById("scroll_text_box").setAttribute(
+            "style",
+            "display: flex; flex-direction: column; position: absolute; width: 40vh;" +
+                "height: calc(40vh / 2); top: calc(50vh + ((40vh / 1.69) / 1.69));" +
+                "left: calc(50vw - (40vh / 2)); z-index: 20; transition: 1.5s;"
+            );
+        }
+    }
+  
+    // Style the text
+    const infos = document.getElementsByClassName("info");
+    for (let i = 0; i < infos.length; i++) {
+        infos[i].setAttribute(
+            "style",
+            "text-align: center; font-size: calc(0.045 * 40vh);" + "z-index: 21; transition: 1.5s;"
+        );
+    }
+  
+    // Add additional images
+    if (phase.additionalImages) {
+        phase.additionalImages.forEach((image, index) => {
+            const overlayImage = document.createElement("img");
+            overlayImage.setAttribute("src", image.src);
+            overlayImage.setAttribute("id", image.id);
+    
+            // Different sizes for images
+            let styleString = `position: ${image.position}; top: ${image.top}; left: ${image.left}; z-index: 15;`;
+            if (index === 0) {
+                styleString =
+                    "width: calc(0.8 * 20vh); height: 30vh;" +
+                    "border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 80vh);" +
+                    "left: calc(50vw - ((0.8 * 30vh + 10vh) / 2)); z-index: 21; transition: 1.5s;";
+            } else if (index === 1) {
+                styleString =
+                    "width: calc(0.8 * 30vh); height: 20vh;" +
+                    "border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 2vh);" +
+                    "left: calc(50vw - ((0.8 * 30vh + 10vh) / 2)); z-index: 21; transition: 1.5s;";
+            }
+    
+            overlayImage.setAttribute("style", styleString);
+            document.body.appendChild(overlayImage);
+        });
+    }
+  
+    // Create next button
+    const nextButton = document.createElement("button");
+    nextButton.id = "next-btn";
+    nextButton.setAttribute(
+        "style",
+        `
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;           /* Adjust as needed */
+        height: 100px;           /* Adjust as needed */
+        border: none;
+        background: url('../assets/images/next_button.png') no-repeat center center;
+        background-size: contain;
+        cursor: pointer;
+        z-index: 100;
+        `
+    );
+
+    nextButton.addEventListener("mouseover", () => {
+        nextButton.style.backgroundImage = "url('../assets/images/next_button_light.png')";
+    });
+
+    nextButton.addEventListener("mouseout", () => {
+        nextButton.style.backgroundImage = "url('../assets/images/next_button.png')";
+    });
+
+    nextButton.addEventListener("click", nextPhase);
+    phase_div.appendChild(nextButton);
+}
+  
+function nextPhase() {
+    // Remove current phase
+    removeCurrentPhase();
+  
+    // Move to next phase
+    phaseIndex++;
+    if (phaseIndex < phaseValues.length) {
+        displayPhase();
+
+    // If at end of phases
+    } else {
+        afterPhases();
+    }
+}
+  
+function removeCurrentPhase() {
+    // Remove phase modal
+    const phaseModal = document.getElementById("phase_modal");
+    if (phaseModal) {
+        phaseModal.remove();
+    }
+  
+    // Remove phase images
+    const overlayImages = document.querySelectorAll(
+        '[id^="chrysalis"], [id^="butterfly"], [id^="chrysalis2"], [id^="butterfly2"]'
+    );
+    overlayImages.forEach((img) => img.remove());
+  
+    phaseBool = false;
 }
