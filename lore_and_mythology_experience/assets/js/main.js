@@ -2,6 +2,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
+import { startPhasesSMP } from "./phasesSMP.js";
 // import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 // import {
 //     CSS2DRenderer,
@@ -234,7 +235,13 @@ function starFieldTransistion() {
         isStarTransition = false;
         metorite.visible = false;
         console.log('Transitioning to phases');
-        startPhases();
+        // startPhases();
+        const mainTitle = document.querySelector(".main-title");
+        if (mainTitle) {
+            mainTitle.style.visibility = "hidden";
+            mainTitle.style.opacity = "0";
+        }
+        startPhasesSMP();
     }, 2000);
 }
 
