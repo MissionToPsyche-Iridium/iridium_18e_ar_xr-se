@@ -81,8 +81,8 @@ export function experience1() {
 
     _scene.add(sunLight);
 
-    const axesHelper = new THREE.AxesHelper(5);
-    _scene.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper(5);
+    // _scene.add(axesHelper);
 
     // Set initial camera rotation using spherical coordinates
     const radius = 10;
