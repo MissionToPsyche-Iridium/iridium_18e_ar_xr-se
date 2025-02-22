@@ -343,12 +343,11 @@ const loader = new GLTFLoader();
 let asteroid;
 loader.load('../assets/models/asteroid.glb', (gltf) => {
     asteroid = gltf.scene;
-    asteroid.scale.set(0.06, 0.06, 0.06);
+    asteroid.scale.set(0.2, 0.2, 0.2);
     asteroid.position.copy(asteroidPosition);
     asteroid.visible = false;
     scene.add(asteroid);
 });
-
 
 // Add lighting
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
@@ -357,33 +356,6 @@ scene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 1.5);
 pointLight.position.set(5, 5, 5);
 scene.add(pointLight);
-
-// Create a telescope
-const telescopeBaseGeometry = new THREE.CylinderGeometry(0.3, 0.3, 1, 32);
-const telescopeBaseMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
-const telescopeBase = new THREE.Mesh(telescopeBaseGeometry, telescopeBaseMaterial);
-telescopeBase.position.set(0, -2.5, 0);
-scene.add(telescopeBase);
-
-const telescopeTubeGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3, 32);
-const telescopeTubeMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
-const telescopeTube = new THREE.Mesh(telescopeTubeGeometry, telescopeTubeMaterial);
-telescopeTube.rotation.x = Math.PI / 2;
-telescopeTube.position.set(0, -2, 1.5);
-scene.add(telescopeTube);
-
-const telescopeEyepieceGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
-const telescopeEyepieceMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
-const telescopeEyepiece = new THREE.Mesh(telescopeEyepieceGeometry, telescopeEyepieceMaterial);
-telescopeEyepiece.rotation.x = Math.PI / 2;
-telescopeEyepiece.position.set(0, -2, -0.8);
-scene.add(telescopeEyepiece);
-
-const telescopeLensGeometry = new THREE.SphereGeometry(0.15, 32, 32);
-const telescopeLensMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff, emissive: 0x000066 });
-const telescopeLens = new THREE.Mesh(telescopeLensGeometry, telescopeLensMaterial);
-telescopeLens.position.set(0, -2, 3.1);
-scene.add(telescopeLens);
 
 // Scope behavior
 const scope = document.getElementById('scope');
