@@ -185,6 +185,7 @@ function createStarField() {
     uniform vec2 uCirclePos; 
     uniform float uCircleRadius;
     uniform bool uBlurEnabled;
+    uniform bool uBlurCircle;
     uniform vec2 uResolution;
 
     void main() {
@@ -221,7 +222,11 @@ function createStarField() {
         vec4 starColor = vec4(vColor, alpha);
 
         // Apply blur effect outside the circle (simulated by reducing brightness)
-        if (uBlurEnabled && screenDist > 1.0) {
+        if (uBlurCircle && uBlurEnabled && screenDist > 1.0) {
+            starColor.rgb *= 0.3; 
+        }
+
+        if (!uBlurCircle && uBlurEnabled) {
             starColor.rgb *= 0.3; 
         }
 
@@ -240,7 +245,8 @@ function createStarField() {
         uniforms: {
             uCirclePos: { value: new THREE.Vector2(0.5, 0.5) },
             uCircleRadius: { value: 0.16 },
-            uBlurEnabled: { value: false },
+            uBlurEnabled: { value: true },
+            uBlurCircle: { value: false },
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         }
     });
@@ -493,7 +499,7 @@ function starFieldTransistion() {
 function onPointerDown(event) {
     if (window.scopeDisabled) return;
     scope.style.display = 'block';
-    starMaterial.uniforms.uBlurEnabled.value = true;
+    starMaterial.uniforms.uBlurCircle.value = true;
     moveScope(event);
 }
 
@@ -508,20 +514,20 @@ function onPointerMove(event) {
 function onPointerUp() {
     if (window.scopeDisabled) return;
 
-    starMaterial.uniforms.uBlurEnabled.value = false;
+    starMaterial.uniforms.uBlurCircle.value = false;
     scope.style.display = 'none';
 }
 
 document.addEventListener('touchstart', (event) => {
     if (window.scopeDisabled) return;
-    starMaterial.uniforms.uBlurEnabled.value = true;
+    starMaterial.uniforms.uBlurCircle.value = true;
     scope.style.display = 'block';
     moveScope(event);
 });
 
 document.addEventListener('touchend', () => {
     if (window.scopeDisabled) return;
-    starMaterial.uniforms.uBlurEnabled.value = false;
+    starMaterial.uniforms.uBlurCircle.value = false;
     scope.style.display = 'none';
 });
 // Attach pointer events
