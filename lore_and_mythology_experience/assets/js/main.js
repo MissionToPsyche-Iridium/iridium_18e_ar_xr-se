@@ -241,7 +241,7 @@ function starFieldTransistion() {
             mainTitle.style.visibility = "hidden";
             mainTitle.style.opacity = "0";
         }
-        startPhasesSMP();
+        startPhases();
     }, 2000);
 }
 

@@ -149,7 +149,7 @@ const phases = {
         image: "",
         alt: "no image",
         scroll: "",
-        duration: 2000,
+        duration: 500,
         text: [
             ""
         ]
