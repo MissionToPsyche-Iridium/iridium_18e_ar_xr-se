@@ -7,6 +7,10 @@ canvas {
   display: block;
 }
 
+img {
+  pointer-events: none;
+}
+
 .main-title {
   position: absolute;
   left: 50%;
@@ -19,7 +23,14 @@ canvas {
   visibility: hidden;
   opacity: 0;
   transition: 1.5s;
+  user-select: all; /* allow copying */
 }
+
+.main-title::selection {
+  background: transparent; /* remove highlight effect */
+  color: inherit; /* keep text color unchanged */
+}
+
 /* Icon Button Styling */
 #help-icon-button {
   position: fixed;
@@ -30,6 +41,12 @@ canvas {
   cursor: pointer;
   z-index: 20;
   pointer-events: auto;
+  user-select: all; /* allow copying */
+}
+
+#help-icon-button::selection {
+  background: transparent; /* remove highlight effect */
+  color: inherit; /* keep text color unchanged */
 }
 
 #settings-icon-button {
@@ -41,6 +58,12 @@ canvas {
   cursor: pointer;
   z-index: 20;
   pointer-events: auto;
+  user-select: all; /* allow copying */
+}
+
+#settings-icon-button::selection {
+  background: transparent; /* remove highlight effect */
+  color: inherit; /* keep text color unchanged */
 }
 
 /* Modal Styling */
@@ -56,9 +79,10 @@ canvas {
 }
 
 .modal-popup {
-  background: url("../images/papyrus_scroll_double_sided_wide_rotated.png") no-repeat center center;
+  background: url("../images/papyrus_scroll_double_sided_wide_rotated.png")
+    no-repeat center center;
   background-size: 100% 100%;
-  font-family: 'Lucida Calligraphy', 'Brush Script MT', cursive;
+  font-family: "Lucida Calligraphy", "Brush Script MT", cursive;
   margin: 10% auto;
   padding: 20px;
   width: 80%;
@@ -165,6 +189,17 @@ canvas {
   pointer-events: auto;
   display: none;
   z-index: 10;
+  -webkit-mask-image: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 1) 60%
+  );
+  mask-image: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 1) 60%
+  );
+  backdrop-filter: none;
 }
 
 #help_modal {
@@ -311,7 +346,9 @@ input[type="range"]::-webkit-slider-thumb {
   background: black;
   border-radius: 50%;
   cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
+  transition:
+    transform 0.2s,
+    background 0.2s;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -326,4 +363,3 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 50%;
   cursor: pointer;
 }
-
