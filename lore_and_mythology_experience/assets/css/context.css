@@ -1,0 +1,165 @@
+@font-face {
+    font-family: 'Papyrus';
+    src: url('../fonts/papyrus.ttf') format('truetype');
+}
+html {
+    overflow: hidden;
+}
+body {
+    background-image: url("../images/context/skybox.png");
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100vh;
+    gap: 20px;
+    margin: 0;
+    overflow: hidden;
+}
+/*
+====================================
+Main Containers
+====================================
+ */
+#top {
+    display: flex;
+    flex-direction: column;
+    height: 20vh;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+#spacer {
+    display: flex;
+    flex-direction: column;
+    height: 20vh;
+    margin-top: -20px;
+    justify-content: center;
+    align-items: center;
+}
+#middle {
+    display: flex;
+    height: 40vh;
+    flex-direction: row;
+    position: absolute;
+    bottom: 35vh;
+}
+.foreground {
+    display: flex;
+    flex-direction: row;
+    height: 20vh;
+    width: 100vw;
+    background-image: url("../images/context/grass.png");
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+}
+/*
+====================================
+Secondary Containers
+====================================
+ */
+#scroll {
+    opacity: 0;
+    max-width: 500px;
+}
+#scrollClick {
+    opacity: 0;
+    max-width: 500px;
+    height: 50%;
+}
+#left {
+    width: 50vw;
+    position: relative;
+    bottom: -2vh;
+    z-index: 1;
+}
+#right {
+    width: 40vw;
+    position: relative;
+    bottom: -20vh;
+    left: 5vw;
+    z-index: 6;
+    display: flex;
+    flex-direction: column-reverse;
+}
+#fg1 {
+    position: absolute;
+    bottom: 20vh;
+    z-index: 2;
+}
+#fg2 {
+    position: absolute;
+    bottom: 10vh;
+    z-index: 4;
+}
+#fg3 {
+    position: absolute;
+    bottom: 0;
+    z-index: 5;
+}
+/*
+====================================
+Tertiary Containers
+====================================
+ */
+
+#telescope {
+    aspect-ratio: 1 / 1;
+    width: 75%;
+    max-height: 275px;
+    height: auto;
+    opacity: 1!important;
+    z-index: 2;
+    background-image: url("../images/context/telescope.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    position: relative;
+    top: 20%;
+    left: 10%;
+}
+
+#telescopeBg {
+    background-color: rgba(255, 255, 255, 0.0);
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    max-width: 300px;
+    z-index: 6;
+    border-radius: 100%;
+    position: relative;
+}
+
+#observatory {
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-image: url("../images/context/observatory.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+}
+
+.scroll-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/context/scroll.png");
+    background-repeat: no-repeat;
+    background-size: 95% 100%;
+    background-position: center;
+}
+.scroll-text {
+    position: relative;
+    bottom: -10px;
+    color: black;
+    font-family: "Papyrus", fantasy;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
