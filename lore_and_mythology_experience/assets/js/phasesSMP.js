@@ -9,7 +9,7 @@ const phases = {
     psycheSatellite1: {
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Psyche satellite with wings like a butterfly.",
-        duration: 3000,
+        duration: 1000,
         banner: "",
         text: [
             ""
@@ -21,7 +21,7 @@ const phases = {
     psycheSatellite2: {
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 8000,
+        duration: 3000,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             "With it’s solar panel wings outstretched",
@@ -62,7 +62,7 @@ const phases = {
     finale: {
         image: "",
         alt: "",
-        duration: 20000,
+        duration: 3000,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             " “Perhaps after NASA’s",
@@ -107,7 +107,7 @@ export function startPhasesSMP() {
     showSMPIntro(() => {
         showLaunch(() => {
             showTimer(() => {
-                displayPhase();
+                displayPhaseSMP();
             });
         });
     });
@@ -258,7 +258,7 @@ function showTimer(callback) {
 * displayPhase
 * display SMP-l phases
  */
-function displayPhase() {
+function displayPhaseSMP() {
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
 
     if (phaseIndex >= phaseValues.length) {
@@ -278,7 +278,7 @@ function displayPhase() {
 * afterPhases
 * handler after phases show
  */
-function afterPhases() {
+function afterPhasesSMP() {
     // TODO: what happens after the phases?
     console.log("Psyche Lore Journey complete!");
 }
@@ -364,20 +364,65 @@ function showPhase(phase) {
             });
         }
 
-        // clear phase after the duration ends
-        // hide phase modal and remove the phase images
+        // Add next button
+        const nextButton = document.createElement("button");
+        nextButton.id = "next-btn";
+        nextButton.setAttribute("style", `
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 100px;
+            border: none;
+            background: url('../assets/images/continue_button.png') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+        `);
+        nextButton.addEventListener("click", nextPhaseSMP);
+        phase_div.appendChild(nextButton);
+
+        // Next button appears after some time passes
         setTimeout(() => {
-            document.getElementById("phase_modal").remove();
-
-            // remove any overlay images for the phase
-             const overlayImages = document.querySelectorAll('[id^="butterfly"]');
-            overlayImages.forEach((img) => img.remove());
-
-            phaseBool = false;
+            nextButton.style.display = "block";
         }, phase.duration);
+
     } else {
         // Hide the current phase modal if it's already showing
         document.getElementById("phase_modal").setAttribute("style", "display: none;");
         phaseBool = false;
     }
+}
+
+function nextPhaseSMP() {
+    // Remove current phase
+    removeCurrentPhaseSMP();
+  
+    // Move to next phase
+    phaseIndex++;
+    if (phaseIndex < phaseValues.length) {
+        displayPhaseSMP();
+
+    // If at end of phases
+    } else {
+        afterPhasesSMP();
+    }
+}
+
+function removeCurrentPhaseSMP() {
+    // Remove phase modal
+    const phaseModal = document.getElementById("phase_modal");
+    if (phaseModal) {
+        phaseModal.remove();
+    }
+  
+    // Remove phase images
+    const overlayImages = document.querySelectorAll(
+        '[id^="butterfly"]'
+    );
+    overlayImages.forEach((img) => img.remove());
+  
+    phaseBool = false;
 }
