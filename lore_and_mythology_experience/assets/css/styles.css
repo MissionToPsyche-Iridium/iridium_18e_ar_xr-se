@@ -29,6 +29,7 @@ canvas {
   height: 30px;
   cursor: pointer;
   z-index: 20;
+  pointer-events: auto;
 }
 
 #settings-icon-button {
@@ -39,6 +40,7 @@ canvas {
   height: 30px;
   cursor: pointer;
   z-index: 20;
+  pointer-events: auto;
 }
 
 /* Modal Styling */
@@ -178,57 +180,57 @@ canvas {
 
 #papyrus_horizontal {
   background-color: transparent;
-  width: 85vw;
-  height: calc(0.75 * 85vw);
+  width: calc(0.75 * 85vh);
+  height: 85vh;
   position: relative;
-  top: calc((100vh - 0.75 * 85vw) / 2);
-  left: calc((100vw - 85vw) / 2);
+  top: calc((100vh - 85vh) / 2);
+  left: calc((100vw - (0.75 * 85vh)) / 2);
 }
 
 #close_help {
   position: absolute;
-  top: calc((0.073 * 0.75 * 85vw) + (0.5 * 100vh) - (0.5 * 0.75 * 85vw));
-  left: calc(0.855 * 85vw);
+  top: calc(100vh - 85vh - ((0.09 * 0.75 * 85vh) / 2));
+  left: calc((100vw / 2) + ((0.75 * 85vh) / 4));
   font-family: "Papyrus", fantasy;
-  font-size: calc(0.07 * 0.75 * 85vw);
+  font-size: calc(0.09 * 0.75 * 85vh);
   cursor: pointer;
 }
 
 #help_modal_title {
   position: absolute;
-  top: calc((0.18 * 0.75 * 85vw) + (0.5 * 100vh) - (0.5 * 0.75 * 85vw));
-  left: calc(0.52 * 85vw);
+  top: calc(100vh - 85vh + ((0.11 * 0.75 * 85vh) / 2));
+  left: calc((100vw / 2) - (4 * 0.35 * 0.11 * 0.75 * 85vh));
   font-family: "Papyrus", fantasy;
-  font-size: calc(0.08 * 0.75 * 85vw);
+  font-size: calc(0.11 * 0.75 * 85vh);
 }
 
 .swipe {
   position: absolute;
-  top: calc((0.46 * 0.75 * 85vw) + (0.5 * 100vh) - (0.5 * 0.75 * 85vw));
-  left: calc(0.33 * 85vw);
+  top: calc(3.3 * (100vh - 85vh));
+  left: calc((100vw / 2) - (0.75 * 85vh / 2) + (0.22 * 0.75 * 85vh));
   display: flex;
   flex-direction: column;
   font-family: "Papyrus", fantasy;
 }
 
 #swipe {
-  width: calc(0.13 * 85vw);
+  width: calc(0.2 * 0.75 * 85vh);
   align-self: center;
 }
 
 .tap {
   position: absolute;
-  top: calc((0.439 * 0.75 * 85vw) + (0.5 * 100vh) - (0.5 * 0.75 * 85vw));
-  left: calc(0.58 * 90vw);
+  top: calc(3.17 * (100vh - 85vh));
+  left: calc((100vw / 2) + (0.75 * 85vh / 2) - (0.46 * 0.75 * 85vh));
   display: flex;
   flex-direction: column;
   font-family: "Papyrus", fantasy;
 }
 
 #tap {
-  width: calc(0.13 * 85vw);
+  width: calc(0.2 * 0.75 * 85vh);
   align-self: center;
-  padding: 0.69vw;
+  padding: 0.99vh;
 }
 
 .text_box {
@@ -236,15 +238,15 @@ canvas {
   border-width: thin;
   border-color: black;
   border-radius: 5px;
-  padding: 0.5vw;
+  padding: 0.5vh;
   display: flex;
   flex-direction: column;
-  width: 19vw;
+  width: calc(0.27* 0.75* 85vh);
 }
 
 .instructions {
   text-align: center;
-  font-size: calc(0.03 * 0.75 * 85vw);
+  font-size: calc(0.02 * 85vh);
 }
 
 .invisibuttons {

@@ -564,9 +564,9 @@ function triggerAutoHelp() {
 }
 function resetAutoHelp() {
     clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(triggerAutoHelp, 70000);
+    inactivityTimer = setTimeout(triggerAutoHelp, 60000);
 }
-let inactivityTimer = setTimeout(triggerAutoHelp, 70000);
+let inactivityTimer = setTimeout(triggerAutoHelp, 60000);
 initializeAutoHelp();
 
 
