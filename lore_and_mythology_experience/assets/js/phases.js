@@ -1,3 +1,4 @@
+import { startPhasesSMP } from "./phasesSMP.js";
 // TODO: store phase data in json file
 const phases = {
     annibale1: {
@@ -168,7 +169,7 @@ const phases = {
         image: "",
         alt: "no image",
         scroll: "",
-        duration: 2000,
+        duration: 500,
         text: [
             ""
         ]
@@ -201,7 +202,7 @@ function displayPhase() {
 }
 
 function afterPhases() {
-    // TODO, what happens after the phases are done?
+    startPhasesSMP();
 }
 
 let phaseBool = false;

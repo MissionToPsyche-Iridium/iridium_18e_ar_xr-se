@@ -3,6 +3,7 @@ import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
+import { startPhasesSMP } from "./phasesSMP.js";
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -457,6 +458,7 @@ function starFieldTransistion() {
         isStarTransition = false;
         asteroid.visible = false;
         console.log('Transitioning to phases');
+        // startPhases();
         const mainTitle = document.querySelector(".main-title");
         if (mainTitle) {
             mainTitle.style.visibility = "hidden";
