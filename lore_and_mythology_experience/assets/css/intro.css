@@ -1,42 +1,46 @@
 body {
-    font-family: 'Papyrus', fantasy;
-    background-color: transparent;
-    margin: 0;
-    padding: 0;
+  font-family: "Papyrus", fantasy;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  pointer-events: none;
 }
 
 .popup-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 500px;
-    background: url('../images/papyrus_scroll_intro.png') no-repeat center center;
-    background-size: contain;
-    z-index: 1000;
-    padding: 50%; /* Adjusted for better scaling */
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    visibility: hidden;
-    opacity: 0;
-    transition: 1.5s;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  background: url("../images/papyrus_scroll_intro.png") no-repeat center center;
+  background-size: contain;
+  z-index: 1000;
+  padding: 50%; /* Adjusted for better scaling */
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  visibility: hidden;
+  opacity: 0;
+  transition: 1.5s;
 }
 
 /* Adjustments for smaller screens */
 @media (max-width: 600px) {
-    .popup-container {
-        top: 50%;
-        width: 95%;
-        padding: 40%;
-    }
+  .popup-container {
+    top: 50%;
+    width: 95%;
+    padding: 40%;
+  }
 }
 
 /* Adjustments for larger screens */
 @media (min-width: 1024px) {
-    .popup-container {
-        width: 60%;
-        max-width: 600px;
-        padding: 45%;
-    }
+  .popup-container {
+    width: 60%;
+    max-width: 600px;
+    padding: 45%;
+  }
 }
