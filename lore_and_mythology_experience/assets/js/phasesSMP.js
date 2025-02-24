@@ -42,7 +42,7 @@ const phases = {
         ]
     },
     psycheGoddess: {
-        image: "../assets/images/goddess_psyche/psyche_sleeping_vector.png",
+        image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "Goddess Psyche sleeping vector.",
         duration: 4000,
         banner: "",
@@ -209,7 +209,7 @@ function showLaunch(callback) {
 
         // YouTube Iframe API
         let player;
-        window.onYouTubeIframeAPIReady = function () {
+        window.onYouTubeIframeAPIReady = function() {
             player = new YT.Player(iframe, {
                 events: {
                     'onStateChange': onPlayerStateChange
@@ -356,7 +356,7 @@ function showPhase(phase) {
                 overlayImage.setAttribute("id", image.id);
                 // add position styles for stacking additional images on top of phase image
                 overlayImage.setAttribute("style", `position: ${image.position}; top: ${image.top}; left: ${image.left}; z-index: 15;`);
-                overlayImage.setAttribute("style","width: calc(0.8 * 55vh); height: auto" +
+                overlayImage.setAttribute("style", "width: calc(0.8 * 55vh); height: auto" +
                     " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 75vh);" +
                     " left: calc(45vw - ((0.8 * 30vh + 10vh) / 2)); z-index: 21; transition: 1.5s ease-in-out;");
 
