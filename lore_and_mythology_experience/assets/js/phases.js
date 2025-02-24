@@ -99,8 +99,8 @@ const phases = {
             ""
         ],
         additionalImages: [
-            { src: "../assets/images/chrysalis/chrysalis2.png", id: "chrysalis2", position: "absolute", top: "10px", left: "10px" },
-            { src: "../assets/images/chrysalis/butterfly2.png", id: "butterfly2", position: "absolute", top: "10px", left: "10px" },
+            { src: "../assets/images/chrysalis/chrysalis_stars.png", id: "chrysalis_stars", position: "absolute", top: "10px", left: "10px" },
+            { src: "../assets/images/chrysalis/butterfly_stars.png", id: "butterfly_stars", position: "absolute", top: "10px", left: "10px" },
         ]
     },
     psychegoddess1: { // psyche goddess part1
