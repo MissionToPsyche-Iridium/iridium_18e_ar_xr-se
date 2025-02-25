@@ -9,7 +9,7 @@ const phases = {
     psycheSatellite1: {
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Psyche satellite with wings like a butterfly.",
-        duration: 1000,
+        duration: 2000,
         banner: "",
         text: [
             ""
@@ -21,7 +21,7 @@ const phases = {
     psycheSatellite2: {
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 3000,
+        duration: 2000,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             "With it’s solar panel wings outstretched",
@@ -35,7 +35,7 @@ const phases = {
     blank1: {
         image: "",
         alt: "",
-        duration: 1000,
+        duration: 2000,
         banner: "",
         text: [
             ""
@@ -44,7 +44,7 @@ const phases = {
     psycheGoddess: {
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "Goddess Psyche sleeping vector.",
-        duration: 4000,
+        duration: 2000,
         banner: "",
         text: [
             ""
@@ -53,7 +53,7 @@ const phases = {
     blank2: {
         image: "",
         alt: "",
-        duration: 1000,
+        duration: 2000,
         banner: "",
         text: [
             ""
@@ -62,7 +62,7 @@ const phases = {
     finale: {
         image: "",
         alt: "",
-        duration: 3000,
+        duration: 2000,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             " “Perhaps after NASA’s",
@@ -80,7 +80,7 @@ const phases = {
     blank3: {
         image: "",
         alt: "",
-        duration: 1000,
+        duration: 2000,
         banner: "",
         text: [
             ""
@@ -107,7 +107,8 @@ export function startPhasesSMP() {
     showSMPIntro(() => {
         showLaunch(() => {
             showTimer(() => {
-                displayPhaseSMP();
+                console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
+                showPhase(phaseValues[phaseIndex]);
             });
         });
     });
@@ -255,26 +256,6 @@ function showTimer(callback) {
 }
 
 /*
-* displayPhase
-* display SMP-l phases
- */
-function displayPhaseSMP() {
-    console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
-
-    if (phaseIndex >= phaseValues.length) {
-        phaseIndex = 0;
-        setTimeout(afterPhases, phaseValues[phaseIndex].duration);
-        return;
-    }
-
-    const phase = phaseValues[phaseIndex];
-    showPhase(phase);
-    phaseIndex++;
-
-    setTimeout(displayPhase, phase.duration);
-}
-
-/*
 * afterPhases
 * handler after phases show
  */
@@ -403,7 +384,8 @@ function nextPhaseSMP() {
     // Move to next phase
     phaseIndex++;
     if (phaseIndex < phaseValues.length) {
-        displayPhaseSMP();
+        console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
+        showPhase(phaseValues[phaseIndex]);
 
     // If at end of phases
     } else {
