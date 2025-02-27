@@ -9,7 +9,7 @@ const phases = {
     psycheSatellite1: {
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Psyche satellite with wings like a butterfly.",
-        duration: 3000,
+        duration: 2000,
         banner: "",
         text: [
             ""
@@ -20,8 +20,8 @@ const phases = {
     },
     psycheSatellite2: {
         image: "../assets/images/smp/psyche-satellite.png",
-        alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 8000,
+        alt: "Satellite Psyche with wings like a butterfly",
+        duration: 6000,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             "With it’s solar panel wings outstretched",
@@ -32,34 +32,16 @@ const phases = {
             { src: "../assets/images/chrysalis/butterfly.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
         ],
     },
-    blank1: {
-        image: "",
-        alt: "",
-        duration: 1000,
-        banner: "",
-        text: [
-            ""
-        ]
-    },
     psycheGoddess: {
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "Goddess Psyche sleeping vector.",
-        duration: 4000,
+        duration: 3000,
         banner: "",
         text: [
             ""
         ]
     },
-    blank2: {
-        image: "",
-        alt: "",
-        duration: 1000,
-        banner: "",
-        text: [
-            ""
-        ]
-    },
-    finale: {
+    quote: {
         image: "",
         alt: "",
         duration: 20000,
@@ -77,10 +59,10 @@ const phases = {
             "- McManamy"
         ]
     },
-    blank3: {
-        image: "",
-        alt: "",
-        duration: 1000,
+    finale: {
+        image: "../assets/images/smp/Psyche_Icon_Color-SVG.svg",
+        alt: "Psyche Icon",
+        duration: 10000,
         banner: "",
         text: [
             ""
@@ -251,7 +233,7 @@ function showTimer(callback) {
     console.log('Transitioning to satellite timer');
     setTimeout(() => {
         callback(); // Call the callback after timer is done
-    }, 5000);
+    }, 500);
 }
 
 /*
