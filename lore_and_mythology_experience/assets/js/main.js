@@ -3,6 +3,7 @@ import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
+import { AudioManager } from './AudioManager.js';
 import { startPhasesSMP } from "./phasesSMP.js";
 // import {
 //     CSS2DRenderer,
@@ -22,7 +23,12 @@ const camera = new THREE.PerspectiveCamera(
     1000,
 );
 camera.position.z = 5;
-
+window.onload = audio;
+function audio() {
+    const audioManager = new AudioManager();
+    audioManager.play();
+    audioManager.setVolume(0.5);
+}
 // Create a renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
