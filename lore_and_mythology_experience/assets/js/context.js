@@ -1,4 +1,7 @@
+import {AudioManager} from "./AudioManager.js";
+
 const telescope = document.getElementById("telescope");
+
 
 function telescopeClickedHandler() {
     window.location.href = '../pages/main_page.html'
@@ -15,8 +18,18 @@ var blinkIn = 0;
 window.onload = fadeIn;
 
 function fadeIn() {
+    audioLoad();
     clearInterval(intervalID);
     intervalID = setInterval(showScroll, 10);
+}
+
+function audioLoad() {
+    const audioFrame = document.getElementById('audio-frame');
+    audioFrame.onload = function () {
+        const audioManager = audioFrame.contentWindow.audioManager;
+        audioManager.play();
+        audioManager.setVolume(0.5);
+    };
 }
 
 function fadeOut() {
