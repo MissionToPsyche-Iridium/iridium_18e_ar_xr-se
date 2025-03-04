@@ -285,14 +285,54 @@ function getMaxX() {
     return frustumWidth / 2;
 }
 
+function generateAsteroidTexture() {
+    const size = 512;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+
+    // Fill with a base color
+    ctx.fillStyle = "#444";
+    ctx.fillRect(0, 0, size, size);
+
+    // Create craters 
+    for (let i = 0; i < 10; i++) {
+        const x = Math.random() * size;
+        const y = Math.random() * size;
+        const r = Math.random() * (size / 8) + (size / 10);
+
+        // Outer glow
+        const gradient = ctx.createRadialGradient(x, y, r * 0.3, x, y, r);
+        gradient.addColorStop(0, "rgba(20, 20, 20, 1)");
+        gradient.addColorStop(0.7, "rgba(50, 50, 50, 1)");
+        gradient.addColorStop(1, "rgba(90, 90, 90, 0.6)");
+
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+    }
+
+    return new THREE.CanvasTexture(canvas);
+}
+
 // create and add asteroid belt
 function createAsteroidBelt(scene) {
     const numAsteroids = 500;
     const beltRadius = 50;
     const beltThickness = 10;
-    const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
-    const asteroidMaterial = new THREE.MeshBasicMaterial({ color: 0x3a3a3a });
+    // const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
+    const asteroidGeometry = new THREE.SphereGeometry(0.5, 256, 256);
+    const asteroidMaterial = new THREE.MeshStandardMaterial({
+        map: generateAsteroidTexture(),
+        roughness: 1,
+        metalness: 0,
+        emissive: new THREE.Color(0x111111)
+    });
 
+    asteroidGeometry.computeBoundingBox();
+    asteroidGeometry.computeVertexNormals();
 
     while (true) {
         const asteroidAngle = Math.random() * Math.PI * 2;
@@ -314,6 +354,14 @@ function createAsteroidBelt(scene) {
 
         const asteroid = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
         asteroid.position.set(x, y, z);
+        const scale = Math.random() * 1.5 + 0.5;
+        asteroid.scale.set(scale, scale, scale);
+
+        asteroid.rotation.set(
+            Math.random() * Math.PI * 2,
+            Math.random() * Math.PI * 2,
+            Math.random() * Math.PI * 2
+        );
 
         scene.add(asteroid);
     }
@@ -354,13 +402,11 @@ loader.load('../assets/models/asteroid.glb', (gltf) => {
     scene.add(asteroid);
 });
 
-// Add lighting
-const ambientLight = new THREE.AmbientLight(0x404040, 2);
-scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xffffff, 1.5);
-pointLight.position.set(5, 5, 5);
-scene.add(pointLight);
+// lighting
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5, 5, 5);
+scene.add(light);
 
 // Scope behavior
 const scope = document.getElementById('scope');
@@ -458,7 +504,6 @@ function starFieldTransistion() {
 
     setTimeout(() => {
         camera.position.z = 0;
-        pointLight.position.z = 0;
         isStarTransition = false;
         asteroid.visible = false;
         console.log('Transitioning to phases');
