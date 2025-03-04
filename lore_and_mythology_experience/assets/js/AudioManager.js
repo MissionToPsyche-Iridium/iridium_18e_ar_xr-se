@@ -1,6 +1,10 @@
 class AudioManager {
-    constructor() {
-        this.audio = new Audio(AMPBackground);
+    constructor(choice) {
+        if(choice === "context") {
+            this.audio = new Audio(AMPCBackground);
+        } else if(choice === "amp") {
+            this.audio = new Audio(AMPBackground);
+        }
         this.audio.loop = true;
         this.audio.volume = 1;
         this.audio.autoplay = true;
@@ -12,9 +16,6 @@ class AudioManager {
         this.audio.play().catch(error => console.error("Playback failed:", error));
     }
 
-    pause() {
-        this.audio.pause();
-    }
 
     setVolume(volume) {
         this.audio.volume = volume;
@@ -24,3 +25,5 @@ class AudioManager {
 export { AudioManager };
 
 const AMPBackground = "../assets/sfx/background-AMP.mp3";
+const AMPCBackground = "../assets/sfx/background-AMP-C.mp3";
+const SMPBackground = "../assets/sfx/background-SMP.mp3";

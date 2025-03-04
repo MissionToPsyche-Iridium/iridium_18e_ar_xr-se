@@ -25,7 +25,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 5;
 window.onload = audio;
 function audio() {
-    const audioManager = new AudioManager();
+    const audioManager = new AudioManager("amp");
     audioManager.play();
     audioManager.setVolume(0.5);
 }

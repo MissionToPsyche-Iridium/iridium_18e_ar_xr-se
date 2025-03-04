@@ -1,3 +1,4 @@
+import {AudioManager} from "./AudioManager.js";
 
 const telescope = document.getElementById("telescope");
 
@@ -15,10 +16,16 @@ let blinkIn = 0;
 window.onload = fadeIn;
 
 function fadeIn() {
+    audioLoad();
     clearInterval(intervalID);
     intervalID = setInterval(showScroll, 10);
 }
 
+function audioLoad() {
+        const audioManager = new AudioManager("context");
+        audioManager.play();
+        audioManager.setVolume(0.5);
+}
 
 function fadeOut() {
     clearInterval(intervalID);
