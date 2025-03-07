@@ -284,7 +284,7 @@ function getMaxX() {
 // create and add asteroid belt
 function createAsteroidBelt(scene) {
     const numAsteroids = 500;
-    const beltRadius = 50;
+    const beltRadius = 509;
     const beltThickness = 10;
     const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
     const asteroidMaterial = new THREE.MeshBasicMaterial({ color: 0x3a3a3a });
@@ -350,6 +350,28 @@ loader.load('../assets/models/asteroid.glb', (gltf) => {
     scene.add(asteroid);
 });
 
+// Load telescope parts
+let telescopeLower, telescopeUpperPivot, telescopeUpper;
+loader.load('../assets/models/telescope_lower.glb', (gltf) => {
+    telescopeLower = gltf.scene;
+    telescopeLower.position.set(0, -3.9, 0);
+    telescopeLower.scale.set(0.3, 0.3, 0.3);
+    telescopeLower.rotation.x = THREE.MathUtils.degToRad(-55); // Base rotation away from camera
+    telescopeLower.rotation.y = THREE.MathUtils.degToRad(90); // This will turn to align with scope
+    scene.add(telescopeLower);
+
+    telescopeUpperPivot = new THREE.Group();
+    telescopeUpperPivot.position.set(0, 4, 0);
+    telescopeLower.add(telescopeUpperPivot);
+
+    // Once loaded, load the upper
+    loader.load('../assets/models/telescope_upper.glb', (gltf2) => {
+        telescopeUpper = gltf2.scene;
+        telescopeUpper.position.set(0, 0, 0); // x y z (y and z will reposition to align with scope)
+        telescopeUpperPivot.add(telescopeUpper);
+    });
+});
+
 // Add lighting
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
 scene.add(ambientLight);
@@ -381,9 +403,9 @@ let isZoom = false; // Camera zoom starts
 
 window.scopeDisabled = false;
 
+let target3D = new THREE.Vector3();
 
 function moveScope(event) {
-
     if (event.touches) {
         scope.style.left = `${event.touches[event.touches.length - 1].clientX - scope.offsetWidth / 2}px`;
         scope.style.top = `${event.touches[event.touches.length - 1].clientY - scope.offsetHeight / 2}px`;
@@ -402,12 +424,15 @@ function moveScope(event) {
     let x = event.clientX / window.innerWidth;
     let y = 1.0 - event.clientY / window.innerHeight;
     starMaterial.uniforms.uCirclePos.value.set(x, y);
+
     // Perform raycast
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(asteroid, true);
 
     // hide/show asteroid
     if (intersects.length > 0) {
+        target3D.copy(intersects[0].point);
+
         // pause zoom
         if (isZoom) return;
         isZoom = true;
@@ -443,8 +468,56 @@ function moveScope(event) {
             }
         }
         requestAnimationFrame(animateZoom);
+
+    // Calculate target when scope is aimed
+    } else {
+        const asteroidZ = asteroid.position.z || -10;
+        const cameraPos = camera.position.clone();
+        const rayDirection = new THREE.Vector3();
+        rayDirection.copy(raycaster.ray.direction);
+        let t = (asteroidZ - cameraPos.z) / rayDirection.z;
+        if (t < 0) t = 0;
+
+        target3D.set(
+            cameraPos.x + rayDirection.x * t,
+            cameraPos.y + rayDirection.y * t,
+            asteroidZ
+        );
     }
 }
+
+let currentYaw = 0;
+let currentPitch = 0;
+function pointTelescopeAt(target3D, delta) {
+    if (!telescopeLower || !telescopeUpper) return;
+    const rotationSpeed = 4.0;
+  
+    // Rotate lower telescope's yaw around its origin
+    const lowerWorldPos = new THREE.Vector3();
+    telescopeLower.getWorldPosition(lowerWorldPos);
+  
+    const dir = new THREE.Vector3().subVectors(target3D, lowerWorldPos);
+    const flatDir = new THREE.Vector3(dir.x, 0, dir.z);
+    if (flatDir.lengthSq() < 1e-8) return;
+    flatDir.normalize();
+
+    const rawYaw = -Math.atan2(flatDir.x, flatDir.z);
+    const baseYaw = THREE.MathUtils.degToRad(90);
+    const desiredYaw = baseYaw + rawYaw;
+    currentYaw = THREE.MathUtils.lerp(currentYaw, desiredYaw, rotationSpeed * delta);
+    telescopeLower.rotation.y = currentYaw;
+  
+    // Rotate upper telescope's pitch around an axis offset from origin
+    // TODO, move model down in .glb so that its origin is where it rotates around
+    const upperWorldPos = new THREE.Vector3();
+    telescopeUpperPivot.getWorldPosition(upperWorldPos);
+    const upperDir = new THREE.Vector3().subVectors(target3D, upperWorldPos);
+    const distXZ = Math.sqrt(upperDir.x * upperDir.x + upperDir.z * upperDir.z);
+    const rawPitch = -Math.atan2(upperDir.y, distXZ);
+
+    currentPitch = THREE.MathUtils.lerp(currentPitch, rawPitch, rotationSpeed * delta);
+    telescopeUpperPivot.rotation.x = currentPitch;
+  }
 
 // Star transition
 const starTransistionGeometry = new THREE.BufferGeometry();
@@ -467,7 +540,6 @@ function starFieldTransistion() {
         startPhases();
     }, 2000);
 }
-
 
 // Pointer events
 function onPointerDown(event) {
@@ -521,6 +593,9 @@ function animate() {
     const now = performance.now();
     const delta = (now - lastTime) / 1000.0;
     lastTime = now;
+
+    // Aim telescope
+    pointTelescopeAt(target3D, delta);
 
     // Star transition
     if (isStarTransition) {
