@@ -344,12 +344,37 @@ function showPhase(phase) {
                     banner.appendChild(textBox);
                 }
 
+                let bottomValue;
+
+                if (window.innerWidth <= 768) { // Small screens (mobile)
+                    console.log("small screen");
+                    if (phase.text.length > 3) {
+                        bottomValue = "12vh";
+                    }  else {
+                        bottomValue = "15vh";
+                    }
+                } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
+                    console.log("medium screen");
+                    if (phase.text.length > 3) {
+                        bottomValue = "15vh";
+                    }  else {
+                        bottomValue = "16vh";
+                    }
+                } else { // Large screens (desktops)
+                    console.log("large screen");
+                    if (phase.text.length > 3) {
+                        bottomValue = "15vh";
+                    }  else {
+                        bottomValue = "16vh";
+                    }
+                }
+
                 textBox.setAttribute("style",
-                    "display: flex; flex-wrap: wrap; position: inherit; align-items: center;" +
-                    " justify-content: center; width: calc(0.8* 28vh); color: #C9FFFC; " +
-                    "font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Comfortaa', Arial, sans-serif; " +
-                    "text-align: center; padding: 4vh; white-space: normal; bottom: 12vh; z-index: 10;" +
-                    "left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))");
+                    `display: flex; flex-wrap: wrap; position: inherit; align-items: center;
+                    justify-content: center; width: calc(0.8* 28vh); color: #C9FFFC;
+                    font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Comfortaa', Arial, sans-serif;
+                    text-align: center; padding: 4vh; white-space: normal; bottom: ${bottomValue}; z-index: 10;
+                    left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))`);
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
