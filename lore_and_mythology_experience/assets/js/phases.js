@@ -230,7 +230,7 @@ function showPhase(phase) {
             }
 
             scroll.setAttribute("style",
-                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 55vh); border-radius: 12px;" +
+                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 56vh); border-radius: 12px;" +
                 " position: absolute; bottom: -2vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
                 " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
                 " text-align: center; overflow: visible; flex-direction: column;");
@@ -245,7 +245,14 @@ function showPhase(phase) {
                     banner.appendChild(textBox);
                 }
 
-                if (phase.text.length > 3) {
+                if (phase.text.length > 4) {
+                    textBox.setAttribute("style",
+                        "display: flex; flex-wrap: wrap; position: inherit; align-items: center;" +
+                        " justify-content: center; width: calc(0.8* 40vh); color: black; " +
+                        "font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; " +
+                        "text-align: center; padding: 0vh 4vh; white-space: normal; bottom: 8vh; z-index: 10;" +
+                        "left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))");
+                } else if (phase.text.length > 3) {
                     textBox.setAttribute("style",
                         "display: flex; flex-wrap: wrap; position: inherit; align-items: center;" +
                         " justify-content: center; width: calc(0.8* 40vh); color: black; " +
