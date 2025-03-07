@@ -114,7 +114,7 @@ const phases = {
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         duration: 5000,
         text: [
-            "The asteroid Psyche finds herself in",
+            "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
         ]
     },
@@ -137,18 +137,8 @@ const phases = {
         text: [
             "Like Psyche opening the fateful box,",
             "revealing the unexpected,",
-            "humanity explores the Psyche asteroid",
-            "to uncover planetary core secrets.."
-        ]
-    },
-    psychegoddess8: { // psyche goddess part7
-        title: "Exploring the Asteroid Psyche",
-        image: "../assets/images/goddess_psyche/asteroid.png",
-        alt: "psyche asteroid core",
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 2000,
-        text: [
-            "...risking the unknown for discovery."
+            "humanity explores the Psyche asteroid;",
+            "risking the unknown for discovery."
         ]
     }
 };
@@ -255,12 +245,21 @@ function showPhase(phase) {
                     banner.appendChild(textBox);
                 }
 
-                textBox.setAttribute("style",
-                    "display: flex; flex-wrap: wrap; position: inherit; align-items: center;" +
-                    " justify-content: center; width: calc(0.8* 40vh); color: black; " +
-                    "font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; " +
-                    "text-align: center; padding: 4vh; white-space: normal; bottom: 4vh; z-index: 10;" +
-                    "left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))");
+                if (phase.text.length > 3) {
+                    textBox.setAttribute("style",
+                        "display: flex; flex-wrap: wrap; position: inherit; align-items: center;" +
+                        " justify-content: center; width: calc(0.8* 40vh); color: black; " +
+                        "font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; " +
+                        "text-align: center; padding: 0vh 4vh; white-space: normal; bottom: 10vh; z-index: 10;" +
+                        "left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))");
+                } else if (phase.text.length < 4) {
+                    textBox.setAttribute("style",
+                        "display: flex; flex-wrap: wrap; position: inherit; align-items: center;" +
+                        " justify-content: center; width: calc(0.8* 40vh); color: black; " +
+                        "font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; " +
+                        "text-align: center; padding: 0vh 4vh; white-space: normal; bottom: 15vh; z-index: 10;" +
+                        "left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))");
+                }
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence

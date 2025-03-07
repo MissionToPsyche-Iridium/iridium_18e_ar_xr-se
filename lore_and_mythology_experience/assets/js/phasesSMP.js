@@ -348,7 +348,7 @@ function showPhase(phase) {
                     "display: flex; flex-wrap: wrap; position: inherit; align-items: center;" +
                     " justify-content: center; width: calc(0.8* 28vh); color: #C9FFFC; " +
                     "font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Comfortaa', Arial, sans-serif; " +
-                    "text-align: center; padding: 4vh; white-space: normal; bottom: 10vh; z-index: 10;" +
+                    "text-align: center; padding: 4vh; white-space: normal; bottom: 12vh; z-index: 10;" +
                     "left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))");
 
                 // Populate the text box with the phase text
