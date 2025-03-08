@@ -4,7 +4,7 @@ const phases = {
     annibale1: {
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
-        duration: 10000,
+        duration: 8000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "On March 17, 1852, the Italian astronomer",
@@ -17,7 +17,7 @@ const phases = {
     asteroid1: {
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "image of asteroid",
-        duration: 10000,
+        duration: 7000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "The asteroid Psyche has the",
@@ -29,7 +29,7 @@ const phases = {
     chrysalis1: {
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 4000,
+        duration: 3000,
         scroll: "",
         text: [
             ""
@@ -41,7 +41,7 @@ const phases = {
     chrysalis2: {
         image: "",
         alt: "image of chrysalis",
-        duration: 4000,
+        duration: 3000,
         scroll: "",
         text: [
             ""
@@ -53,7 +53,7 @@ const phases = {
     chrysalis3: {
         image: "",
         alt: "image of chrysalis stars",
-        duration: 4000,
+        duration: 3000,
         scroll: "",
         text: [
             ""
@@ -65,7 +65,7 @@ const phases = {
     chrysalis4: {
         image: "",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
-        duration: 10000,
+        duration: 8000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, the breath of life leaves",
@@ -80,7 +80,7 @@ const phases = {
     chrysalis5: {
         image: "",
         alt: "image of butterfly stars",
-        duration: 4000,
+        duration: 3000,
         scroll: "",
         text: [
             ""
@@ -92,7 +92,7 @@ const phases = {
     psychegoddess1: { // psyche goddess part1
         image: "../assets/images/goddess_psyche/psyche_opening_box.png",
         alt: "image of Psyche goddess opening pandora's box.",
-        duration: 10000,
+        duration: 9000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, Psyche, driven by",
@@ -105,7 +105,7 @@ const phases = {
     psychegoddess2: { // psyche goddess part2
         image: "../assets/images/goddess_psyche/psyche_passing_out.png",
         alt: "image of Psyche goddess in a deep, dark sleep.",
-        duration: 6000,
+        duration: 5000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "However, instead of beauty,",
@@ -116,7 +116,7 @@ const phases = {
     psychegoddess3: { // psyche goddess part3
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
-        duration: 6000,
+        duration: 5000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "Psyche finds herself in",
@@ -126,7 +126,7 @@ const phases = {
     psychegoddess4: { // psyche goddess part4
         image: "../assets/images/goddess_psyche/psyche_passing_out_stars.png",
         alt: "psyche sleeping stars",
-        duration: 4000,
+        duration: 3000,
         scroll: "",
         text: [
             ""
@@ -136,7 +136,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 6000,
+        duration: 5000,
         text: [
             "The asteroid Psyche finds herself in",
             "a similar dark, dreamless sleep..."
@@ -146,7 +146,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid",
         scroll: "",
-        duration: 4000,
+        duration: 3000,
         text: [
             ""
         ]
@@ -155,23 +155,13 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 12000,
+        duration: 10000,
         text: [
-            "Just as Psyche's curiosity led her to open",
-            "the fateful box, revealing the unexpected,",
-            "humanity's exploration of the Psyche",
-            "asteroid seeks to unlock the secrets of",
-            "planetary cores--risking the unknown for",
-            "the reward of discovery."
-        ]
-    },
-    finalphase: { // psyche goddess part6
-        image: "",
-        alt: "no image",
-        scroll: "",
-        duration: 500,
-        text: [
-            ""
+            "Like Psyche opening the fateful box,",
+            "revealing the unexpected,",
+            "humanity explores the Psyche asteroid",
+            "to uncover planetary core secrets--",
+            "risking the unknown for discovery."
         ]
     }
 };
@@ -190,7 +180,7 @@ function displayPhase() {
 
     if (phaseIndex >= phaseValues.length) {
         phaseIndex = 0;
-        setTimeout(afterPhases, phaseValues[phaseIndex].duration);
+        setTimeout(afterPhases, 500);
         return;
     }
 
