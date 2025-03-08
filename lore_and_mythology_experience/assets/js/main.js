@@ -351,24 +351,19 @@ loader.load('../assets/models/asteroid.glb', (gltf) => {
 });
 
 // Load telescope parts
-let telescopeLower, telescopeUpperPivot, telescopeUpper;
+let telescopeLower, telescopeUpper;
 loader.load('../assets/models/telescope_lower.glb', (gltf) => {
     telescopeLower = gltf.scene;
-    telescopeLower.position.set(0, -3.9, 0);
-    telescopeLower.scale.set(0.3, 0.3, 0.3);
+    telescopeLower.position.set(0, -1.4, 0);
+    telescopeLower.scale.set(0.2, 0.2, 0.2);
     telescopeLower.rotation.x = THREE.MathUtils.degToRad(-55); // Base rotation away from camera
-    telescopeLower.rotation.y = THREE.MathUtils.degToRad(90); // This will turn to align with scope
     scene.add(telescopeLower);
-
-    telescopeUpperPivot = new THREE.Group();
-    telescopeUpperPivot.position.set(0, 4, 0);
-    telescopeLower.add(telescopeUpperPivot);
 
     // Once loaded, load the upper
     loader.load('../assets/models/telescope_upper.glb', (gltf2) => {
         telescopeUpper = gltf2.scene;
         telescopeUpper.position.set(0, 0, 0); // x y z (y and z will reposition to align with scope)
-        telescopeUpperPivot.add(telescopeUpper);
+        telescopeLower.add(telescopeUpper);
     });
 });
 
@@ -501,8 +496,8 @@ function pointTelescopeAt(target3D, delta) {
     if (flatDir.lengthSq() < 1e-8) return;
     flatDir.normalize();
 
-    const rawYaw = -Math.atan2(flatDir.x, flatDir.z);
-    const baseYaw = THREE.MathUtils.degToRad(90);
+    const rawYaw = Math.atan2(flatDir.x, flatDir.z);
+    const baseYaw = THREE.MathUtils.degToRad(0);
     const desiredYaw = baseYaw + rawYaw;
     currentYaw = THREE.MathUtils.lerp(currentYaw, desiredYaw, rotationSpeed * delta);
     telescopeLower.rotation.y = currentYaw;
@@ -510,13 +505,13 @@ function pointTelescopeAt(target3D, delta) {
     // Rotate upper telescope's pitch around an axis offset from origin
     // TODO, move model down in .glb so that its origin is where it rotates around
     const upperWorldPos = new THREE.Vector3();
-    telescopeUpperPivot.getWorldPosition(upperWorldPos);
+    telescopeUpper.getWorldPosition(upperWorldPos);
     const upperDir = new THREE.Vector3().subVectors(target3D, upperWorldPos);
     const distXZ = Math.sqrt(upperDir.x * upperDir.x + upperDir.z * upperDir.z);
     const rawPitch = -Math.atan2(upperDir.y, distXZ);
 
     currentPitch = THREE.MathUtils.lerp(currentPitch, rawPitch, rotationSpeed * delta);
-    telescopeUpperPivot.rotation.x = currentPitch;
+    telescopeUpper.rotation.x = currentPitch;
   }
 
 // Star transition
