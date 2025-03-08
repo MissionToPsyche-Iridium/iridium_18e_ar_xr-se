@@ -3,7 +3,6 @@ import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
-import { startPhasesSMP } from "./phasesSMP.js";
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -211,8 +210,7 @@ function createStarField() {
 
         // Adjust the radius based on aspect ratio
         // Using the smaller dimension (height or width) for the radius
-        float minDim = min(uResolution.x, uResolution.y);
-        float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
+        float adjustedRadius = uCircleRadius * (uResolution.y / uResolution.x);
 
         // Calculate distance from draggable circle (center and radius)
         float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
@@ -235,6 +233,11 @@ function createStarField() {
     }
 `;
 
+    // calculate scope radius
+    document.getElementById('scope').style.display = 'block';
+    const aspect = window.innerWidth / window.innerHeight;
+    const scopeRadius = document.getElementById('scope').offsetWidth / 2 / window.innerWidth * aspect;
+
     // Material
     starMaterial = new THREE.ShaderMaterial({
         vertexColors: true,
@@ -245,13 +248,14 @@ function createStarField() {
         fragmentShader,
         uniforms: {
             uCirclePos: { value: new THREE.Vector2(0.5, 0.5) },
-            uCircleRadius: { value: 0.16 },
+            uCircleRadius: { value: scopeRadius },
             uBlurEnabled: { value: true },
             uBlurCircle: { value: false },
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         }
     });
 
+    document.getElementById('scope').style.display = 'none';
     return new THREE.Points(geometry, starMaterial);
 }
 
@@ -698,19 +702,4 @@ window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     starMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     camera.updateProjectionMatrix();
-});
-
-// load papyrus scroll introduction
-document.addEventListener("DOMContentLoaded", function() {
-    fetch('intro.html')
-        .then(response => response.text())
-        .then(data => {
-            document.body.insertAdjacentHTML('beforeend', data);
-
-            import('./intro.js')
-                .then(module => {
-                    module.openPopup();
-                })
-                .catch(error => console.error("Failed to load intro.js:", error));
-        });
 });
