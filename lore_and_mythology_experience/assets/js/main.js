@@ -369,6 +369,15 @@ const scope = document.getElementById('scope');
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2()
 
+// Telescope placeholder 
+// TODO: Delete and replace with telescope
+const geometry = new THREE.PlaneGeometry(0.5, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+const telescope = new THREE.Mesh(geometry, material);
+scene.add(telescope);
+
+telescope.position.set(0, -3, 0);
+
 // OrbitControls 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = false;
@@ -406,9 +415,23 @@ function moveScope(event) {
     let x = event.clientX / window.innerWidth;
     let y = 1.0 - event.clientY / window.innerHeight;
     starMaterial.uniforms.uCirclePos.value.set(x, y);
+
     // Perform raycast
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(asteroid, true);
+
+    // create target for telescope to point at
+    const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    const target = new THREE.Vector3();
+    raycaster.ray.intersectPlane(planeZ, target);
+
+    // Get angle from telescope to mouse position
+    const dx = target.x - telescope.position.x;
+    const dy = target.y - telescope.position.y;
+    const angle = Math.atan2(dy, dx);
+
+    // rotate telescope
+    telescope.rotation.z = angle - Math.PI / 2;
 
     // hide/show asteroid
     if (intersects.length > 0) {
