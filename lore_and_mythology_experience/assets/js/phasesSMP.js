@@ -245,7 +245,7 @@ function displayPhase() {
 
     if (phaseIndex >= phaseValues.length) {
         phaseIndex = 0;
-        setTimeout(afterPhases, phaseValues[phaseIndex].duration);
+        setTimeout(afterPhases, 500);
         return;
     }
 
