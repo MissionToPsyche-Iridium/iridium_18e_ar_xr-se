@@ -5,7 +5,7 @@ const phases = {
         title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
-        duration: 8000,
+        duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "On March 17, 1852, the Italian astronomer",
@@ -19,7 +19,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "image of asteroid",
-        duration: 7000,
+        duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "The asteroid Psyche has the",
@@ -32,7 +32,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 3000,
+        duration: 2000,
         scroll: "",
         text: [
             ""
@@ -45,7 +45,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "",
         alt: "image of chrysalis",
-        duration: 3000,
+        duration: 2000,
         scroll: "",
         text: [
             ""
@@ -58,7 +58,7 @@ const phases = {
         title: "The 'Breath of Life'",
         image: "",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
-        duration: 8000,
+        duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, the breath of life leaves",
@@ -74,7 +74,7 @@ const phases = {
         title: "The Goddess Psyche Opening Pandora's Box",
         image: "../assets/images/goddess_psyche/psyche_opening_box.png",
         alt: "image of Psyche goddess opening pandora's box.",
-        duration: 9000,
+        duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, Psyche, driven by",
@@ -88,7 +88,7 @@ const phases = {
         title: "The Goddess Psyche Falling Into a Deep Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out.png",
         alt: "image of Psyche goddess in a deep, dark sleep.",
-        duration: 5000,
+        duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "However, instead of beauty,",
@@ -100,7 +100,7 @@ const phases = {
         title: "The Goddess Psyche In A Dark, Dreamless Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
-        duration: 5000,
+        duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "Psyche finds herself in",
@@ -112,7 +112,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 5000,
+        duration: 2000,
         text: [
             "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
@@ -123,7 +123,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid",
         scroll: "",
-        duration: 3000,
+        duration: 2000,
         text: [
             ""
         ]
@@ -133,7 +133,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 8000,
+        duration: 2000,
         text: [
             "Like Psyche opening the fateful box,",
             "revealing the unexpected,",
@@ -149,23 +149,9 @@ const phaseValues = Object.values(phases);
 // Start the phases
 export function startPhases() {
     phaseIndex = 0;
-    displayPhase();
-}
 
-function displayPhase() {
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
-
-    if (phaseIndex >= phaseValues.length) {
-        phaseIndex = 0;
-        setTimeout(afterPhases, 500);
-        return;
-    }
-
-    const phase = phaseValues[phaseIndex];
-    showPhase(phase);
-    phaseIndex++;
-
-    setTimeout(displayPhase, phase.duration);
+    showPhase(phaseValues[phaseIndex]);
 }
 
 function afterPhases() {
@@ -174,8 +160,6 @@ function afterPhases() {
 
 let phaseBool = false;
 
-// initialize phase data and display it
-// can put css and html in separate files if needed.
 function showPhase(phase) {
     if (!phaseBool) {
         phaseBool = true;
@@ -302,23 +286,66 @@ function showPhase(phase) {
             });
         }
 
-        // clear phase after the duration ends
+        // Add next button
+        const nextButton = document.createElement("button");
+        nextButton.id = "next-btn";
+        nextButton.setAttribute("style", `
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 100px;
+            border: none;
+            background: url('../assets/images/continue_button.png') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+        `);
+        nextButton.addEventListener("click", nextPhase);
+        phase_div.appendChild(nextButton);
+
+        // Next button appears after some time passes
         setTimeout(() => {
-            // hide phase modal and remove the phase images
-            document.getElementById("phase_modal").remove();
-
-            // remove any overlay images for the phase
-            const overlayImages = document.querySelectorAll(
-                '[id^="chrysalis"], [id^="butterfly"]');
-            //'[id^="chrysalis"], [id^="butterfly"], [id^="chrysalis2"], [id^="butterfly2"]');
-            overlayImages.forEach((img) => img.remove());
-
-            phaseBool = false;
-
+            nextButton.style.display = "block";
         }, phase.duration);
+
     } else {
         // Hide the current phase modal if it's already showing
         document.getElementById("phase_modal").setAttribute("style", "display: none;");
         phaseBool = false;
     }
+}
+  
+function nextPhase() {
+    // Remove current phase
+    removeCurrentPhase();
+  
+    // Move to next phase
+    phaseIndex++;
+    if (phaseIndex < phaseValues.length) {
+        console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
+        showPhase(phaseValues[phaseIndex]);
+
+    // If at end of phases
+    } else {
+        afterPhases();
+    }
+}
+  
+function removeCurrentPhase() {
+    // Remove phase modal
+    const phaseModal = document.getElementById("phase_modal");
+    if (phaseModal) {
+        phaseModal.remove();
+    }
+  
+    // Remove phase images
+    const overlayImages = document.querySelectorAll(
+        '[id^="chrysalis"], [id^="butterfly"], [id^="chrysalis2"], [id^="butterfly2"]'
+    );
+    overlayImages.forEach((img) => img.remove());
+  
+    phaseBool = false;
 }
