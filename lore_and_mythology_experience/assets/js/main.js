@@ -320,7 +320,7 @@ function generateAsteroidTexture() {
 // create and add asteroid belt
 function createAsteroidBelt(scene) {
     const numAsteroids = 500;
-    const beltRadius = 509;
+    const beltRadius = 50;
     const beltThickness = 10;
     // const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
     const asteroidGeometry = new THREE.SphereGeometry(0.5, 256, 256);
@@ -386,7 +386,7 @@ asteroidVector.unproject(camera);
 const cameraRay = asteroidVector.sub(camera.position).normalize();
 
 // Distance from camera to z plane
-const distanceFromCamera = (0 - camera.position.z) / cameraRay.z;
+const distanceFromCamera = (0 - camera.position.z) / cameraRay.z * 2;
 
 // Final position at z plane
 const asteroidPosition = camera.position.clone().add(cameraRay.multiplyScalar(distanceFromCamera));
@@ -435,15 +435,6 @@ const scope = document.getElementById('scope');
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2()
 
-// Telescope placeholder 
-// TODO: Delete and replace with telescope
-const geometry = new THREE.PlaneGeometry(0.5, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
-const telescope = new THREE.Mesh(geometry, material);
-scene.add(telescope);
-
-telescope.position.set(0, -3, 0);
-
 // OrbitControls 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = false;
@@ -464,95 +455,16 @@ let target3D = new THREE.Vector3();
 
 function moveScope(event) {
     if (event.touches) {
-        scope.style.left = `${event.touches[event.touches.length - 1].clientX - scope.offsetWidth / 2}px`;
-        scope.style.top = `${event.touches[event.touches.length - 1].clientY - scope.offsetHeight / 2}px`;
-
-        // Convert to world position
-        mouse.x = (event.touches[event.touches.length - 1].clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.touches[event.touches.length - 1].clientY / window.innerHeight) * 2 + 1;
-
+        const touch = event.touches[event.touches.length - 1];
+        scope.style.left = `${touch.clientX - scope.offsetWidth / 2}px`;
+        scope.style.top = `${touch.clientY - scope.offsetHeight / 2}px`;
+        mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
     } else {
         scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
         scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
-        // Convert to world position
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    }
-    let x = event.clientX / window.innerWidth;
-    let y = 1.0 - event.clientY / window.innerHeight;
-    starMaterial.uniforms.uCirclePos.value.set(x, y);
-
-    // Perform raycast
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(asteroid, true);
-
-    // create target for telescope to point at
-    const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-    const target = new THREE.Vector3();
-    raycaster.ray.intersectPlane(planeZ, target);
-
-    // Get angle from telescope to mouse position
-    const dx = target.x - telescope.position.x;
-    const dy = target.y - telescope.position.y;
-    const angle = Math.atan2(dy, dx);
-
-    // rotate telescope
-    telescope.rotation.z = angle - Math.PI / 2;
-
-    // hide/show asteroid
-    if (intersects.length > 0) {
-        target3D.copy(intersects[0].point);
-
-        // pause zoom
-        if (isZoom) return;
-        isZoom = true;
-        scope.style.display = 'none';
-
-        asteroid.visible = true;
-        const targetPoint = intersects[0].point;
-
-        // Move the camera closer instead of directly to the point
-        const zoomFactor = 0.5;
-        const newCameraPosition = camera.position.clone().lerp(targetPoint, zoomFactor);
-
-        // Animate the zoom effect
-        const duration = 1000;
-        const startTime = performance.now();
-        const startPos = camera.position.clone();
-        const startTarget = controls.target.clone();
-
-        function animateZoom(time) {
-            const elapsed = time - startTime;
-            const t = Math.min(elapsed / duration, 1);
-
-            // Interpolate camera position and focus target
-            camera.position.lerpVectors(startPos, newCameraPosition, t);
-            controls.target.lerpVectors(startTarget, targetPoint, t);
-            controls.update();
-
-            if (t < 1) {
-                requestAnimationFrame(animateZoom);
-            } else {
-                settingsModal.applyAMPIModalStyles();
-                starFieldTransistion();
-            }
-        }
-        requestAnimationFrame(animateZoom);
-
-    // Calculate target when scope is aimed
-    } else {
-        const asteroidZ = asteroid.position.z || -10;
-        const cameraPos = camera.position.clone();
-        const rayDirection = new THREE.Vector3();
-        rayDirection.copy(raycaster.ray.direction);
-        let t = (asteroidZ - cameraPos.z) / rayDirection.z;
-        if (t < 0) t = 0;
-
-        target3D.set(
-            cameraPos.x + rayDirection.x * t,
-            cameraPos.y + rayDirection.y * t,
-            asteroidZ
-        );
     }
 }
 
@@ -561,31 +473,25 @@ let currentPitch = 0;
 function pointTelescopeAt(target3D, delta) {
     if (!telescopeLower || !telescopeUpper) return;
     const rotationSpeed = 4.0;
-  
-    // Rotate lower telescope's yaw around its origin
+    
+    // Lower telescope yaw
     const lowerWorldPos = new THREE.Vector3();
     telescopeLower.getWorldPosition(lowerWorldPos);
-  
     const dir = new THREE.Vector3().subVectors(target3D, lowerWorldPos);
     const flatDir = new THREE.Vector3(dir.x, 0, dir.z);
     if (flatDir.lengthSq() < 1e-8) return;
     flatDir.normalize();
-
-    const rawYaw = Math.atan2(flatDir.x, flatDir.z);
-    const baseYaw = THREE.MathUtils.degToRad(0);
-    const desiredYaw = baseYaw + rawYaw;
-    currentYaw = THREE.MathUtils.lerp(currentYaw, desiredYaw, rotationSpeed * delta);
+    const rawYaw = -Math.atan2(flatDir.x, flatDir.z);
+    currentYaw = THREE.MathUtils.lerp(currentYaw, rawYaw, rotationSpeed * delta);
     telescopeLower.rotation.y = currentYaw;
-  
-    // Rotate upper telescope's pitch around an axis offset from origin
-    // TODO, move model down in .glb so that its origin is where it rotates around
-    const upperWorldPos = new THREE.Vector3();
-    telescopeUpper.getWorldPosition(upperWorldPos);
-    const upperDir = new THREE.Vector3().subVectors(target3D, upperWorldPos);
-    const distXZ = Math.sqrt(upperDir.x * upperDir.x + upperDir.z * upperDir.z);
-    const rawPitch = -Math.atan2(upperDir.y, distXZ);
-
-    currentPitch = THREE.MathUtils.lerp(currentPitch, rawPitch, rotationSpeed * delta);
+    
+    // Upper telescope pitch
+    const targetLocal = telescopeLower.worldToLocal(target3D.clone());
+    const deltaVec = new THREE.Vector3().subVectors(targetLocal, telescopeUpper.position);
+    const distXZ = Math.sqrt(deltaVec.x * deltaVec.x + deltaVec.z * deltaVec.z);
+    const desiredPitch = -Math.atan2(deltaVec.y, distXZ);
+    
+    currentPitch = THREE.MathUtils.lerp(currentPitch, desiredPitch, rotationSpeed * delta);
     telescopeUpper.rotation.x = currentPitch;
   }
 
@@ -663,6 +569,8 @@ function animate() {
     const delta = (now - lastTime) / 1000.0;
     lastTime = now;
 
+    updateTarget3D();
+
     // Aim telescope
     pointTelescopeAt(target3D, delta);
 
@@ -684,82 +592,97 @@ function animate() {
 }
 animate();
 
+function updateTarget3D() {
+    if (!asteroid) return;
+    const asteroidZ = asteroid.position.z;
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -asteroidZ);
+    raycaster.setFromCamera(mouse, camera);
+    const intersectPoint = new THREE.Vector3();
+    raycaster.ray.intersectPlane(plane, intersectPoint);
+    target3D.copy(intersectPoint);
+}
+
 function checkAsteroidInScope(delta) {
-    // Get scope position
-    const scopeRectangle = scope.getBoundingClientRect();
-    const scopeX = scopeRectangle.left + scopeRectangle.width / 2;
-    const scopeY = scopeRectangle.top + scopeRectangle.height / 2;
-    const scopeRadius = scopeRectangle.width / 2;
+  if (!asteroid) return;
 
-    // Distance from scope to asteroid
-    const deltaX = asteroidX - scopeX;
-    const deltaY = asteroidY - scopeY;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  // Get asteroid position 2D
+  const asteroidScreenPos = asteroid.position.clone();
+  asteroidScreenPos.project(camera);
+  asteroidScreenPos.x = (asteroidScreenPos.x + 1) * window.innerWidth / 2;
+  asteroidScreenPos.y = (-asteroidScreenPos.y + 1) * window.innerHeight / 2;
 
-    // If within scope, increase hold time
-    if (distance <= scopeRadius) {
-        // Make visible
-        asteroid.visible = true;
+  // Get scope center
+  const scopeRect = scope.getBoundingClientRect();
+  const scopeX = scopeRect.left + scopeRect.width / 2;
+  const scopeY = scopeRect.top + scopeRect.height / 2;
+  const scopeRadius = scopeRect.width / 2;
 
-        // Asteroid rotation
-        asteroid.rotation.x += 0.002;
-        asteroid.rotation.y += 0.002;
+  // Calculate distance between asteroid and scope
+  const dx = asteroidScreenPos.x - scopeX;
+  const dy = asteroidScreenPos.y - scopeY;
+  const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // Increase hold time
-        holdTime += delta;
+  // If asteroid is in scope
+  if (distance <= scopeRadius) {
+    asteroid.visible = true;
+    asteroid.rotation.x += 0.002;
+    asteroid.rotation.y += 0.002;
+    holdTime += delta;
 
-        // If in scope long enough, lock on
-        if (holdTime >= holdThreshold) {
-            lockOn();
-        }
-
-        // Reset if asteroid leaves scope
-    } else {
-        asteroid.visible = false;
-        holdTime = 0;
+    if (holdTime >= holdThreshold) {
+      lockOn();
     }
+  } else {
+    asteroid.visible = false;
+    holdTime = 0;
+  }
 }
 
 function lockOn() {
     isLockOn = true;
     window.scopeDisabled = true;
-
-    // Get current scope and asteroid positions
+  
+    // Get scope position
     const scopeRectangle = scope.getBoundingClientRect();
     const startLeft = parseFloat(scope.style.left);
     const startTop = parseFloat(scope.style.top);
-    const endLeft = asteroidX - scopeRectangle.width / 2;
-    const endTop = asteroidY - scopeRectangle.height / 2;
-
-    const duration = 1000; // ms for scope to move
+  
+    // Get asteroid position in 2D
+    const asteroidScreenPos = asteroid.position.clone();
+    asteroidScreenPos.project(camera);
+    asteroidScreenPos.x = (asteroidScreenPos.x + 1) * window.innerWidth / 2;
+    asteroidScreenPos.y = (-asteroidScreenPos.y + 1) * window.innerHeight / 2;
+  
+    // Target position for scope
+    const endLeft = asteroidScreenPos.x - scopeRectangle.width / 2;
+    const endTop = asteroidScreenPos.y - scopeRectangle.height / 2;
+  
+    const duration = 1000;
     const startTime = performance.now();
-
+  
     function animateScopeToAsteroid(tNow) {
-        const elapsed = tNow - startTime;
-        const t = Math.min(elapsed / duration, 1);
-
-        // Move scope to asteroid
-        const newLeft = startLeft + (endLeft - startLeft) * t;
-        const newTop = startTop + (endTop - startTop) * t;
-        scope.style.left = newLeft + 'px';
-        scope.style.top = newTop + 'px';
-
-        // Asteroid rotation
-        asteroid.rotation.x += 0.002;
-        asteroid.rotation.y += 0.002;
-
-        // Animate movement
-        if (t < 1) {
-            requestAnimationFrame(animateScopeToAsteroid);
-
-            // Start camera zoom
-        } else {
-            startCameraZoom();
-        }
+      const elapsed = tNow - startTime;
+      const t = Math.min(elapsed / duration, 1);
+  
+      // LERP scope to asteroid
+      const newLeft = startLeft + (endLeft - startLeft) * t;
+      const newTop = startTop + (endTop - startTop) * t;
+      scope.style.left = newLeft + 'px';
+      scope.style.top = newTop + 'px';
+  
+      // Rotate asteroid to make noticable
+      asteroid.rotation.x += 0.002;
+      asteroid.rotation.y += 0.002;
+  
+      if (t < 1) {
+        requestAnimationFrame(animateScopeToAsteroid);
+      } else {
+        startCameraZoom();
+      }
     }
-
+  
     requestAnimationFrame(animateScopeToAsteroid);
-}
+  }
 
 function startCameraZoom() {
     isZoom = true;

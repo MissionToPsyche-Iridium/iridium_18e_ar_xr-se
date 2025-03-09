@@ -291,7 +291,7 @@ function showPhase(phase) {
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
             position: absolute;
-            bottom: 30px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             width: 200px;
