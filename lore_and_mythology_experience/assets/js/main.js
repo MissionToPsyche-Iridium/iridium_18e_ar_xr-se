@@ -454,19 +454,25 @@ window.scopeDisabled = false;
 let target3D = new THREE.Vector3();
 
 function moveScope(event) {
+    let clientX, clientY;
     if (event.touches) {
-        const touch = event.touches[event.touches.length - 1];
-        scope.style.left = `${touch.clientX - scope.offsetWidth / 2}px`;
-        scope.style.top = `${touch.clientY - scope.offsetHeight / 2}px`;
-        mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      const touch = event.touches[event.touches.length - 1];
+      clientX = touch.clientX;
+      clientY = touch.clientY;
     } else {
-        scope.style.left = `${event.clientX - scope.offsetWidth / 2}px`;
-        scope.style.top = `${event.clientY - scope.offsetHeight / 2}px`;
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      clientX = event.clientX;
+      clientY = event.clientY;
     }
-}
+    scope.style.left = `${clientX - scope.offsetWidth / 2}px`;
+    scope.style.top = `${clientY - scope.offsetHeight / 2}px`;
+  
+    mouse.x = (clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+  
+    const normX = clientX / window.innerWidth;
+    const normY = 1 - (clientY / window.innerHeight);
+    starMaterial.uniforms.uCirclePos.value.set(normX, normY);
+  }
 
 let currentYaw = 0;
 let currentPitch = 0;
