@@ -156,6 +156,7 @@ h1 {
   width: 350px;
   text-align: left;
   flex-direction: column;
+  padding-left: 5%;
 }
 
 .citation-section-title {
