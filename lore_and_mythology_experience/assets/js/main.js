@@ -409,6 +409,7 @@ loader.load('../assets/models/telescope_lower.glb', (gltf) => {
     telescopeLower.position.set(0, -1.4, 0);
     telescopeLower.scale.set(0.2, 0.2, 0.2);
     telescopeLower.rotation.x = THREE.MathUtils.degToRad(-55); // Base rotation away from camera
+    telescopeLower.rotation.y = THREE.MathUtils.degToRad(90); // Base rotation away from camera
     scene.add(telescopeLower);
 
     // Once loaded, load the upper
@@ -477,28 +478,42 @@ function moveScope(event) {
 let currentYaw = 0;
 let currentPitch = 0;
 function pointTelescopeAt(target3D, delta) {
-    if (!telescopeLower || !telescopeUpper) return;
+    // TEMPORARY SOLUTION
+    if (!telescopeUpper) return;
+  
+    // Rotate the telescope upper to follow the target position
+    const dx = target3D.x - telescopeUpper.position.x;
+    const dz = target3D.z - telescopeUpper.position.z;
+    const targetYaw = Math.atan2(dz, dx);
     const rotationSpeed = 4.0;
+    telescopeUpper.rotation.x = THREE.MathUtils.lerp(
+      telescopeUpper.rotation.x,
+      targetYaw +  THREE.MathUtils.degToRad(90),
+      rotationSpeed * delta
+    );
+
+    // if (!telescopeLower || !telescopeUpper) return;
+    // const rotationSpeed = 4.0;
     
-    // Lower telescope yaw
-    const lowerWorldPos = new THREE.Vector3();
-    telescopeLower.getWorldPosition(lowerWorldPos);
-    const dir = new THREE.Vector3().subVectors(target3D, lowerWorldPos);
-    const flatDir = new THREE.Vector3(dir.x, 0, dir.z);
-    if (flatDir.lengthSq() < 1e-8) return;
-    flatDir.normalize();
-    const rawYaw = -Math.atan2(flatDir.x, flatDir.z);
-    currentYaw = THREE.MathUtils.lerp(currentYaw, rawYaw, rotationSpeed * delta);
-    telescopeLower.rotation.y = currentYaw;
+    // // Lower telescope yaw
+    // const lowerWorldPos = new THREE.Vector3();
+    // telescopeLower.getWorldPosition(lowerWorldPos);
+    // const dir = new THREE.Vector3().subVectors(target3D, lowerWorldPos);
+    // const flatDir = new THREE.Vector3(dir.x, 0, dir.z);
+    // if (flatDir.lengthSq() < 1e-8) return;
+    // flatDir.normalize();
+    // const rawYaw = -Math.atan2(flatDir.x, flatDir.z);
+    // currentYaw = THREE.MathUtils.lerp(currentYaw, rawYaw, rotationSpeed * delta);
+    // telescopeLower.rotation.y = currentYaw;
     
-    // Upper telescope pitch
-    const targetLocal = telescopeLower.worldToLocal(target3D.clone());
-    const deltaVec = new THREE.Vector3().subVectors(targetLocal, telescopeUpper.position);
-    const distXZ = Math.sqrt(deltaVec.x * deltaVec.x + deltaVec.z * deltaVec.z);
-    const desiredPitch = -Math.atan2(deltaVec.y, distXZ);
+    // // Upper telescope pitch
+    // const targetLocal = telescopeLower.worldToLocal(target3D.clone());
+    // const deltaVec = new THREE.Vector3().subVectors(targetLocal, telescopeUpper.position);
+    // const distXZ = Math.sqrt(deltaVec.x * deltaVec.x + deltaVec.z * deltaVec.z);
+    // const desiredPitch = -Math.atan2(deltaVec.y, distXZ);
     
-    currentPitch = THREE.MathUtils.lerp(currentPitch, desiredPitch, rotationSpeed * delta);
-    telescopeUpper.rotation.x = currentPitch;
+    // currentPitch = THREE.MathUtils.lerp(currentPitch, desiredPitch, rotationSpeed * delta);
+    // telescopeUpper.rotation.x = currentPitch;
   }
 
 // Star transition
