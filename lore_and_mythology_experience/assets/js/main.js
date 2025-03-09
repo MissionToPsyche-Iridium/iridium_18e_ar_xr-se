@@ -3,6 +3,8 @@ import SettingsModal from './SettingsModal.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
 import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
+import { AudioManager } from './AudioManager.js';
+import { startPhasesSMP } from "./phasesSMP.js";
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -21,7 +23,12 @@ const camera = new THREE.PerspectiveCamera(
     1000,
 );
 camera.position.z = 5;
-
+window.onload = audio;
+function audio() {
+    const audioManager = new AudioManager("amp");
+    audioManager.play();
+    audioManager.setVolume(0.5);
+}
 // Create a renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -210,7 +217,8 @@ function createStarField() {
 
         // Adjust the radius based on aspect ratio
         // Using the smaller dimension (height or width) for the radius
-        float adjustedRadius = uCircleRadius * (uResolution.y / uResolution.x);
+        float minDim = min(uResolution.x, uResolution.y);
+        float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
 
         // Calculate distance from draggable circle (center and radius)
         float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
@@ -248,7 +256,7 @@ function createStarField() {
         fragmentShader,
         uniforms: {
             uCirclePos: { value: new THREE.Vector2(0.5, 0.5) },
-            uCircleRadius: { value: scopeRadius },
+            uCircleRadius: { value: 0.16 },
             uBlurEnabled: { value: true },
             uBlurCircle: { value: false },
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
@@ -424,10 +432,9 @@ loader.load('../assets/models/telescope_lower.glb', (gltf) => {
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
 scene.add(ambientLight);
 
-// lighting
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(5, 5, 5);
-scene.add(light);
+const pointLight = new THREE.PointLight(0xffffff, 1.5);
+pointLight.position.set(5, 5, 5);
+scene.add(pointLight);
 
 // Scope behavior
 const scope = document.getElementById('scope');
@@ -435,6 +442,15 @@ const scope = document.getElementById('scope');
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2()
+
+// Telescope placeholder 
+// TODO: Delete and replace with telescope
+const geometry = new THREE.PlaneGeometry(0.5, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+const telescope = new THREE.Mesh(geometry, material);
+scene.add(telescope);
+
+telescope.position.set(0, -3, 0);
 
 // OrbitControls 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -466,10 +482,10 @@ function moveScope(event) {
     }
     scope.style.left = `${clientX - scope.offsetWidth / 2}px`;
     scope.style.top = `${clientY - scope.offsetHeight / 2}px`;
-  
+
     mouse.x = (clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(clientY / window.innerHeight) * 2 + 1;
-  
+
     const normX = clientX / window.innerWidth;
     const normY = 1 - (clientY / window.innerHeight);
     starMaterial.uniforms.uCirclePos.value.set(normX, normY);
@@ -480,7 +496,7 @@ let currentPitch = 0;
 function pointTelescopeAt(target3D, delta) {
     // TEMPORARY SOLUTION
     if (!telescopeUpper) return;
-  
+
     // Rotate the telescope upper to follow the target position
     const dx = target3D.x - telescopeUpper.position.x;
     const dz = target3D.z - telescopeUpper.position.z;
@@ -494,7 +510,7 @@ function pointTelescopeAt(target3D, delta) {
 
     // if (!telescopeLower || !telescopeUpper) return;
     // const rotationSpeed = 4.0;
-    
+
     // // Lower telescope yaw
     // const lowerWorldPos = new THREE.Vector3();
     // telescopeLower.getWorldPosition(lowerWorldPos);
@@ -505,13 +521,13 @@ function pointTelescopeAt(target3D, delta) {
     // const rawYaw = -Math.atan2(flatDir.x, flatDir.z);
     // currentYaw = THREE.MathUtils.lerp(currentYaw, rawYaw, rotationSpeed * delta);
     // telescopeLower.rotation.y = currentYaw;
-    
+
     // // Upper telescope pitch
     // const targetLocal = telescopeLower.worldToLocal(target3D.clone());
     // const deltaVec = new THREE.Vector3().subVectors(targetLocal, telescopeUpper.position);
     // const distXZ = Math.sqrt(deltaVec.x * deltaVec.x + deltaVec.z * deltaVec.z);
     // const desiredPitch = -Math.atan2(deltaVec.y, distXZ);
-    
+
     // currentPitch = THREE.MathUtils.lerp(currentPitch, desiredPitch, rotationSpeed * delta);
     // telescopeUpper.rotation.x = currentPitch;
   }
@@ -536,6 +552,7 @@ function starFieldTransistion() {
         startPhases();
     }, 2000);
 }
+
 
 // Pointer events
 function onPointerDown(event) {
@@ -662,46 +679,46 @@ function checkAsteroidInScope(delta) {
 function lockOn() {
     isLockOn = true;
     window.scopeDisabled = true;
-  
+
     // Get scope position
     const scopeRectangle = scope.getBoundingClientRect();
     const startLeft = parseFloat(scope.style.left);
     const startTop = parseFloat(scope.style.top);
-  
+
     // Get asteroid position in 2D
     const asteroidScreenPos = asteroid.position.clone();
     asteroidScreenPos.project(camera);
     asteroidScreenPos.x = (asteroidScreenPos.x + 1) * window.innerWidth / 2;
     asteroidScreenPos.y = (-asteroidScreenPos.y + 1) * window.innerHeight / 2;
-  
+
     // Target position for scope
     const endLeft = asteroidScreenPos.x - scopeRectangle.width / 2;
     const endTop = asteroidScreenPos.y - scopeRectangle.height / 2;
-  
+
     const duration = 1000;
     const startTime = performance.now();
-  
+
     function animateScopeToAsteroid(tNow) {
       const elapsed = tNow - startTime;
       const t = Math.min(elapsed / duration, 1);
-  
+
       // LERP scope to asteroid
       const newLeft = startLeft + (endLeft - startLeft) * t;
       const newTop = startTop + (endTop - startTop) * t;
       scope.style.left = newLeft + 'px';
       scope.style.top = newTop + 'px';
-  
+
       // Rotate asteroid to make noticable
       asteroid.rotation.x += 0.002;
       asteroid.rotation.y += 0.002;
-  
+
       if (t < 1) {
         requestAnimationFrame(animateScopeToAsteroid);
       } else {
         startCameraZoom();
       }
     }
-  
+
     requestAnimationFrame(animateScopeToAsteroid);
   }
 

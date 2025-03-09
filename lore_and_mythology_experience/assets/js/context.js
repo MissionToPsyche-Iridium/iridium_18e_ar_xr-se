@@ -1,4 +1,5 @@
 const telescopeBackground = document.getElementById("telescopeBg");
+import {AudioManager} from "./AudioManager.js";
 
 function telescopeClickedHandler() {
     window.location.href = '../pages/main_page.html'
@@ -14,8 +15,15 @@ var blinkIn = 0;
 window.onload = fadeIn;
 
 function fadeIn() {
+    audioLoad();
     clearInterval(intervalID);
     intervalID = setInterval(showScroll, 10);
+}
+
+function audioLoad() {
+        const audioManager = new AudioManager("context");
+        audioManager.play();
+        audioManager.setVolume(0.5);
 }
 
 function fadeOut() {
@@ -54,9 +62,9 @@ function hideScroll() {
 }
 
 function blinkTelescope() {
-    var currentColor = window.getComputedStyle(telescopeBackground).getPropertyValue("background-color");
-    var rgba = currentColor.match(/rgba?\((\d+), (\d+), (\d+), ([\d.]+)\)/);
-    var opacity;
+    const currentColor = window.getComputedStyle(telescopeBackground).getPropertyValue("background-color");
+    const rgba = currentColor.match(/rgba?\((\d+), (\d+), (\d+), ([\d.]+)\)/);
+    let opacity;
 
     if (rgba) {
         opacity = parseFloat(rgba[4]);
