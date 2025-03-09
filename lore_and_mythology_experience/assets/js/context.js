@@ -1,16 +1,15 @@
-const telescope = document.getElementById("telescope");
+const telescopeBackground = document.getElementById("telescopeBg");
 
 function telescopeClickedHandler() {
     window.location.href = '../pages/main_page.html'
 }
 
-telescope.addEventListener('click', telescopeClickedHandler)
+telescopeBackground.addEventListener('click', telescopeClickedHandler)
 
 var opacity = 0;
 var intervalID = 0;
 var scroll = document.getElementById("scroll");
 var clickDialog = document.getElementById("scrollClick");
-var telescopeBackground = document.getElementById("telescopeBg");
 var blinkIn = 0;
 window.onload = fadeIn;
 

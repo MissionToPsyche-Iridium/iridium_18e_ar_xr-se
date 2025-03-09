@@ -2,6 +2,7 @@ import { startPhasesSMP } from "./phasesSMP.js";
 // TODO: store phase data in json file
 const phases = {
     annibale1: {
+        title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
         duration: 2000,
@@ -15,6 +16,7 @@ const phases = {
         ]
     },
     asteroid1: {
+        title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "image of asteroid",
         duration: 2000,
@@ -27,6 +29,7 @@ const phases = {
         ],
     },
     chrysalis1: {
+        title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
         duration: 2000,
@@ -39,6 +42,7 @@ const phases = {
         ],
     },
     chrysalis2: {
+        title: "Chrysalis Resemblance",
         image: "",
         alt: "image of chrysalis",
         duration: 2000,
@@ -51,18 +55,7 @@ const phases = {
         ],
     },
     chrysalis3: {
-        image: "",
-        alt: "image of chrysalis stars",
-        duration: 2000,
-        scroll: "",
-        text: [
-            ""
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/chrysalis_stars.png", id: "chrysalis", position: "absolute", top: "0", left: "0" },
-        ],
-    },
-    chrysalis4: {
+        title: "The 'Breath of Life'",
         image: "",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
         duration: 2000,
@@ -77,19 +70,8 @@ const phases = {
             { src: "../assets/images/chrysalis/butterfly.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
         ]
     },
-    chrysalis5: {
-        image: "",
-        alt: "image of butterfly stars",
-        duration: 2000,
-        scroll: "",
-        text: [
-            ""
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/butterfly_stars.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
-        ]
-    },
     psychegoddess1: { // psyche goddess part1
+        title: "The Goddess Psyche Opening Pandora's Box",
         image: "../assets/images/goddess_psyche/psyche_opening_box.png",
         alt: "image of Psyche goddess opening pandora's box.",
         duration: 2000,
@@ -103,6 +85,7 @@ const phases = {
         ]
     },
     psychegoddess2: { // psyche goddess part2
+        title: "The Goddess Psyche Falling Into a Deep Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out.png",
         alt: "image of Psyche goddess in a deep, dark sleep.",
         duration: 2000,
@@ -114,6 +97,7 @@ const phases = {
         ]
     },
     psychegoddess3: { // psyche goddess part3
+        title: "The Goddess Psyche In A Dark, Dreamless Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
         duration: 2000,
@@ -123,26 +107,19 @@ const phases = {
             "a dark, dreamless sleep..."
         ]
     },
-    psychegoddess4: { // psyche goddess part4
-        image: "../assets/images/goddess_psyche/psyche_passing_out_stars.png",
-        alt: "psyche sleeping stars",
-        duration: 2000,
-        scroll: "",
-        text: [
-            ""
-        ]
-    },
-    psychegoddess5: { // psyche goddess part5
+    psychegoddess4: { // psyche goddess part5
+        title: "The Asteroid Psyche",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         duration: 2000,
         text: [
-            "The asteroid Psyche finds herself in",
+            "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
         ]
     },
-    psychegoddess6: { // psyche goddess part6
+    psychegoddess5: { // psyche goddess part6
+        title: "The Asteroid Psyche",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid",
         scroll: "",
@@ -152,26 +129,16 @@ const phases = {
         ]
     },
     psychegoddess7: { // psyche goddess part7
+        title: "Exploring the Asteroid Psyche",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         duration: 2000,
         text: [
-            "Just as Psyche's curiosity led her to open",
-            "the fateful box, revealing the unexpected,",
-            "humanity's exploration of the Psyche",
-            "asteroid seeks to unlock the secrets of",
-            "planetary cores--risking the unknown for",
-            "the reward of discovery."
-        ]
-    },
-    finalphase: { // psyche goddess part6
-        image: "",
-        alt: "no image",
-        scroll: "",
-        duration: 500,
-        text: [
-            ""
+            "Like Psyche opening the fateful box,",
+            "revealing the unexpected,",
+            "humanity explores the Psyche asteroid;",
+            "risking the unknown for discovery."
         ]
     }
 };
@@ -232,17 +199,69 @@ function showPhase(phase) {
             document.getElementById("phase").setAttribute("style",
                 "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                 " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: calc(50vw - ((0.8 * 40vh + 10vh) / 2)); z-index: 10; transition: 1.5s;");
+                " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 10; transition: 1.5s;");
         }
+
         if (phase.scroll && phase.scroll.length > 0) {
-            document.getElementById("papyrus_scroll").setAttribute("style",
-                "background-color: transparent; width: 40vh; height: 40vh; border-radius: 12px;" +
-                " position: absolute; top: 50vh; left: calc(50vw - (40vh / 2)); z-index: 5; transition: 1.5s;");
+            let scroll = document.getElementById("papyrus_scroll");
+
+            // Ensure banner exists before applying styles
+            if (!scroll) {
+                scroll = document.createElement("div");
+                scroll.id = "scroll";
+                document.body.appendChild(scroll);
+            }
+
+            scroll.setAttribute("style",
+                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 56vh); border-radius: 12px;" +
+                " position: absolute; bottom: -2vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
+                " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
+                " text-align: center; overflow: visible; flex-direction: column;");
+
             if (phase.text.some(line => line !== "")) {
-                document.getElementById("scroll_text_box").setAttribute("style",
-                    "display: flex; flex-direction: column; position: absolute; width: 40vh; " +
-                    "height: calc(40vh / 2); top: calc(50vh + ((40vh / 1.69) / 1.69)); " +
-                    "left: calc(50vw - (40vh / 2)); z-index: 20; transition: 1.5s;");
+                let textBox = document.getElementById("scroll_text_box");
+
+                // Ensure the text box exists
+                if (!textBox) {
+                    textBox = document.createElement("div");
+                    textBox.id = "scroll_text_box";
+                    banner.appendChild(textBox);
+                }
+
+                let bottomValue;
+
+                if (window.innerWidth <= 768) { // Small screens (mobile)
+                    console.log("small screen");
+                    if (phase.text.length > 3) {
+                        bottomValue = "9vh";
+                    }  else {
+                        bottomValue = "15vh";
+                    }
+                } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
+                    console.log("medium screen");
+                    if (phase.text.length > 3) {
+                        bottomValue = "15vh";
+                    }  else {
+                        bottomValue = "18vh";
+                    }
+                } else { // Large screens (desktops)
+                    console.log("large screen");
+                    if (phase.text.length > 3) {
+                        bottomValue = "15vh";
+                    }  else {
+                        bottomValue = "18vh";
+                    }
+                }
+
+                textBox.setAttribute("style",
+                    `display: flex; flex-wrap: wrap; position: inherit; align-items: center; 
+                         justify-content: center; width: calc(0.8 * 40vh); color: black; 
+                         font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; 
+                         text-align: center; padding: 0vh 4vh; white-space: normal; 
+                         bottom: ${bottomValue}; z-index: 10; left: calc(52vw - ((0.8 * 50vh + 10vh) / 2));`);
+
+                // Populate the text box with the phase text
+                textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
             }
         }
         var infos = document.getElementsByClassName("info");
@@ -257,21 +276,12 @@ function showPhase(phase) {
                 const overlayImage = document.createElement("img");
                 overlayImage.setAttribute("src", image.src);
                 overlayImage.setAttribute("id", image.id);
-                // add position styles for stacking additional images on top of phase image
-                // overlayImage.setAttribute("style", `position: ${image.position}; top: ${image.top}; left: ${image.left}; z-index: 15;`);
-                // if (index === 0) {
-                //     overlayImage.setAttribute("style","width: calc(0.8 * 20vh); height: 30vh;" +
-                //         " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 80vh);" +
-                //         " left: calc(50vw - ((0.8 * 30vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
-                // } else if (index === 1) {
-                //     overlayImage.setAttribute("style","width: calc(0.8 * 30vh); height: 20vh;" +
-                //         " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 2vh);" +
-                //         " left: calc(50vw - ((0.8 * 30vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
-                // }
+
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                     " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                    " left: calc(50vw - ((0.8 * 40vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
+                    " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
+
                 document.body.appendChild(overlayImage);
             });
         }

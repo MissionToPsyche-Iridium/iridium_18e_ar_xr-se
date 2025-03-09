@@ -103,33 +103,35 @@ Tertiary Containers
 ====================================
  */
 
-#telescope {
+ #telescope {
     aspect-ratio: 1 / 1;
-    width: 75%;
-    max-height: 275px;
+    width: 700px;
     height: auto;
-    opacity: 1!important;
+    opacity: 1 !important;
     z-index: 2;
     background-image: url("../images/context/telescope.png");
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: bottom left;
-    position: relative;
-    top: 20%;
-    left: 10%;
+    background-position: bottom right;
+    position: absolute;
+    bottom: -150px;
+    right: -200px;
+    pointer-events: none;
 }
 
 #telescopeBg {
     background-color: rgba(255, 255, 255, 0.0);
     aspect-ratio: 1 / 1;
-    width: 100%;
+    width: 150px;
     height: auto;
-    max-height: 300px;
-    max-width: 300px;
-    z-index: 6;
+    z-index: 10;
     border-radius: 100%;
-    position: relative;
+    position: absolute;
+    bottom: -40px;
+    right: 80px;
+    pointer-events: all;
 }
+
 
 #observatory {
     width: 100%;
