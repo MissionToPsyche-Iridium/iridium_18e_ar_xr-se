@@ -1,18 +1,17 @@
+const telescopeBackground = document.getElementById("telescopeBg");
 import {AudioManager} from "./AudioManager.js";
-
-const telescope = document.getElementById("telescope");
-
 
 function telescopeClickedHandler() {
     window.location.href = '../pages/main_page.html'
 }
 
-let opacity = 0;
-let intervalID = 0;
-const scroll = document.getElementById("scroll");
-const clickDialog = document.getElementById("scrollClick");
-const telescopeBackground = document.getElementById("telescopeBg");
-let blinkIn = 0;
+telescopeBackground.addEventListener('click', telescopeClickedHandler)
+
+var opacity = 0;
+var intervalID = 0;
+var scroll = document.getElementById("scroll");
+var clickDialog = document.getElementById("scrollClick");
+var blinkIn = 0;
 window.onload = fadeIn;
 
 function fadeIn() {
@@ -32,6 +31,10 @@ function fadeOut() {
     intervalID = setInterval(hideScroll, 10);
 }
 
+function blink() {
+    clearInterval(intervalID);
+    intervalID = setInterval(blinkTelescope, 10);
+}
 
 function showScroll() {
     opacity = Number(window.getComputedStyle(scroll)
@@ -53,7 +56,6 @@ function hideScroll() {
         scroll.style.opacity = opacity;
     } else {
         clearInterval(intervalID);
-        telescope.addEventListener('click', telescopeClickedHandler)
         intervalID = setInterval(blinkTelescope, 75);
         clickDialog.style.opacity = 1;
     }
