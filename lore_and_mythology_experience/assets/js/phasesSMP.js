@@ -274,13 +274,13 @@ function showTimer(callback) {
     let message1 = "Mission Status: ";
     let message2 = "";
 
-    let colHeadings = [["|", "Since Launch  |", "Since Arrival  |", "Since Completion "], 
-                       ["|", "Since Launch  |", "Since Arrival  |", "Until Completion "], 
-                       ["|", "Since Launch  |", "Until Arrival  |", "Until Completion "] 
-                      ];
+    let colHeadings = [["|", "Since Launch  |", "Since Arrival  |", "Since Completion "],
+    ["|", "Since Launch  |", "Since Arrival  |", "Until Completion "],
+    ["|", "Since Launch  |", "Until Arrival  |", "Until Completion "]
+    ];
     //let rowHeadings = ["|", "years  |", "days  |", "hours  |", minutes  |", "seconds  |"];
 
-    let launchCountup = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
+    let launchCountup = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
     let timeSinceLaunch = currentTime - launchTime;
     if (currentTime >= leapDay) {
         launchCountup["years"] = Math.floor((timeSinceLaunch - (2 * millisecondsInADay)) / millisecondsInAYear);
@@ -297,8 +297,8 @@ function showTimer(callback) {
     timeSinceLaunch = timeSinceLaunch - (launchCountup["minutes"] * millisecondsInAMinute);
     launchCountup["seconds"] = Math.floor(timeSinceLaunch / millisecondsInASecond);
 
-    let arrivalCountdown = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
-    let completionCountdown = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
+    let arrivalCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
+    let completionCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
 
     let timeUntilArrival = arrivalTime - currentTime;
     let timeSinceArrival = 0;
@@ -493,7 +493,7 @@ function showTimer(callback) {
         let timerValues = Object.values(countdown);
         let timerPhase = timerValues[0];
 
-        setTimeout(function() {showCountdown(timerPhase, i)}, 1000 * i);
+        setTimeout(function() { showCountdown(timerPhase, i) }, 1000 * i);
     }
 
     setTimeout(() => {
@@ -623,6 +623,7 @@ function afterPhasesSMP() {
         logo.setAttribute(
             "style",
             "background-color: transparent; width: 30vw; max-width: 200px; height: auto;" +
+            " pointer-events: auto; z-index: 999; cursor: pointer;" +
             " border-radius: 12px; padding: 2vh;" +
             " transition: 1.5s ease-in-out;"
         );
@@ -666,6 +667,10 @@ function afterPhasesSMP() {
         finaleDiv.appendChild(finaleText); // Add the new text element
         finaleDiv.appendChild(restartButton);
         document.body.appendChild(finaleDiv);
+
+        logo.addEventListener("click", function() {
+            window.top.location.href = "https://psyche.asu.edu/";
+        });
     }
 }
 
@@ -746,21 +751,21 @@ function showPhase(phase) {
                     console.log("small screen");
                     if (phase.text.length > 3) {
                         bottomValue = "12vh";
-                    }  else {
+                    } else {
                         bottomValue = "15vh";
                     }
                 } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
                     console.log("medium screen");
                     if (phase.text.length > 3) {
                         bottomValue = "15vh";
-                    }  else {
+                    } else {
                         bottomValue = "16vh";
                     }
                 } else { // Large screens (desktops)
                     console.log("large screen");
                     if (phase.text.length > 3) {
                         bottomValue = "15vh";
-                    }  else {
+                    } else {
                         bottomValue = "16vh";
                     }
                 }
@@ -835,14 +840,14 @@ function showPhase(phase) {
 function nextPhaseSMP() {
     // Remove current phase
     removeCurrentPhaseSMP();
-  
+
     // Move to next phase
     phaseIndex++;
     if (phaseIndex < phaseValues.length) {
         console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
         showPhase(phaseValues[phaseIndex]);
 
-    // If at end of phases
+        // If at end of phases
     } else {
         afterPhasesSMP();
     }
@@ -854,12 +859,12 @@ function removeCurrentPhaseSMP() {
     if (phaseModal) {
         phaseModal.remove();
     }
-  
+
     // Remove phase images
     const overlayImages = document.querySelectorAll(
         '[id^="butterfly"]'
     );
     overlayImages.forEach((img) => img.remove());
-  
+
     phaseBool = false;
 }
