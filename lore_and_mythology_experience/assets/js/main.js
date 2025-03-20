@@ -15,6 +15,13 @@ import { startPhasesSMP } from "./phasesSMP.js";
 // Create the scene
 const scene = new THREE.Scene();
 
+const GraphicsQuality = Object.freeze({
+    LOW: 'low',
+    MEDIUM: 'medium',
+    HIGH: 'high'
+});
+let currentGraphicsQuality = localStorage.getItem('graphicsQuality') || GraphicsQuality.MEDIUM;
+
 // Create a camera
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -29,6 +36,7 @@ function audio() {
     audioManager.play();
     audioManager.setVolume(0.5);
 }
+
 // Create a renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -115,16 +123,25 @@ function createSpaceClouds() {
 let starMaterial;
 
 function createStarField() {
-    const starCount = 10000; // Number of stars
-    const minDistance = 50; // Minimum distance from origin (camera)
-
+    // Adjust star count using quality setting
+    let starCount;
+    if (currentGraphicsQuality === GraphicsQuality.HIGH) {
+      starCount = 10000;
+    } else if (currentGraphicsQuality === GraphicsQuality.MEDIUM) {
+      starCount = 3000;
+    } else { // LOW
+      starCount = 1000;
+    }
+    
+    const minDistance = 50; // Minimum distance from camera
+  
     // Initialize star field data
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(starCount * 3);
     const colors = new Float32Array(starCount * 3);
     const sizes = new Float32Array(starCount);
-
-    // For each star
+  
+    // Generate star data as before…
     for (let i = 0; i < starCount; i++) {
         // Calculate star position
         let x, y, z;
@@ -149,12 +166,14 @@ function createStarField() {
             r = 1.0;
             g = 0.85 + Math.random() * 0.15;
             b = 0.7 + Math.random() * 0.1;
-            // Yellow-Orange
+
+        // Yellow-Orange
         } else if (tint > 0.1) {
             r = 1.0;
             g = 0.7 + Math.random() * 0.3;
             b = 0.4 + Math.random() * 0.2;
-            // White-Blue
+
+        // White-Blue
         } else {
             r = 0.9;
             g = 0.9;
@@ -165,88 +184,68 @@ function createStarField() {
         colors[i * 3 + 1] = g;
         colors[i * 3 + 2] = b;
     }
-
-    // Assign attributes to geometry
+  
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
-
-    // Vertex shader
+  
+    // Choose shader precision based on quality.
+    const shaderPrecision = (currentGraphicsQuality === GraphicsQuality.LOW) ? 'mediump' : 'highp';
+  
     const vertexShader = `
-    precision highp float;
-    attribute float size;
-    varying vec3 vColor;
-
-    void main() {
-        vColor = color;
-        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = size * (600.0 / -mvPosition.z);
-        gl_Position = projectionMatrix * mvPosition;
-    }
-`;
-
-    // Fragment shader
+      precision ${shaderPrecision} float;
+      attribute float size;
+      varying vec3 vColor;
+  
+      void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * (600.0 / -mvPosition.z);
+          gl_Position = projectionMatrix * mvPosition;
+      }
+    `;
+  
     const fragmentShader = `
-    precision highp float;
-    varying vec3 vColor;
-    uniform vec2 uCirclePos; 
-    uniform float uCircleRadius;
-    uniform bool uBlurEnabled;
-    uniform bool uBlurCircle;
-    uniform vec2 uResolution;
-
-    void main() {
-        vec2 coord = gl_PointCoord - vec2(0.5);
-        float dist = length(coord);
-
-        if (dist > 0.5) {
-            discard;
-        }
-
-        // Star core and glow
-        float core = 1.0 - smoothstep(0.0, 0.08, dist);
-        float glow = 1.0 - smoothstep(0.08, 0.5, dist);
-        glow *= 0.5;
-        float alpha = core + glow;
-
-        // Convert fragment position to normalized coordinates (0 to 1)
-        vec2 fragPos = gl_FragCoord.xy / uResolution;
-
-        // Calculate the aspect ratio of the screen (x / y)
-        float aspectRatio = uResolution.x / uResolution.y;
-
-        // Adjust the radius based on aspect ratio
-        // Using the smaller dimension (height or width) for the radius
-        float minDim = min(uResolution.x, uResolution.y);
-        float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
-
-        // Calculate distance from draggable circle (center and radius)
-        float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
-        float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
-        float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
-
-        // Default star color
-        vec4 starColor = vec4(vColor, alpha);
-
-        // Apply blur effect outside the circle (simulated by reducing brightness)
-        if (uBlurCircle && uBlurEnabled && screenDist > 1.0) {
-            starColor.rgb *= 0.3; 
-        }
-
-        if (!uBlurCircle && uBlurEnabled) {
-            starColor.rgb *= 0.3; 
-        }
-
-        gl_FragColor = starColor;
-    }
-`;
-
-    // calculate scope radius
-    document.getElementById('scope').style.display = 'block';
-    const aspect = window.innerWidth / window.innerHeight;
-    const scopeRadius = document.getElementById('scope').offsetWidth / 2 / window.innerWidth * aspect;
-
-    // Material
+      precision ${shaderPrecision} float;
+      varying vec3 vColor;
+      uniform vec2 uCirclePos; 
+      uniform float uCircleRadius;
+      uniform bool uBlurEnabled;
+      uniform bool uBlurCircle;
+      uniform vec2 uResolution;
+  
+      void main() {
+          vec2 coord = gl_PointCoord - vec2(0.5);
+          float dist = length(coord);
+  
+          if (dist > 0.5) {
+              discard;
+          }
+  
+          float core = 1.0 - smoothstep(0.0, 0.08, dist);
+          float glow = 1.0 - smoothstep(0.08, 0.5, dist);
+          glow *= 0.5;
+          float alpha = core + glow;
+  
+          vec2 fragPos = gl_FragCoord.xy / uResolution;
+          float minDim = min(uResolution.x, uResolution.y);
+          float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
+          float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
+          float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
+          float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
+          vec4 starColor = vec4(vColor, alpha);
+  
+          if (uBlurCircle && uBlurEnabled && screenDist > 1.0) {
+              starColor.rgb *= 0.3; 
+          }
+          if (!uBlurCircle && uBlurEnabled) {
+              starColor.rgb *= 0.3; 
+          }
+          gl_FragColor = starColor;
+      }
+    `;
+  
+    // Create the shader material
     starMaterial = new THREE.ShaderMaterial({
         vertexColors: true,
         transparent: true,
@@ -262,15 +261,26 @@ function createStarField() {
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         }
     });
-
-    document.getElementById('scope').style.display = 'none';
+  
     return new THREE.Points(geometry, starMaterial);
 }
 
 // Add star field
-const stars = createStarField();
+let stars = createStarField();
 scene.add(stars);
 
+function updateGraphicsQuality(newQuality) {
+    currentGraphicsQuality = newQuality;
+    localStorage.setItem('graphicsQuality', newQuality);
+  
+    if (stars) {
+      scene.remove(stars);
+    }
+    stars = createStarField();
+    scene.add(stars);
+  
+    console.log(`Graphics quality set to ${newQuality}`);
+}
 
 // Asteroid distance from edges of screen
 const MIN_X = getMaxX();
@@ -443,15 +453,6 @@ const scope = document.getElementById('scope');
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2()
 
-// Telescope placeholder 
-// TODO: Delete and replace with telescope
-const geometry = new THREE.PlaneGeometry(0.5, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
-const telescope = new THREE.Mesh(geometry, material);
-scene.add(telescope);
-
-telescope.position.set(0, -3, 0);
-
 // OrbitControls 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = false;
@@ -459,7 +460,7 @@ controls.enableRotate = false;
 controls.enablePan = false;
 controls.enableZoom = false;
 
-const settingsModal = new SettingsModal();
+const settingsModal = new SettingsModal(updateGraphicsQuality);
 
 let holdTime = 0.0; // Time on asteroid
 const holdThreshold = 3.0; // Time to trigger zoom
