@@ -547,16 +547,35 @@ function showCountdown(phase, count, callback) {
     }
 
     document.getElementById("banner").setAttribute("style",
-        "background-color: transparent; width: calc(30vw + 15vh); height: auto; border-radius: 12px;" +
-        " position: absolute; top: 70%; left: 50%;" +
-        " z-index: 5; transition: 1.5s ease-in-out; transform: translate(-50%, -50%);");
+        `background-color: transparent; max-width: 90vw; width: calc(0.8 * 75vh); border-radius: 12px;
+        position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);
+        z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;
+        text-align: center; overflow: visible; flex-direction: column;`);
 
     if (phase.text.some(line => line !== "")) {
+        let bottomValue;
+        let textLeft;
+
+        if (window.innerWidth <= 768) { // Small screens (mobile)
+            console.log("small screen");
+            bottomValue = "12vh";
+            textLeft = "37%";
+        } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
+            console.log("medium screen");
+            bottomValue = "14vh";
+            textLeft = "38%";
+        } else { // Large screens (desktops)
+            console.log("large screen");
+            bottomValue = "16vh";
+            textLeft = "44%";
+        }
+
         const text = document.getElementById("banner_text_box");
-        text.setAttribute("style", " display: flex; flex-direction: column; position: absolute;" +
-            " top: 80%; left: 43%; transform: translate(-50%, -50%);" +
-            " color: #C9FFFC; font-size: 2rem; font-family: 'Comfortaa', Arial, sans-serif; text-align: center;" +
-            " z-index: 10; padding: 10px 20px; border-radius: 8px; transform: translate(-50%, -50%);");
+        text.setAttribute("style", `display: flex; flex-direction: column; position: absolute;
+            left: ${textLeft}; transform: translate(-50%, -50%);
+            color: #C9FFFC; font-size: clamp(0.5rem, 2vw, 0.5rem); font-family: 'Comfortaa', Arial, sans-serif;
+            text-align: center;  z-index: 10; padding: 4vh; border-radius: 8px;
+            transform: translate(-50%, -50%); bottom: ${bottomValue};`);
     }
 
     var infos = document.getElementsByClassName("info");
@@ -592,7 +611,7 @@ function showCountdown(phase, count, callback) {
 
     setTimeout(() => {
         callback(); // Call the callback after timer is done
-    }, 500);
+    }, 5999900);
 }
 
 /*
@@ -711,7 +730,7 @@ function showPhase(phase) {
             document.getElementById("phase").setAttribute("style",
                 "background-color: transparent; width: calc(0.8 * 45vh); height: auto;" +
                 " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 10;" +
+                " left: 50%; transform: translateX(-50%); z-index: 10;" +
                 "transition: 1.5s ease-in-out;");
         }
         if (phase.banner && phase.banner.length > 0) {
@@ -725,8 +744,8 @@ function showPhase(phase) {
             }
 
             banner.setAttribute("style",
-                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 55vh); border-radius: 12px;" +
-                " position: absolute; bottom: 5vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
+                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 65vh); border-radius: 12px;" +
+                " position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%);" +
                 " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
                 " text-align: center; overflow: visible; flex-direction: column;");
 
@@ -794,7 +813,7 @@ function showPhase(phase) {
                 overlayImage.setAttribute("style", `position: ${image.position}; top: ${image.top}; left: ${image.left}; z-index: 15;`);
                 overlayImage.setAttribute("style", "width: calc(0.8 * 50vh); height: auto" +
                     " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 10vh);" +
-                    " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 21; transition: 1.5s ease-in-out;");
+                    " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s ease-in-out;");
 
                 document.body.appendChild(overlayImage);
             });
