@@ -149,7 +149,6 @@ const phaseValues = Object.values(phases);
 // Start the phases
 export function startPhases() {
     phaseIndex = 0;
-
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
     showPhase(phaseValues[phaseIndex]);
 }
@@ -199,7 +198,7 @@ function showPhase(phase) {
             document.getElementById("phase").setAttribute("style",
                 "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                 " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 10; transition: 1.5s;");
+                " left: 50%; transform: translateX(-50%); z-index: 10; transition: 1.5s;");
         }
 
         if (phase.scroll && phase.scroll.length > 0) {
@@ -214,7 +213,7 @@ function showPhase(phase) {
 
             scroll.setAttribute("style",
                 "background-color: transparent; max-width: 90vw; width: calc(0.8 * 56vh); border-radius: 12px;" +
-                " position: absolute; bottom: 5vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
+                " position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);" +
                 " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
                 " text-align: center; overflow: visible; flex-direction: column;");
 
@@ -246,9 +245,11 @@ function showPhase(phase) {
                     }
                 } else { // Large screens (desktops)
                     console.log("large screen");
-                    if (phase.text.length > 3) {
+                    if (phase.text.length > 4) {
                         bottomValue = "19vh";
-                    }  else {
+                    } else if (phase.text.length > 3) {
+                        bottomValue = "22vh";
+                    } else {
                         bottomValue = "23vh";
                     }
                 }
@@ -258,7 +259,7 @@ function showPhase(phase) {
                          justify-content: center; width: calc(0.8 * 40vh); color: black; 
                          font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; 
                          text-align: center; padding: 0vh 4vh; white-space: normal; 
-                         bottom: ${bottomValue}; z-index: 10; left: calc(52vw - ((0.8 * 50vh + 10vh) / 2));`);
+                         bottom: ${bottomValue}; z-index: 10; left: 50%; transform: translateX(-50%);`);
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
@@ -280,7 +281,7 @@ function showPhase(phase) {
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                     " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                    " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
+                    " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s;");
 
                 document.body.appendChild(overlayImage);
             });
