@@ -9,7 +9,7 @@ const phases = {
     psycheSatellite1: {
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Psyche satellite with wings like a butterfly.",
-        duration: 2000,
+        duration: 250,
         banner: "",
         text: [
             ""
@@ -21,7 +21,7 @@ const phases = {
     psycheSatellite2: {
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Satellite Psyche with wings like a butterfly",
-        duration: 2000,
+        duration: 250,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             "With it’s solar panel wings",
@@ -36,7 +36,7 @@ const phases = {
     quote1: {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "",
-        duration: 2000,
+        duration: 250,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             " “Perhaps after NASA’s Psyche",
@@ -47,7 +47,7 @@ const phases = {
     quote2: {
         image: "../assets/images/goddess_psyche/psyche_drinking_ambrosia.png",
         alt: "",
-        duration: 2000,
+        duration: 250,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             " “it will be as though",
@@ -59,7 +59,7 @@ const phases = {
     quote3: {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "",
-        duration: 2000,
+        duration: 250,
         banner: "../assets/images/smp/smp-banner.png",
         text: [
             " “only that the achieved",
@@ -726,7 +726,7 @@ function showPhase(phase) {
 
             banner.setAttribute("style",
                 "background-color: transparent; max-width: 90vw; width: calc(0.8 * 55vh); border-radius: 12px;" +
-                " position: absolute; bottom: -2vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
+                " position: absolute; bottom: 5vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
                 " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
                 " text-align: center; overflow: visible; flex-direction: column;");
 
@@ -745,23 +745,23 @@ function showPhase(phase) {
                 if (window.innerWidth <= 768) { // Small screens (mobile)
                     console.log("small screen");
                     if (phase.text.length > 3) {
-                        bottomValue = "12vh";
+                        bottomValue = "18vh";
                     }  else {
-                        bottomValue = "15vh";
+                        bottomValue = "22vh";
                     }
                 } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
                     console.log("medium screen");
                     if (phase.text.length > 3) {
-                        bottomValue = "15vh";
+                        bottomValue = "21vh";
                     }  else {
-                        bottomValue = "16vh";
+                        bottomValue = "23vh";
                     }
                 } else { // Large screens (desktops)
                     console.log("large screen");
                     if (phase.text.length > 3) {
-                        bottomValue = "15vh";
+                        bottomValue = "21vh";
                     }  else {
-                        bottomValue = "16vh";
+                        bottomValue = "24vh";
                     }
                 }
 
@@ -805,7 +805,7 @@ function showPhase(phase) {
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
             position: absolute;
-            bottom: 15px;
+            bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
             width: 200px;
@@ -816,6 +816,8 @@ function showPhase(phase) {
             cursor: pointer;
             z-index: 100;
             display: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         `);
         nextButton.addEventListener("click", nextPhaseSMP);
         phase_div.appendChild(nextButton);
