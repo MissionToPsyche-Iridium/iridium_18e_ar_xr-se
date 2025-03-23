@@ -611,7 +611,7 @@ function showCountdown(phase, count, callback) {
 
     setTimeout(() => {
         callback(); // Call the callback after timer is done
-    }, 5999900);
+    }, 500);
 }
 
 /*
