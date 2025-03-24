@@ -519,6 +519,7 @@ function pointTelescopeAt(target3D, delta) {
 // Star transition
 const starTransistionGeometry = new THREE.BufferGeometry();
 let isStarTransition = false;
+let phaseBool = false;
 function starFieldTransistion() {
     isStarTransition = true;
 
@@ -533,6 +534,7 @@ function starFieldTransistion() {
             mainTitle.style.visibility = "hidden";
             mainTitle.style.opacity = "0";
         }
+        phaseBool = true;
         startPhases();
     }, 2000);
 }
@@ -771,13 +773,15 @@ function initializeAutoHelp() {
     });
 }
 function triggerAutoHelp() {
-    document.getElementById("help-icon-button").click();
+    if (!phaseBool) {
+        document.getElementById("help-icon-button").click();
+    }
 }
 function resetAutoHelp() {
     clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(triggerAutoHelp, 60000);
+    inactivityTimer = setTimeout(triggerAutoHelp, 15000);
 }
-let inactivityTimer = setTimeout(triggerAutoHelp, 60000);
+let inactivityTimer = setTimeout(triggerAutoHelp, 15000);
 initializeAutoHelp();
 
 // Handle window resizing
