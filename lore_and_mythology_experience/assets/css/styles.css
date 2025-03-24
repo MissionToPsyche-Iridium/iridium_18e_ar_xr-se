@@ -2,6 +2,12 @@
   font-family: 'Papyrus';
   src: url('../fonts/papyrus.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('../fonts/Comfortaa-VariableFont_wght.ttf') format('truetype');
+}
+
 body {
   margin: 0;
   overflow: hidden;

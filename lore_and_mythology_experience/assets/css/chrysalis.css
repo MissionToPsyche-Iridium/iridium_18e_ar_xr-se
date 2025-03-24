@@ -2,6 +2,7 @@
   font-family: 'Papyrus';
   src: url('../fonts/papyrus.ttf') format('truetype');
 }
+
 body {
   background-color: black;
   display: flex;
