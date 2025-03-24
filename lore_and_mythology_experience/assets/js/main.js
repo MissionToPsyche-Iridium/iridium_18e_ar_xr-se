@@ -446,7 +446,7 @@ controls.enableZoom = false;
 const settingsModal = new SettingsModal();
 
 let holdTime = 0.0; // Time on asteroid
-const holdThreshold = 3.0; // Time to trigger zoom
+const holdThreshold = 0.5; // Time to trigger zoom
 let isLockOn = false; // Scope is locked on
 let isZoom = false; // Camera zoom starts
 
