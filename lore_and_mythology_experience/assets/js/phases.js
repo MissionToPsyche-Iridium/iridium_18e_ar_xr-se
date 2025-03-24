@@ -224,37 +224,7 @@ function showPhase(phase) {
                     banner.appendChild(textBox);
                 }
 
-                let bottomValue;
-
-                if (window.innerWidth <= 768) { // Small screens (mobile)
-                    console.log("small screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "9vh";
-                    }  else {
-                        bottomValue = "15vh";
-                    }
-                } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
-                    console.log("medium screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "15vh";
-                    }  else {
-                        bottomValue = "18vh";
-                    }
-                } else { // Large screens (desktops)
-                    console.log("large screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "15vh";
-                    }  else {
-                        bottomValue = "18vh";
-                    }
-                }
-
-                textBox.setAttribute("style",
-                    `display: flex; flex-wrap: wrap; position: inherit; align-items: center; 
-                         justify-content: center; width: calc(0.8 * 40vh); color: black; 
-                         font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; 
-                         text-align: center; padding: 0vh 4vh; white-space: normal; 
-                         bottom: ${bottomValue}; z-index: 10; left: calc(52vw - ((0.8 * 50vh + 10vh) / 2));`);
+                textBox.className = "scroll-text-box";
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence

@@ -392,3 +392,22 @@ input[type="range"]::-moz-range-thumb {
   overflow: visible;
   flex-direction: column;
 }
+
+.scroll-text-box {
+  display: flex;
+  flex-wrap: wrap;
+  position: inherit;
+  align-items: center;
+  justify-content: center;
+  width: calc(0.8 * 40vh);
+  color: black;
+  font-size: clamp(0.8rem, 2vw, 0.5rem);
+  font-family: 'Papyrus',
+  Arial, sans-serif;
+  text-align: center;
+  padding: 0vh 4vh;
+  white-space: normal;
+  bottom: 15vh;
+  z-index: 10;
+  left: calc(52vw - ((0.8 * 50vh + 10vh) / 2));
+}
