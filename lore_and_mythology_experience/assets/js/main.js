@@ -417,6 +417,15 @@ loader.load('../assets/models/asteroid.glb', (gltf) => {
     asteroid.scale.set(0.2, 0.2, 0.2);
     asteroid.position.copy(asteroidPosition);
     asteroid.visible = false;
+
+    // Make asteroid model lighter (original too dark)
+    asteroid.traverse((child) => {
+        if (child.isMesh) {
+            child.material.emissive = new THREE.Color(0x222222);
+            child.material.emissiveIntensity = 1;
+        }
+    });
+
     scene.add(asteroid);
 });
 
