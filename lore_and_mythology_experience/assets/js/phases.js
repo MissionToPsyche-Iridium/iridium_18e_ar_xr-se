@@ -167,10 +167,7 @@ function showPhase(phase) {
         // set up html and css
         const phase_div = document.createElement("div");
         phase_div.setAttribute("id", "phase_modal");
-        phase_div.setAttribute("style", "display: block; position: fixed;" +
-            " z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
-            "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;");
-
+        phase_div.className = "phase-modal";
         let phase_innerHTML = "";
 
         if (phase.image && phase.image.length > 0) {
@@ -178,7 +175,7 @@ function showPhase(phase) {
         }
 
         if (phase.scroll && phase.scroll.length > 0) {
-            phase_innerHTML += `<img src="${phase.scroll}" id="papyrus_scroll"/>`;
+            phase_innerHTML += `<div id="scroll-container" class="scroll" style="background-image: url(${phase.scroll}); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 100%;">`;
 
             if (phase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="scroll_text_box">`;
@@ -187,6 +184,10 @@ function showPhase(phase) {
                 });
                 phase_innerHTML += `</div>`;
             }
+
+            phase_innerHTML += `</div>`;
+
+
         }
 
         phase_innerHTML += ``;
@@ -196,10 +197,7 @@ function showPhase(phase) {
 
         // add styles to the phase image and scroll
         if (phase.image && phase.image.length > 0) {
-            document.getElementById("phase").setAttribute("style",
-                "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 10; transition: 1.5s;");
+            document.getElementById("phase").className = "phase";
         }
 
         if (phase.scroll && phase.scroll.length > 0) {
@@ -208,8 +206,7 @@ function showPhase(phase) {
             // Ensure banner exists before applying styles
             if (!scroll) {
                 scroll = document.createElement("div");
-                scroll.id = "scroll";
-                document.body.appendChild(scroll);
+                scroll.id = "scroll-container";
             }
 
             scroll.className = "scroll";
@@ -221,7 +218,8 @@ function showPhase(phase) {
                 if (!textBox) {
                     textBox = document.createElement("div");
                     textBox.id = "scroll_text_box";
-                    banner.appendChild(textBox);
+                    scroll.appendChild(textBox);
+                    document.body.appendChild(scroll);
                 }
 
                 textBox.className = "scroll-text-box";
