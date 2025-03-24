@@ -212,11 +212,7 @@ function showPhase(phase) {
                 document.body.appendChild(scroll);
             }
 
-            scroll.setAttribute("style",
-                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 56vh); border-radius: 12px;" +
-                " position: absolute; bottom: -2vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
-                " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
-                " text-align: center; overflow: visible; flex-direction: column;");
+            scroll.className = "scroll";
 
             if (phase.text.some(line => line !== "")) {
                 let textBox = document.getElementById("scroll_text_box");
