@@ -403,7 +403,8 @@ input[type="range"]::-moz-range-thumb {
 .scroll {
   background-color: transparent;
   display: flex;
-  max-width: 40vw;
+  max-width: 300px;
+  width: 40vw;
   max-height: 30vh;
   border-radius: 12px;
   z-index: 5;
