@@ -56,7 +56,7 @@ const phases = {
     },
     chrysalis3: {
         title: "The 'Breath of Life'",
-        image: "",
+        image: "../assets/images/chrysalis/butterfly.png",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
         duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
@@ -65,9 +65,6 @@ const phases = {
             "as someone dies and is represented as",
             "a butterfly leaving its chrysalis.",
             "This breath of life is called Psyche."
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/butterfly.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
         ]
     },
     psychegoddess1: { // psyche goddess part1
@@ -116,16 +113,6 @@ const phases = {
         text: [
             "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
-        ]
-    },
-    psychegoddess5: { // psyche goddess part6
-        title: "The Asteroid Psyche",
-        image: "../assets/images/goddess_psyche/asteroid.png",
-        alt: "psyche asteroid",
-        scroll: "",
-        duration: 2000,
-        text: [
-            ""
         ]
     },
     psychegoddess7: { // psyche goddess part7
@@ -211,7 +198,7 @@ function showPhase(phase) {
 
             scroll.className = "scroll";
 
-            if (phase.text.some(line => line !== "")) {
+            {
                 let textBox = document.getElementById("scroll_text_box");
 
                 // Ensure the text box exists
@@ -243,8 +230,8 @@ function showPhase(phase) {
 
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                    " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
+                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(30vh);" +
+                    " left: calc(50vw - ((0.8 * 50vh) / 2)); z-index: 21; transition: 1.5s;");
 
                 document.body.appendChild(overlayImage);
             });
