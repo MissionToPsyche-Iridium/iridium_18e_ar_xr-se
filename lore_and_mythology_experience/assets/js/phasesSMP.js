@@ -4,6 +4,10 @@
 * @author: Nicole Garcia
  */
 
+ import incrementProgressBar from './progressBar.js';
+
+ incrementProgressBar(14);
+
 // Data for SMP-l phases
 const phases = {
     psycheSatellite1: {
@@ -209,6 +213,7 @@ function showLaunch(callback) {
             if (event.data === YT.PlayerState.ENDED) {
                 document.getElementById("launch-modal").remove();
                 launchBool = false;
+                incrementProgressBar(15);
                 callback();  // transition to next function when video ends
             }
         }
@@ -224,6 +229,7 @@ function showLaunch(callback) {
             modal.remove();
         }
         launchBool = false;
+        incrementProgressBar(15);
         callback();
     }
 }
@@ -502,6 +508,7 @@ function showTimer(callback) {
     }
 
     setTimeout(() => {
+        incrementProgressBar(16);
         callback();
     }, 20000);
 }
@@ -858,6 +865,7 @@ function nextPhaseSMP() {
   
     // Move to next phase
     phaseIndex++;
+    incrementProgressBar(16 + phaseIndex);
     if (phaseIndex < phaseValues.length) {
         console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
         showPhase(phaseValues[phaseIndex]);
