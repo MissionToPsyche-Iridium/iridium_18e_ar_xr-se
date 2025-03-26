@@ -687,7 +687,29 @@ function afterPhasesSMP() {
         document.body.appendChild(finaleDiv);
     }
 }
+// Create a <style> tag and add fade effects
+const style = document.createElement("style");
+style.innerHTML = `
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.25s forwards;
+    }
+    
+    .fade-out {
+        animation: fadeOut 0.25s forwards;
+    }
 
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
 // initialize SMP-l phase data and display it
 // can put css and html in separate files if needed.
 function showPhase(phase) {
@@ -838,7 +860,18 @@ function showPhase(phase) {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         `);
-        nextButton.addEventListener("click", nextPhaseSMP);
+        nextButton.addEventListener("click", () => {
+                setTimeout(() => {
+                    phase_div.classList.remove("fade-in");
+                    phase_div.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        removeCurrentPhaseSMP();
+                        nextPhaseSMP();
+                    }, 250); // Matches fade-out duration
+                }, phase.duration);
+            }
+        );
         phase_div.appendChild(nextButton);
 
         // Next button appears after some time passes
@@ -860,8 +893,10 @@ function nextPhaseSMP() {
     // Move to next phase
     phaseIndex++;
     if (phaseIndex < phaseValues.length) {
-        console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
-        showPhase(phaseValues[phaseIndex]);
+        setTimeout(() => {
+            console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
+            showPhase(phaseValues[phaseIndex]);
+        }, 250);
 
     // If at end of phases
     } else {
@@ -873,14 +908,19 @@ function removeCurrentPhaseSMP() {
     // Remove phase modal
     const phaseModal = document.getElementById("phase_modal");
     if (phaseModal) {
-        phaseModal.remove();
+        phaseModal.classList.add("fade-out"); // Apply fade-out animation
+        setTimeout(() => {
+            phaseModal.remove(); // Remove after fade-out completes
+        }, 250);
     }
   
     // Remove phase images
     const overlayImages = document.querySelectorAll(
         '[id^="butterfly"]'
     );
-    overlayImages.forEach((img) => img.remove());
+    setTimeout(() => {
+        overlayImages.forEach((img) => img.remove()); // Remove after fade-out completes
+    }, 250);
   
     phaseBool = false;
 }
