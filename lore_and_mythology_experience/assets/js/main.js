@@ -126,21 +126,21 @@ function createStarField() {
     // Adjust star count using quality setting
     let starCount;
     if (currentGraphicsQuality === GraphicsQuality.HIGH) {
-      starCount = 10000;
+        starCount = 10000;
     } else if (currentGraphicsQuality === GraphicsQuality.MEDIUM) {
-      starCount = 3000;
+        starCount = 3000;
     } else { // LOW
-      starCount = 1000;
+        starCount = 1000;
     }
-    
+
     const minDistance = 50; // Minimum distance from camera
-  
+
     // Initialize star field data
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(starCount * 3);
     const colors = new Float32Array(starCount * 3);
     const sizes = new Float32Array(starCount);
-  
+
     // Generate star data as before…
     for (let i = 0; i < starCount; i++) {
         // Calculate star position
@@ -167,13 +167,13 @@ function createStarField() {
             g = 0.85 + Math.random() * 0.15;
             b = 0.7 + Math.random() * 0.1;
 
-        // Yellow-Orange
+            // Yellow-Orange
         } else if (tint > 0.1) {
             r = 1.0;
             g = 0.7 + Math.random() * 0.3;
             b = 0.4 + Math.random() * 0.2;
 
-        // White-Blue
+            // White-Blue
         } else {
             r = 0.9;
             g = 0.9;
@@ -184,14 +184,14 @@ function createStarField() {
         colors[i * 3 + 1] = g;
         colors[i * 3 + 2] = b;
     }
-  
+
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
-  
+
     // Choose shader precision based on quality.
     const shaderPrecision = (currentGraphicsQuality === GraphicsQuality.LOW) ? 'mediump' : 'highp';
-  
+
     const vertexShader = `
       precision ${shaderPrecision} float;
       attribute float size;
@@ -204,7 +204,7 @@ function createStarField() {
           gl_Position = projectionMatrix * mvPosition;
       }
     `;
-  
+
     const fragmentShader = `
       precision ${shaderPrecision} float;
       varying vec3 vColor;
@@ -244,7 +244,7 @@ function createStarField() {
           gl_FragColor = starColor;
       }
     `;
-  
+
     // Create the shader material
     starMaterial = new THREE.ShaderMaterial({
         vertexColors: true,
@@ -261,7 +261,7 @@ function createStarField() {
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         }
     });
-  
+
     return new THREE.Points(geometry, starMaterial);
 }
 
@@ -272,13 +272,13 @@ scene.add(stars);
 function updateGraphicsQuality(newQuality) {
     currentGraphicsQuality = newQuality;
     localStorage.setItem('graphicsQuality', newQuality);
-  
+
     if (stars) {
-      scene.remove(stars);
+        scene.remove(stars);
     }
     stars = createStarField();
     scene.add(stars);
-  
+
     console.log(`Graphics quality set to ${newQuality}`);
 }
 
@@ -335,9 +335,10 @@ function generateAsteroidTexture() {
     return new THREE.CanvasTexture(canvas);
 }
 
+
 // create and add asteroid belt
 function createAsteroidBelt(scene) {
-    const numAsteroids = 500;
+    const numAsteroids = window.innerWidth * .3;
     const beltRadius = 50;
     const beltThickness = 10;
     // const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
