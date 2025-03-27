@@ -546,7 +546,7 @@ function pointTelescopeAt(target3D, delta) {
 // Star transition
 const starTransistionGeometry = new THREE.BufferGeometry();
 let isStarTransition = false;
-function starFieldTransistion() {
+function starFieldTransition() {
     isStarTransition = true;
 
     // Remove telescope from scene
@@ -557,12 +557,12 @@ function starFieldTransistion() {
         isStarTransition = false;
         asteroid.visible = false;
         console.log('Transitioning to phases');
-        // startPhases();
         const mainTitle = document.querySelector(".main-title");
         if (mainTitle) {
             mainTitle.style.visibility = "hidden";
             mainTitle.style.opacity = "0";
         }
+        updateGraphicsQuality(GraphicsQuality.LOW);
         startPhases();
     }, 2000);
 }
@@ -780,7 +780,7 @@ function startCameraZoom() {
             // Start star field transition
         } else {
             settingsModal.applyAMPIModalStyles();
-            starFieldTransistion();
+            starFieldTransition();
         }
     }
 
