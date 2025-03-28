@@ -4,9 +4,14 @@
 * @author: Nicole Garcia
  */
 
+ import incrementProgressBar from './progressBar.js';
+
+ incrementProgressBar(14);
+
 // Data for SMP-l phases
 const phases = {
     psycheSatellite1: {
+        title: "The Psyche Satellite Resembles a Butterfly",
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Psyche satellite with wings like a butterfly.",
         duration: 250,
@@ -19,6 +24,7 @@ const phases = {
         ],
     },
     psycheSatellite2: {
+        title: "The Psyche Satellite Resembles a Butterfly",
         image: "../assets/images/smp/psyche-satellite.png",
         alt: "Satellite Psyche with wings like a butterfly",
         duration: 250,
@@ -34,6 +40,7 @@ const phases = {
         ],
     },
     quote1: {
+        title: "Conclusion",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "",
         duration: 250,
@@ -45,6 +52,7 @@ const phases = {
         ]
     },
     quote2: {
+        title: "Conclusion",
         image: "../assets/images/goddess_psyche/psyche_drinking_ambrosia.png",
         alt: "",
         duration: 250,
@@ -57,6 +65,7 @@ const phases = {
         ]
     },
     quote3: {
+        title: "Conclusion",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "",
         duration: 250,
@@ -118,7 +127,7 @@ function showSMPIntro(callback) {
         Object.assign(introDiv.style, {
             top: "100%",
             left: "50%",
-            color: "#C9FFFC",
+            color: "white",
             background: "rgba(0, 0, 0, 0.2)",
             transform: "translate(-50%, -50%)",
             fontSize: "20px",
@@ -204,6 +213,7 @@ function showLaunch(callback) {
             if (event.data === YT.PlayerState.ENDED) {
                 document.getElementById("launch-modal").remove();
                 launchBool = false;
+                incrementProgressBar(15);
                 callback();  // transition to next function when video ends
             }
         }
@@ -219,6 +229,7 @@ function showLaunch(callback) {
             modal.remove();
         }
         launchBool = false;
+        incrementProgressBar(15);
         callback();
     }
 }
@@ -534,7 +545,7 @@ function showTimer(callback) {
                 z-index: 101;
                 display: block;
             `);
-            nextButton.addEventListener("click", function() {/*incrementProgressBar(16);*/ clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
+            nextButton.addEventListener("click", function() {incrementProgressBar(16); clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
             phase_div.appendChild(nextButton);
 
             document.body.appendChild(phase_div);
@@ -573,7 +584,7 @@ function showTimer(callback) {
                 z-index: 101;
                 display: block;
             `);
-            nextButton.addEventListener("click", function() {/*incrementProgressBar(16);*/ clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
+            nextButton.addEventListener("click", function() {incrementProgressBar(16); clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
             document.getElementById("phase_modal").appendChild(nextButton);
         }
 
@@ -708,6 +719,12 @@ function showPhase(phase) {
 
         let phase_innerHTML = "";
 
+        if (phase.title && phase.title.length > 0) {
+            phase_innerHTML += `<div id="phase-title">`;
+            phase_innerHTML += `<span class="title">${phase.title}</span>`;
+            phase_innerHTML += `</div>`;
+        }
+
         if (phase.image && phase.image.length > 0) {
             phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
         }
@@ -728,6 +745,15 @@ function showPhase(phase) {
 
         phase_div.innerHTML = phase_innerHTML;
         document.body.appendChild(phase_div);
+
+        // add style to phase title
+        if (phase.title && phase.title.length > 0) {
+            document.getElementById("phase-title").setAttribute(
+                "style", "text-align: center; font-size: calc(0.08 * 40vh);" +
+                " z-index: 21; transition: 1.5s; top: 5vh; color: white; position: absolute; " +
+                "left: 50%; transform: translateX(-50%); width: 80%; max-width: 90vw;" +
+                "font-family: 'Comfortaa', Arial, sans-serif;");
+        }
 
         // add styles to the phase image and banner
         if (phase.image && phase.image.length > 0) {
@@ -863,6 +889,7 @@ function nextPhaseSMP() {
   
     // Move to next phase
     phaseIndex++;
+    incrementProgressBar(16 + phaseIndex);
     if (phaseIndex < phaseValues.length) {
         console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
         showPhase(phaseValues[phaseIndex]);

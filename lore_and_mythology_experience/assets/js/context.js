@@ -1,6 +1,11 @@
+import incrementProgressBar from './progressBar.js';
+
+incrementProgressBar(0);
+
 const telescopeBackground = document.getElementById("telescopeBg");
 
 function telescopeClickedHandler() {
+    incrementProgressBar(1);
     window.location.href = '../pages/main_page.html'
 }
 
