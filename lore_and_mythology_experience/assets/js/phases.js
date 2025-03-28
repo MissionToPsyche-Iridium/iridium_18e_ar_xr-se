@@ -9,7 +9,7 @@ const phases = {
         title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "On March 17, 1852, the Italian",
@@ -35,7 +35,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "image of asteroid",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "The asteroid Psyche has the",
@@ -48,7 +48,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 2000,
+        duration: 250,
         scroll: "",
         text: [
             ""
@@ -61,7 +61,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "",
         alt: "image of chrysalis",
-        duration: 2000,
+        duration: 250,
         scroll: "",
         text: [
             ""
@@ -74,7 +74,7 @@ const phases = {
         title: "The 'Breath of Life'",
         image: "",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, the breath of life leaves",
@@ -90,7 +90,7 @@ const phases = {
         title: "The Goddess Psyche Opening Pandora's Box",
         image: "../assets/images/goddess_psyche/psyche_opening_box.png",
         alt: "image of Psyche goddess opening pandora's box.",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, Psyche, driven by",
@@ -104,7 +104,7 @@ const phases = {
         title: "The Goddess Psyche Falling Into a Deep Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out.png",
         alt: "image of Psyche goddess in a deep, dark sleep.",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "However, instead of beauty,",
@@ -116,7 +116,7 @@ const phases = {
         title: "The Goddess Psyche In A Dark, Dreamless Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "Psyche finds herself in",
@@ -128,7 +128,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 2000,
+        duration: 250,
         text: [
             "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
@@ -139,7 +139,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid",
         scroll: "",
-        duration: 2000,
+        duration: 250,
         text: [
             ""
         ]
@@ -149,7 +149,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 2000,
+        duration: 250,
         text: [
             "Like Psyche opening the fateful box,",
             "revealing the unexpected,",
@@ -165,7 +165,6 @@ const phaseValues = Object.values(phases);
 // Start the phases
 export function startPhases() {
     phaseIndex = 0;
-
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
     showPhase(phaseValues[phaseIndex]);
 }
@@ -230,7 +229,7 @@ function showPhase(phase) {
             document.getElementById("phase").setAttribute("style",
                 "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                 " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 10; transition: 1.5s;");
+                " left: 50%; transform: translateX(-50%); z-index: 10; transition: 1.5s;");
         }
 
         if (phase.scroll && phase.scroll.length > 0) {
@@ -245,7 +244,7 @@ function showPhase(phase) {
 
             scroll.setAttribute("style",
                 "background-color: transparent; max-width: 90vw; width: calc(0.8 * 56vh); border-radius: 12px;" +
-                " position: absolute; bottom: -2vh; left: calc(50vw - ((0.8 * 50vh + 10vh) / 2));" +
+                " position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);" +
                 " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
                 " text-align: center; overflow: visible; flex-direction: column;");
 
@@ -264,23 +263,25 @@ function showPhase(phase) {
                 if (window.innerWidth <= 768) { // Small screens (mobile)
                     console.log("small screen");
                     if (phase.text.length > 3) {
-                        bottomValue = "9vh";
+                        bottomValue = "16vh";
                     }  else {
-                        bottomValue = "15vh";
+                        bottomValue = "22vh";
                     }
                 } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
                     console.log("medium screen");
                     if (phase.text.length > 3) {
-                        bottomValue = "15vh";
+                        bottomValue = "21vh";
                     }  else {
-                        bottomValue = "18vh";
+                        bottomValue = "23vh";
                     }
                 } else { // Large screens (desktops)
                     console.log("large screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "15vh";
-                    }  else {
-                        bottomValue = "18vh";
+                    if (phase.text.length > 4) {
+                        bottomValue = "19vh";
+                    } else if (phase.text.length > 3) {
+                        bottomValue = "22vh";
+                    } else {
+                        bottomValue = "23vh";
                     }
                 }
 
@@ -289,7 +290,7 @@ function showPhase(phase) {
                          justify-content: center; width: calc(0.8 * 40vh); color: black; 
                          font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; 
                          text-align: center; padding: 0vh 4vh; white-space: normal; 
-                         bottom: ${bottomValue}; z-index: 10; left: calc(52vw - ((0.8 * 50vh + 10vh) / 2));`);
+                         bottom: ${bottomValue}; z-index: 10; left: 50%; transform: translateX(-50%);`);
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
@@ -311,7 +312,7 @@ function showPhase(phase) {
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                     " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                    " left: calc(50vw - ((0.8 * 50vh + 10vh) / 2)); z-index: 21; transition: 1.5s;");
+                    " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s;");
 
                 document.body.appendChild(overlayImage);
             });
@@ -322,7 +323,7 @@ function showPhase(phase) {
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
             position: absolute;
-            bottom: 15px;
+            bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
             width: 200px;
@@ -333,6 +334,8 @@ function showPhase(phase) {
             cursor: pointer;
             z-index: 100;
             display: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         `);
         nextButton.addEventListener("click", nextPhase);
         phase_div.appendChild(nextButton);
