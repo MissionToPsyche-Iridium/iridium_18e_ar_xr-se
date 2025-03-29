@@ -274,13 +274,13 @@ function showTimer(callback) {
     let message1 = "Mission Status: ";
     let message2 = "";
 
-    let colHeadings = [["|", "Since Launch  |", "Since Arrival  |", "Since Completion "], 
-                       ["|", "Since Launch  |", "Since Arrival  |", "Until Completion "], 
-                       ["|", "Since Launch  |", "Until Arrival  |", "Until Completion "] 
-                      ];
+    let colHeadings = [["|", "Since Launch  |", "Since Arrival  |", "Since Completion "],
+    ["|", "Since Launch  |", "Since Arrival  |", "Until Completion "],
+    ["|", "Since Launch  |", "Until Arrival  |", "Until Completion "]
+    ];
     //let rowHeadings = ["|", "years  |", "days  |", "hours  |", minutes  |", "seconds  |"];
 
-    let launchCountup = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
+    let launchCountup = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
     let timeSinceLaunch = currentTime - launchTime;
     if (currentTime >= leapDay) {
         launchCountup["years"] = Math.floor((timeSinceLaunch - (2 * millisecondsInADay)) / millisecondsInAYear);
@@ -297,8 +297,8 @@ function showTimer(callback) {
     timeSinceLaunch = timeSinceLaunch - (launchCountup["minutes"] * millisecondsInAMinute);
     launchCountup["seconds"] = Math.floor(timeSinceLaunch / millisecondsInASecond);
 
-    let arrivalCountdown = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
-    let completionCountdown = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
+    let arrivalCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
+    let completionCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
 
     let timeUntilArrival = arrivalTime - currentTime;
     let timeSinceArrival = 0;
@@ -493,7 +493,7 @@ function showTimer(callback) {
         let timerValues = Object.values(countdown);
         let timerPhase = timerValues[0];
 
-        setTimeout(function() {showCountdown(timerPhase, i)}, 1000 * i);
+        setTimeout(function() { showCountdown(timerPhase, i) }, 1000 * i);
     }
 
     setTimeout(() => {
@@ -642,6 +642,7 @@ function afterPhasesSMP() {
         logo.setAttribute(
             "style",
             "background-color: transparent; width: 30vw; max-width: 200px; height: auto;" +
+            " pointer-events: auto; z-index: 999; cursor: pointer;" +
             " border-radius: 12px; padding: 2vh;" +
             " transition: 1.5s ease-in-out;"
         );
@@ -685,6 +686,10 @@ function afterPhasesSMP() {
         finaleDiv.appendChild(finaleText); // Add the new text element
         finaleDiv.appendChild(restartButton);
         document.body.appendChild(finaleDiv);
+
+        logo.addEventListener("click", function() {
+            window.top.location.href = "https://psyche.asu.edu/";
+        });
     }
 }
 // Create a <style> tag and add fade effects
@@ -889,7 +894,7 @@ function showPhase(phase) {
 function nextPhaseSMP() {
     // Remove current phase
     removeCurrentPhaseSMP();
-  
+
     // Move to next phase
     phaseIndex++;
     if (phaseIndex < phaseValues.length) {
@@ -898,7 +903,7 @@ function nextPhaseSMP() {
             showPhase(phaseValues[phaseIndex]);
         }, 250);
 
-    // If at end of phases
+        // If at end of phases
     } else {
         afterPhasesSMP();
     }
