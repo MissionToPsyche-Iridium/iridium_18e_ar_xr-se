@@ -277,6 +277,7 @@ function showPhase(phase) {
         if (phase.additionalImages) {
             phase.additionalImages.forEach((image, index) => {
                 const overlayImage = document.createElement("img");
+                overlayImage.classList.add("fade-in");
                 overlayImage.setAttribute("src", image.src);
                 overlayImage.setAttribute("id", image.id);
 
@@ -351,24 +352,34 @@ function nextPhase() {
         afterPhases();
     }
 }
-  
+
+// transition out of current phase. Fade out and signal calling the next phase.
 function removeCurrentPhase() {
-    // Remove phase modal
+    // Select phase modal
     const phaseModal = document.getElementById("phase_modal");
-    if (phaseModal) {
-        phaseModal.classList.add("fade-out"); // Apply fade-out animation
-        setTimeout(() => {
-            phaseModal.remove(); // Remove after fade-out completes
-        }, 250);
-    }
-  
-    // Remove phase images
+
+    // Select overlay images
     const overlayImages = document.querySelectorAll(
         '[id^="chrysalis"], [id^="butterfly"], [id^="chrysalis2"], [id^="butterfly2"]'
     );
+
+    // Force reflow (prevents animation issues)
+    phaseModal?.offsetHeight;
+    overlayImages.forEach((img) => img.offsetHeight);
+
+    // Apply fade-out effect
+    if (phaseModal) {
+        phaseModal.classList.add("fade-out");
+    }
+    overlayImages.forEach((img) => {
+        img.classList.add("fade-out");
+    });
+
+    // Remove elements after animation completes
     setTimeout(() => {
-        overlayImages.forEach((img) => img.remove()); // Remove after fade-out completes
-    }, 250);
-  
+        phaseModal?.remove();
+        overlayImages.forEach((img) => img.remove());
+    }, 250); // Match fade-out duration in CSS
+
     phaseBool = false;
 }
