@@ -267,27 +267,17 @@ function createStarField() {
 const stars = createStarField();
 scene.add(stars);
 
+camera.lookAt(0, 0, 0);
 
 // Asteroid distance from edges of screen
-const MIN_X = getMaxX();
-const MAX_X = window.innerWidth - 50;
-const MIN_Y = 100;
-const MAX_Y = window.innerHeight - 500;
+const MIN_X = -1;
+const MAX_X = 1;
+const MIN_Y = -0.1;
+const MAX_Y = 0.1;
 
 let asteroidX;
 let asteroidY;
 let asteroidZ;
-
-function getMaxX() {
-    const camfov = camera.fov * (Math.PI / 180);
-    const aspect = window.innerWidth / window.innerHeight;
-    const zPos = camera.position.z;
-
-    const frustumHeight = 2 * zPos * Math.tan(camfov / 2);
-    const frustumWidth = frustumHeight * aspect;
-
-    return frustumWidth / 2;
-}
 
 function generateAsteroidTexture() {
     const size = 512;
@@ -339,12 +329,12 @@ function createAsteroidBelt(scene) {
     asteroidGeometry.computeVertexNormals();
 
     while (true) {
-        const asteroidAngle = Math.random() * Math.PI * 2;
-        const asteroidDistance = beltRadius + (Math.random() - 0.5) * beltThickness;
+        // const asteroidAngle = Math.random() * Math.PI * 2;
+        // const asteroidDistance = beltRadius + (Math.random() - 0.5) * beltThickness;
 
-        asteroidX = Math.cos(asteroidAngle) * asteroidDistance;
-        asteroidY = (Math.random() - 0.5) * 5;
-        asteroidZ = Math.sin(asteroidAngle) * asteroidDistance;
+        asteroidX = THREE.MathUtils.lerp(MIN_X, MAX_X, Math.random());
+        asteroidY = THREE.MathUtils.lerp(MIN_Y, MAX_Y, Math.random());
+        asteroidZ = 0;
         if (asteroidX < MAX_X && asteroidX > MIN_X) { break; }
     }
 
@@ -383,7 +373,7 @@ const cameraHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * ca
 const cameraWidth = cameraHeight * camera.aspect;
 
 // Unproject from normalized coordinates to camera
-const asteroidVector = new THREE.Vector3(asteroidX, asteroidY, asteroidZ);
+const asteroidVector = new THREE.Vector3(asteroidX, asteroidY, 0);
 asteroidVector.unproject(camera);
 
 // The ray from camera
@@ -739,7 +729,6 @@ function lockOn() {
             startCameraZoom();
         }
     }
-
 
     requestAnimationFrame(animateScopeToAsteroid);
 }
