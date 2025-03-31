@@ -14,6 +14,138 @@ incrementProgressBar(1);
 // import HelpModal from "./HelpModal.js";
 // import { TextureLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 // import TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.esm.js";
+
+window.onload = async () => {
+    // Wait for the user to click on the telescope background in the context modal.
+    showContext().then(launch);
+    // After the modal is dismissed, start the fade in (and subsequent animations).
+};
+
+//================ CONTEXT FUNCTIONS ========================
+
+let telescopeBackground;
+
+async function showContext() {
+    const phase_div = document.createElement("div");
+    phase_div.setAttribute("id", "context_modal");
+    phase_div.setAttribute(
+        "style",
+        "display: block; position: fixed; z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
+        "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;"
+    );
+
+    try {
+        const response = await fetch("../pages/amp_context.html");
+        const data = await response.text();
+        phase_div.innerHTML = data;
+        document.body.appendChild(phase_div);
+    } catch (error) {
+        console.error("Error fetching the HTML:", error);
+    }
+    telescopeBackground = document.getElementById("telescopeBg");
+
+    startAnimations();
+    await waitForTelescopeClick();
+    hideContext();
+}
+
+function waitForTelescopeClick() {
+    return new Promise((resolve) => {
+        telescopeBackground.addEventListener(
+            "click",
+            (event) => {
+                resolve(event);
+            },
+            { once: true }
+        );
+    });
+}
+
+function hideContext() {
+    const modal = document.getElementById("context_modal");
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function startAnimations() {
+
+    let opacity = 0;
+    let intervalID = 0;
+    const scroll = document.getElementById("scroll");
+    const clickDialog = document.getElementById("scrollClick");
+    scroll.style.opacity = 0;
+    let blinkIn = 0;
+    fadeIn();
+
+    function fadeIn() {
+        clearInterval(intervalID);
+        intervalID = setInterval(showScroll, 10);
+    }
+
+    function fadeOut() {
+        clearInterval(intervalID);
+        intervalID = setInterval(hideScroll, 10);
+    }
+
+    function showScroll() {
+        opacity = Number(window.getComputedStyle(scroll).getPropertyValue("opacity"));
+        if (opacity < 1) {
+            opacity += 0.005;
+            scroll.style.opacity = opacity;
+        } else {
+            clearInterval(intervalID);
+            setTimeout(fadeOut, 3000);
+        }
+    }
+
+    function hideScroll() {
+        opacity = Number(window.getComputedStyle(scroll).getPropertyValue("opacity"));
+        if (opacity > 0) {
+            opacity -= 0.005;
+            scroll.style.opacity = opacity;
+        } else {
+            clearInterval(intervalID);
+            // Start the blink animation for the telescope background.
+            intervalID = setInterval(blinkTelescope, 10);
+            clickDialog.style.opacity = 1;
+        }
+    }
+
+    function blinkTelescope() {
+        const currentColor = window.getComputedStyle(telescopeBackground).getPropertyValue("background-color");
+        // Updated the regex to allow optional spaces after commas.
+        const rgba = currentColor.match(/rgba?\((\d+), ?(\d+), ?(\d+), ?([\d.]+)\)/);
+        let opacityValue;
+
+        if (rgba) {
+            opacityValue = parseFloat(rgba[4]);
+        } else {
+            // Fallback if no proper color value is detected.
+            opacityValue = 0.99;
+            blinkIn = 1;
+        }
+
+        if (opacityValue < .4 && blinkIn === 0) {
+            opacityValue += 0.005;
+            if (opacityValue >= .4) {
+                blinkIn = 1;
+                opacityValue = .4;
+            }
+            telescopeBackground.style.backgroundColor = `rgba(255, 255, 255, ${opacityValue})`;
+        } else {
+            opacityValue -= 0.005;
+            if (opacityValue <= 0) {
+                blinkIn = 0;
+                opacityValue = 0;
+            }
+            telescopeBackground.style.backgroundColor = `rgba(255, 255, 255, ${opacityValue})`;
+        }
+    }
+}
+
+function launch() {
+
 // Create the scene
 const scene = new THREE.Scene();
 
@@ -822,3 +954,4 @@ window.addEventListener("resize", () => {
     starMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     camera.updateProjectionMatrix();
 });
+}
