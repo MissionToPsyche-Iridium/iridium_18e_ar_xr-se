@@ -14,6 +14,139 @@ incrementProgressBar(1);
 // import HelpModal from "./HelpModal.js";
 // import { TextureLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 // import TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.esm.js";
+
+window.onload = async () => {
+    // Wait for the user to click on the telescope background in the context modal.
+    showContext().then(launch);
+    // After the modal is dismissed, start the fade in (and subsequent animations).
+};
+
+//================ CONTEXT FUNCTIONS ========================
+
+let telescopeBackground;
+
+async function showContext() {
+    const phase_div = document.createElement("div");
+    phase_div.setAttribute("id", "context_modal");
+    phase_div.setAttribute(
+        "style",
+        "display: block; position: fixed; z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
+        "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;"
+    );
+
+    try {
+        const response = await fetch("../pages/amp_context.html");
+        const data = await response.text();
+        phase_div.innerHTML = data;
+        document.body.appendChild(phase_div);
+    } catch (error) {
+        console.error("Error fetching the HTML:", error);
+    }
+    telescopeBackground = document.getElementById("telescopeBg");
+
+    startAnimations();
+    await waitForTelescopeClick();
+    hideContext();
+}
+
+function waitForTelescopeClick() {
+    return new Promise((resolve) => {
+        telescopeBackground.addEventListener(
+            "click",
+            (event) => {
+                resolve(event);
+            },
+            { once: true }
+        );
+    });
+}
+
+function hideContext() {
+    const modal = document.getElementById("context_modal");
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function startAnimations() {
+
+    let opacity = 0;
+    let intervalID = 0;
+    const scroll = document.getElementById("scroll");
+    const clickDialog = document.getElementById("scrollClick");
+    scroll.style.opacity = 0;
+    let blinkIn = 0;
+    fadeIn();
+
+    function fadeIn() {
+        clearInterval(intervalID);
+        intervalID = setInterval(showScroll, 10);
+    }
+
+    function fadeOut() {
+        clearInterval(intervalID);
+        intervalID = setInterval(hideScroll, 10);
+    }
+
+    function showScroll() {
+        opacity = Number(window.getComputedStyle(scroll).getPropertyValue("opacity"));
+        if (opacity < 1) {
+            opacity += 0.005;
+            scroll.style.opacity = opacity;
+        } else {
+            clearInterval(intervalID);
+            setTimeout(fadeOut, 3000);
+        }
+    }
+
+    function hideScroll() {
+        opacity = Number(window.getComputedStyle(scroll).getPropertyValue("opacity"));
+        if (opacity > 0) {
+            opacity -= 0.005;
+            scroll.style.opacity = opacity;
+        } else {
+            clearInterval(intervalID);
+            // Start the blink animation for the telescope background.
+            intervalID = setInterval(blinkTelescope, 10);
+            clickDialog.style.opacity = 1;
+        }
+    }
+
+    function blinkTelescope() {
+        const currentColor = window.getComputedStyle(telescopeBackground).getPropertyValue("background-color");
+        // Updated the regex to allow optional spaces after commas.
+        const rgba = currentColor.match(/rgba?\((\d+), ?(\d+), ?(\d+), ?([\d.]+)\)/);
+        let opacityValue;
+
+        if (rgba) {
+            opacityValue = parseFloat(rgba[4]);
+        } else {
+            // Fallback if no proper color value is detected.
+            opacityValue = 0.99;
+            blinkIn = 1;
+        }
+
+        if (opacityValue < .4 && blinkIn === 0) {
+            opacityValue += 0.005;
+            if (opacityValue >= .4) {
+                blinkIn = 1;
+                opacityValue = .4;
+            }
+            telescopeBackground.style.backgroundColor = `rgba(255, 255, 255, ${opacityValue})`;
+        } else {
+            opacityValue -= 0.005;
+            if (opacityValue <= 0) {
+                blinkIn = 0;
+                opacityValue = 0;
+            }
+            telescopeBackground.style.backgroundColor = `rgba(255, 255, 255, ${opacityValue})`;
+        }
+    }
+}
+
+function launch() {
+ document.getElementById('main-title').style.visibility = 'visible';
+
 // Create the scene
 const scene = new THREE.Scene();
 
@@ -267,27 +400,17 @@ function createStarField() {
 const stars = createStarField();
 scene.add(stars);
 
+camera.lookAt(0, 0, 0);
 
 // Asteroid distance from edges of screen
-const MIN_X = getMaxX();
-const MAX_X = window.innerWidth - 50;
-const MIN_Y = 100;
-const MAX_Y = window.innerHeight - 500;
+const MIN_X = -1;
+const MAX_X = 1;
+const MIN_Y = -0.1;
+const MAX_Y = 0.1;
 
 let asteroidX;
 let asteroidY;
 let asteroidZ;
-
-function getMaxX() {
-    const camfov = camera.fov * (Math.PI / 180);
-    const aspect = window.innerWidth / window.innerHeight;
-    const zPos = camera.position.z;
-
-    const frustumHeight = 2 * zPos * Math.tan(camfov / 2);
-    const frustumWidth = frustumHeight * aspect;
-
-    return frustumWidth / 2;
-}
 
 function generateAsteroidTexture() {
     const size = 512;
@@ -339,12 +462,12 @@ function createAsteroidBelt(scene) {
     asteroidGeometry.computeVertexNormals();
 
     while (true) {
-        const asteroidAngle = Math.random() * Math.PI * 2;
-        const asteroidDistance = beltRadius + (Math.random() - 0.5) * beltThickness;
+        // const asteroidAngle = Math.random() * Math.PI * 2;
+        // const asteroidDistance = beltRadius + (Math.random() - 0.5) * beltThickness;
 
-        asteroidX = Math.cos(asteroidAngle) * asteroidDistance;
-        asteroidY = (Math.random() - 0.5) * 5;
-        asteroidZ = Math.sin(asteroidAngle) * asteroidDistance;
+        asteroidX = THREE.MathUtils.lerp(MIN_X, MAX_X, Math.random());
+        asteroidY = THREE.MathUtils.lerp(MIN_Y, MAX_Y, Math.random());
+        asteroidZ = 0;
         if (asteroidX < MAX_X && asteroidX > MIN_X) { break; }
     }
 
@@ -383,7 +506,7 @@ const cameraHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * ca
 const cameraWidth = cameraHeight * camera.aspect;
 
 // Unproject from normalized coordinates to camera
-const asteroidVector = new THREE.Vector3(asteroidX, asteroidY, asteroidZ);
+const asteroidVector = new THREE.Vector3(asteroidX, asteroidY, 0);
 asteroidVector.unproject(camera);
 
 // The ray from camera
@@ -740,7 +863,6 @@ function lockOn() {
         }
     }
 
-
     requestAnimationFrame(animateScopeToAsteroid);
 }
 
@@ -833,3 +955,4 @@ window.addEventListener("resize", () => {
     starMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
     camera.updateProjectionMatrix();
 });
+}
