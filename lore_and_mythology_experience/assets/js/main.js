@@ -31,7 +31,7 @@ async function showContext() {
     );
 
     try {
-        const response = await fetch("../../pages/amp_context.html");
+        const response = await fetch("../pages/amp_context.html");
         const data = await response.text();
         phase_div.innerHTML = data;
         document.body.appendChild(phase_div);
