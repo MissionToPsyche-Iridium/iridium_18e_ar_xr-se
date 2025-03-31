@@ -1,4 +1,8 @@
 import { startPhasesSMP } from "./phasesSMP.js";
+import incrementProgressBar from './progressBar.js';
+
+incrementProgressBar(2);
+
 // TODO: store phase data in json file
 const phases = {
     annibale1: {
@@ -8,10 +12,22 @@ const phases = {
         duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
-            "On March 17, 1852, the Italian astronomer",
-            "Annibale De Gasparis discovered the 16th",
-            "asteroid in the main asteroid belt",
-            "between Mars and Jupiter.",
+            "On March 17, 1852, the Italian",
+            "astronomer Annibale De Gasparis",
+            "discovered an asteroid",
+            "in the night sky."
+        ]
+    },
+    annibale2: {
+        title: "Discovery of Psyche",
+        image: "../assets/images/annibale.jpg",
+        alt: "image of astronomer Annibale De Gasparis",
+        duration: 2000,
+        scroll: "../assets/images/papyrus_scroll_double_sided.png",
+        text: [
+            "It is the 16th asteroid in",
+            "the main asteroid belt between",
+            "Mars and Jupiter.",
             "De Gasparis named this asteroid Psyche."
         ]
     },
@@ -174,6 +190,12 @@ function showPhase(phase) {
 
         let phase_innerHTML = "";
 
+        if (phase.title && phase.title.length > 0) {
+            phase_innerHTML += `<div id="phase-title">`;
+            phase_innerHTML += `<span class="title">${phase.title}</span>`;
+            phase_innerHTML += `</div>`;
+        }
+
         if (phase.image && phase.image.length > 0) {
             phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
         }
@@ -194,6 +216,15 @@ function showPhase(phase) {
 
         phase_div.innerHTML = phase_innerHTML;
         document.body.appendChild(phase_div);
+
+        // add style to phase title
+        if (phase.title && phase.title.length > 0) {
+            document.getElementById("phase-title").setAttribute(
+                "style", "text-align: center; font-size: calc(0.08 * 40vh);" +
+                " z-index: 21; transition: 1.5s; top: 5vh; color: white; position: absolute; " +
+                "left: 50%; transform: translateX(-50%); width: 80%; max-width: 90vw;" +
+                "font-family: 'Papyrus', Arial, sans-serif;");
+        }
 
         // add styles to the phase image and scroll
         if (phase.image && phase.image.length > 0) {
@@ -341,6 +372,7 @@ function nextPhase() {
   
     // Move to next phase
     phaseIndex++;
+    incrementProgressBar(2 + phaseIndex);
     if (phaseIndex < phaseValues.length) {
         setTimeout(() => {
             console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
