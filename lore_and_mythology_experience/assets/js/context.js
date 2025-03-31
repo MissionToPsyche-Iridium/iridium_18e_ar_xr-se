@@ -1,7 +1,12 @@
+import incrementProgressBar from './progressBar.js';
+
+incrementProgressBar(0);
+
 const telescopeBackground = document.getElementById("telescopeBg");
 import {AudioManager} from "./AudioManager.js";
 
 function telescopeClickedHandler() {
+    incrementProgressBar(1);
     window.location.href = '../pages/main_page.html'
 }
 
