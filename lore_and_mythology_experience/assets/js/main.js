@@ -4,7 +4,6 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples
 import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 import { AudioManager } from './AudioManager.js';
-import { startPhasesSMP } from "./phasesSMP.js";
 import incrementProgressBar from './progressBar.js';
 
 incrementProgressBar(1);
@@ -16,6 +15,7 @@ incrementProgressBar(1);
 // import HelpModal from "./HelpModal.js";
 // import { TextureLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 // import TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.esm.js";
+let audioManager = new AudioManager();
 
 window.onload = async () => {
     // Wait for the user to click on the telescope background in the context modal.
@@ -26,6 +26,8 @@ window.onload = async () => {
 //================ CONTEXT FUNCTIONS ========================
 
 let telescopeBackground;
+audioManager.play("context");
+audioManager.setVolume(0.5);
 
 async function showContext() {
     const phase_div = document.createElement("div");
@@ -147,6 +149,8 @@ function startAnimations() {
 }
 
 function launch() {
+    audioManager.stopPlaying();
+    audioManager.play("amp");
     document.getElementById('main-title').style.visibility = 'visible';
 
     // Create the scene
@@ -167,12 +171,6 @@ function launch() {
         1000,
     );
     camera.position.z = 5;
-    window.onload = audio;
-    function audio() {
-        const audioManager = new AudioManager("amp");
-        audioManager.play();
-        audioManager.setVolume(0.5);
-    }
 
     // Create a renderer
     const renderer = new THREE.WebGLRenderer();
@@ -701,7 +699,7 @@ function launch() {
                 mainTitle.style.opacity = "0";
             }
             phaseBool = true;
-            startPhases();
+            startPhases(audioManager);
         }, 2000);
     }
 

@@ -1,5 +1,6 @@
 import { startPhasesSMP } from "./phasesSMP.js";
 import incrementProgressBar from './progressBar.js';
+import { AudioManager } from './AudioManager.js';
 
 incrementProgressBar(2);
 
@@ -137,17 +138,19 @@ const phases = {
 };
 
 let phaseIndex = 0;
+let audioManager;
 const phaseValues = Object.values(phases);
 
 // Start the phases
-export function startPhases() {
+export function startPhases(phasesAudioManager) {
+    audioManager = phasesAudioManager;
     phaseIndex = 0;
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
     showPhase(phaseValues[phaseIndex]);
 }
 
 function afterPhases() {
-    startPhasesSMP();
+    startPhasesSMP(audioManager);
 }
 
 // Create a <style> tag and add fade effects
@@ -178,6 +181,7 @@ let phaseBool = false;
 
 function showPhase(phase) {
     if (!phaseBool) {
+        new AudioManager("pageTurn");
         phaseBool = true;
 
         // set up html and css
