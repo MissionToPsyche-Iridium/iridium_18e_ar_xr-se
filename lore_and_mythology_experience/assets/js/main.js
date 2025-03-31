@@ -145,6 +145,7 @@ function startAnimations() {
 }
 
 function launch() {
+ document.getElementById('main-title').style.visibility = 'visible';
 
 // Create the scene
 const scene = new THREE.Scene();
