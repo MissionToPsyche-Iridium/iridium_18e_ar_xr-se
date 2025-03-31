@@ -57,20 +57,7 @@ const phases = {
             { src: "../assets/images/chrysalis/chrysalis.png", id: "chrysalis", position: "absolute", top: "0", left: "0" },
         ],
     },
-    chrysalis2: {
-        title: "Chrysalis Resemblance",
-        image: "",
-        alt: "image of chrysalis",
-        duration: 250,
-        scroll: "",
-        text: [
-            ""
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/chrysalis.png", id: "chrysalis", position: "absolute", top: "0", left: "0" },
-        ],
-    },
-    chrysalis3: {
+    butterfly1: {
         title: "The 'Breath of Life'",
         image: "",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
@@ -123,7 +110,7 @@ const phases = {
             "a dark, dreamless sleep..."
         ]
     },
-    psychegoddess4: { // psyche goddess part5
+    psychegoddess4: { // psyche goddess part4
         title: "The Asteroid Psyche",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
@@ -134,17 +121,7 @@ const phases = {
             "a similar dark, dreamless sleep..."
         ]
     },
-    psychegoddess5: { // psyche goddess part6
-        title: "The Asteroid Psyche",
-        image: "../assets/images/goddess_psyche/asteroid.png",
-        alt: "psyche asteroid",
-        scroll: "",
-        duration: 250,
-        text: [
-            ""
-        ]
-    },
-    psychegoddess7: { // psyche goddess part7
+    psychegoddess5: { // psyche goddess part5
         title: "Exploring the Asteroid Psyche",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
@@ -173,6 +150,30 @@ function afterPhases() {
     startPhasesSMP();
 }
 
+// Create a <style> tag and add fade effects
+const style = document.createElement("style");
+style.innerHTML = `
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.25s forwards;
+    }
+    
+    .fade-out {
+        animation: fadeOut 0.25s forwards;
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+
 let phaseBool = false;
 
 function showPhase(phase) {
@@ -182,6 +183,7 @@ function showPhase(phase) {
         // set up html and css
         const phase_div = document.createElement("div");
         phase_div.setAttribute("id", "phase_modal");
+        phase_div.classList.add("fade-in");
         phase_div.setAttribute("style", "display: block; position: fixed;" +
             " z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
             "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;");
@@ -306,6 +308,7 @@ function showPhase(phase) {
         if (phase.additionalImages) {
             phase.additionalImages.forEach((image, index) => {
                 const overlayImage = document.createElement("img");
+                overlayImage.classList.add("fade-in");
                 overlayImage.setAttribute("src", image.src);
                 overlayImage.setAttribute("id", image.id);
 
@@ -337,7 +340,18 @@ function showPhase(phase) {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         `);
-        nextButton.addEventListener("click", nextPhase);
+        nextButton.addEventListener("click", () => {
+                setTimeout(() => {
+                    phase_div.classList.remove("fade-in");
+                    phase_div.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        removeCurrentPhase();
+                        nextPhase();
+                    }, 250); // Matches fade-out duration
+                }, phase.duration);
+            }
+        );
         phase_div.appendChild(nextButton);
 
         // Next button appears after some time passes
@@ -360,27 +374,44 @@ function nextPhase() {
     phaseIndex++;
     incrementProgressBar(2 + phaseIndex);
     if (phaseIndex < phaseValues.length) {
-        console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
-        showPhase(phaseValues[phaseIndex]);
+        setTimeout(() => {
+            console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
+            showPhase(phaseValues[phaseIndex]);
+        }, 250);
 
     // If at end of phases
     } else {
         afterPhases();
     }
 }
-  
+
+// transition out of current phase. Fade out and signal calling the next phase.
 function removeCurrentPhase() {
-    // Remove phase modal
+    // Select phase modal
     const phaseModal = document.getElementById("phase_modal");
-    if (phaseModal) {
-        phaseModal.remove();
-    }
-  
-    // Remove phase images
+
+    // Select overlay images
     const overlayImages = document.querySelectorAll(
         '[id^="chrysalis"], [id^="butterfly"], [id^="chrysalis2"], [id^="butterfly2"]'
     );
-    overlayImages.forEach((img) => img.remove());
-  
+
+    // Force reflow (prevents animation issues)
+    phaseModal?.offsetHeight;
+    overlayImages.forEach((img) => img.offsetHeight);
+
+    // Apply fade-out effect
+    if (phaseModal) {
+        phaseModal.classList.add("fade-out");
+    }
+    overlayImages.forEach((img) => {
+        img.classList.add("fade-out");
+    });
+
+    // Remove elements after animation completes
+    setTimeout(() => {
+        phaseModal?.remove();
+        overlayImages.forEach((img) => img.remove());
+    }, 250); // Match fade-out duration in CSS
+
     phaseBool = false;
 }

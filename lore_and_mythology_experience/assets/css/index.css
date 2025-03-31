@@ -63,6 +63,9 @@ img {
   height: 15%;
   width: 15%;
   margin-left: 5%;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 999;
 }
 
 #header {

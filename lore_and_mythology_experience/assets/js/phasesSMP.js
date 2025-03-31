@@ -285,13 +285,13 @@ function showTimer(callback) {
     let message1 = "Mission Status: ";
     let message2 = "";
 
-    let colHeadings = [["|", "Since Launch  |", "Since Arrival  |", "Since Completion "], 
-                       ["|", "Since Launch  |", "Since Arrival  |", "Until Completion "], 
-                       ["|", "Since Launch  |", "Until Arrival  |", "Until Completion "] 
-                      ];
+    let colHeadings = [["|", "Since Launch  |", "Since Arrival  |", "Since Completion "],
+    ["|", "Since Launch  |", "Since Arrival  |", "Until Completion "],
+    ["|", "Since Launch  |", "Until Arrival  |", "Until Completion "]
+    ];
     //let rowHeadings = ["|", "years  |", "days  |", "hours  |", minutes  |", "seconds  |"];
 
-    let launchCountup = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
+    let launchCountup = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
     let timeSinceLaunch = currentTime - launchTime;
     if (currentTime >= leapDay) {
         launchCountup["years"] = Math.floor((timeSinceLaunch - (2 * millisecondsInADay)) / millisecondsInAYear);
@@ -308,8 +308,8 @@ function showTimer(callback) {
     timeSinceLaunch = timeSinceLaunch - (launchCountup["minutes"] * millisecondsInAMinute);
     launchCountup["seconds"] = Math.floor(timeSinceLaunch / millisecondsInASecond);
 
-    let arrivalCountdown = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
-    let completionCountdown = {"years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0};
+    let arrivalCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
+    let completionCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
 
     let timeUntilArrival = arrivalTime - currentTime;
     let timeSinceArrival = 0;
@@ -505,6 +505,8 @@ function showTimer(callback) {
         let timerValues = Object.values(countdown);
         let timerPhase = timerValues[0];
 
+        // setTimeout(function() { showCountdown(timerPhase, i) }, 1000 * i);
+
         if (counter == 0) {
             // set up html and css
             const phase_div = document.createElement("div");
@@ -657,6 +659,7 @@ function afterPhasesSMP() {
         logo.setAttribute(
             "style",
             "background-color: transparent; width: 30vw; max-width: 200px; height: auto;" +
+            " pointer-events: auto; z-index: 999; cursor: pointer;" +
             " border-radius: 12px; padding: 2vh;" +
             " transition: 1.5s ease-in-out;"
         );
@@ -700,9 +703,35 @@ function afterPhasesSMP() {
         finaleDiv.appendChild(finaleText); // Add the new text element
         finaleDiv.appendChild(restartButton);
         document.body.appendChild(finaleDiv);
+
+        logo.addEventListener("click", function() {
+            window.top.location.href = "https://psyche.asu.edu/";
+        });
     }
 }
+// Create a <style> tag and add fade effects
+const style = document.createElement("style");
+style.innerHTML = `
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.25s forwards;
+    }
+    
+    .fade-out {
+        animation: fadeOut 0.25s forwards;
+    }
 
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
 // initialize SMP-l phase data and display it
 // can put css and html in separate files if needed.
 function showPhase(phase) {
@@ -836,7 +865,7 @@ function showPhase(phase) {
         if (phase.additionalImages) {
             phase.additionalImages.forEach((image, index) => {
                 const overlayImage = document.createElement("img");
-
+                overlayImage.classList.add("fade-in");
                 overlayImage.setAttribute("src", image.src);
                 overlayImage.setAttribute("id", image.id);
                 // add position styles for stacking additional images on top of phase image
@@ -868,7 +897,18 @@ function showPhase(phase) {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         `);
-        nextButton.addEventListener("click", nextPhaseSMP);
+        nextButton.addEventListener("click", () => {
+                setTimeout(() => {
+                    phase_div.classList.remove("fade-in");
+                    phase_div.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        removeCurrentPhaseSMP();
+                        nextPhaseSMP();
+                    }, 250); // Matches fade-out duration
+                }, phase.duration);
+            }
+        );
         phase_div.appendChild(nextButton);
 
         // Next button appears after some time passes
@@ -886,32 +926,49 @@ function showPhase(phase) {
 function nextPhaseSMP() {
     // Remove current phase
     removeCurrentPhaseSMP();
-  
+
     // Move to next phase
     phaseIndex++;
     incrementProgressBar(16 + phaseIndex);
     if (phaseIndex < phaseValues.length) {
-        console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
-        showPhase(phaseValues[phaseIndex]);
+        setTimeout(() => {
+            console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
+            showPhase(phaseValues[phaseIndex]);
+        }, 250);
 
-    // If at end of phases
+        // If at end of phases
     } else {
         afterPhasesSMP();
     }
 }
 
+// transition out of current phase. Fade out and signal calling the next phase.
 function removeCurrentPhaseSMP() {
-    // Remove phase modal
+    // Select phase modal
     const phaseModal = document.getElementById("phase_modal");
-    if (phaseModal) {
-        phaseModal.remove();
-    }
-  
-    // Remove phase images
+
+    // Select overlay images
     const overlayImages = document.querySelectorAll(
         '[id^="butterfly"]'
     );
-    overlayImages.forEach((img) => img.remove());
-  
+
+    // Force reflow (prevents animation issues)
+    phaseModal?.offsetHeight;
+    overlayImages.forEach((img) => img.offsetHeight);
+
+    // Apply fade-out effect
+    if (phaseModal) {
+        phaseModal.classList.add("fade-out");
+    }
+    overlayImages.forEach((img) => {
+        img.classList.add("fade-out");
+    });
+
+    // Remove elements after animation completes
+    setTimeout(() => {
+        phaseModal?.remove();
+        overlayImages.forEach((img) => img.remove());
+    }, 250); // Match fade-out duration in CSS
+
     phaseBool = false;
 }
