@@ -1,17 +1,33 @@
 import { startPhasesSMP } from "./phasesSMP.js";
+import incrementProgressBar from './progressBar.js';
+
+incrementProgressBar(2);
+
 // TODO: store phase data in json file
 const phases = {
     annibale1: {
         title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
+        duration: 250,
+        scroll: "../assets/images/papyrus_scroll_double_sided.png",
+        text: [
+            "On March 17, 1852, the Italian",
+            "astronomer Annibale De Gasparis",
+            "discovered an asteroid",
+            "in the night sky."
+        ]
+    },
+    annibale2: {
+        title: "Discovery of Psyche",
+        image: "../assets/images/annibale.jpg",
+        alt: "image of astronomer Annibale De Gasparis",
         duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
-            "On March 17, 1852, the Italian astronomer",
-            "Annibale De Gasparis discovered the 16th",
-            "asteroid in the main asteroid belt",
-            "between Mars and Jupiter.",
+            "It is the 16th asteroid in",
+            "the main asteroid belt between",
+            "Mars and Jupiter.",
             "De Gasparis named this asteroid Psyche."
         ]
     },
@@ -19,7 +35,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "image of asteroid",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "The asteroid Psyche has the",
@@ -32,7 +48,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 2000,
+        duration: 250,
         scroll: "",
         text: [
             ""
@@ -45,7 +61,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "",
         alt: "image of chrysalis",
-        duration: 2000,
+        duration: 250,
         scroll: "",
         text: [
             ""
@@ -58,7 +74,7 @@ const phases = {
         title: "The 'Breath of Life'",
         image: "../assets/images/chrysalis/butterfly.png",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, the breath of life leaves",
@@ -71,7 +87,7 @@ const phases = {
         title: "The Goddess Psyche Opening Pandora's Box",
         image: "../assets/images/goddess_psyche/psyche_opening_box.png",
         alt: "image of Psyche goddess opening pandora's box.",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, Psyche, driven by",
@@ -85,7 +101,7 @@ const phases = {
         title: "The Goddess Psyche Falling Into a Deep Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out.png",
         alt: "image of Psyche goddess in a deep, dark sleep.",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "However, instead of beauty,",
@@ -97,7 +113,7 @@ const phases = {
         title: "The Goddess Psyche In A Dark, Dreamless Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "Psyche finds herself in",
@@ -109,7 +125,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 2000,
+        duration: 250,
         text: [
             "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
@@ -120,7 +136,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 2000,
+        duration: 250,
         text: [
             "Like Psyche opening the fateful box,",
             "revealing the unexpected,",
@@ -136,7 +152,6 @@ const phaseValues = Object.values(phases);
 // Start the phases
 export function startPhases() {
     phaseIndex = 0;
-
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
     showPhase(phaseValues[phaseIndex]);
 }
@@ -156,6 +171,12 @@ function showPhase(phase) {
         phase_div.setAttribute("id", "phase_modal");
         phase_div.className = "phase-modal";
         let phase_innerHTML = "";
+
+        if (phase.title && phase.title.length > 0) {
+            phase_innerHTML += `<div id="phase-title">`;
+            phase_innerHTML += `<span class="title">${phase.title}</span>`;
+            phase_innerHTML += `</div>`;
+        }
 
         if (phase.image && phase.image.length > 0) {
             phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
@@ -182,6 +203,15 @@ function showPhase(phase) {
         phase_div.innerHTML = phase_innerHTML;
         document.body.appendChild(phase_div);
 
+        // add style to phase title
+        if (phase.title && phase.title.length > 0) {
+            document.getElementById("phase-title").setAttribute(
+                "style", "text-align: center; font-size: calc(0.08 * 40vh);" +
+                " z-index: 21; transition: 1.5s; top: 5vh; color: white; position: absolute; " +
+                "left: 50%; transform: translateX(-50%); width: 80%; max-width: 90vw;" +
+                "font-family: 'Papyrus', Arial, sans-serif;");
+        }
+
         // add styles to the phase image and scroll
         if (phase.image && phase.image.length > 0) {
             document.getElementById("phase").className = "phase";
@@ -195,7 +225,6 @@ function showPhase(phase) {
                 scroll = document.createElement("div");
                 scroll.id = "scroll-container";
             }
-
             scroll.className = "scroll";
 
             {
@@ -242,7 +271,7 @@ function showPhase(phase) {
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
             position: absolute;
-            bottom: 15px;
+            bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
             width: 200px;
@@ -253,6 +282,8 @@ function showPhase(phase) {
             cursor: pointer;
             z-index: 100;
             display: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         `);
         nextButton.addEventListener("click", nextPhase);
         phase_div.appendChild(nextButton);
@@ -275,6 +306,7 @@ function nextPhase() {
   
     // Move to next phase
     phaseIndex++;
+    incrementProgressBar(2 + phaseIndex);
     if (phaseIndex < phaseValues.length) {
         console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
         showPhase(phaseValues[phaseIndex]);

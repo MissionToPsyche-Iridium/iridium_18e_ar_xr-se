@@ -5,6 +5,9 @@ import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 import { AudioManager } from './AudioManager.js';
 import { startPhasesSMP } from "./phasesSMP.js";
+import incrementProgressBar from './progressBar.js';
+
+incrementProgressBar(1);
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -464,7 +467,7 @@ controls.enableZoom = false;
 const settingsModal = new SettingsModal(updateGraphicsQuality);
 
 let holdTime = 0.0; // Time on asteroid
-const holdThreshold = 3.0; // Time to trigger zoom
+const holdThreshold = 0.5; // Time to trigger zoom
 let isLockOn = false; // Scope is locked on
 let isZoom = false; // Camera zoom starts
 
@@ -537,6 +540,7 @@ function pointTelescopeAt(target3D, delta) {
 // Star transition
 const starTransistionGeometry = new THREE.BufferGeometry();
 let isStarTransition = false;
+let phaseBool = false;
 function starFieldTransistion() {
     isStarTransition = true;
 
@@ -554,6 +558,7 @@ function starFieldTransistion() {
             mainTitle.style.visibility = "hidden";
             mainTitle.style.opacity = "0";
         }
+        phaseBool = true;
         startPhases();
     }, 2000);
 }
@@ -602,6 +607,38 @@ document.addEventListener('mouseup', onPointerUp);
 document.addEventListener('touchstart', onPointerDown);
 document.addEventListener('touchmove', onPointerMove);
 document.addEventListener('touchend', onPointerUp);
+
+// Create a button to auto find Psyche Asteroid
+const autoFindBtn = document.createElement('button');
+autoFindBtn.innerText = "Auto Find Psyche Asteroid";
+autoFindBtn.style.position = "fixed";
+autoFindBtn.style.bottom = "20px";
+autoFindBtn.style.left = "20px";
+autoFindBtn.style.padding = "10px 20px";
+autoFindBtn.style.backgroundColor = "transparent";
+autoFindBtn.style.color = "white";
+autoFindBtn.style.border = "2px solid white";
+autoFindBtn.style.borderRadius = "5px";
+autoFindBtn.style.cursor = "pointer";
+autoFindBtn.style.zIndex = "1000";
+autoFindBtn.style.fontSize = "16px";
+
+// Click autoFindBtn to auto find the Psyche Asteroid
+autoFindBtn.addEventListener('click', () => {
+    asteroid.visible = true;
+    lockOn();
+});
+
+// Add hover effect to autoFindBtn
+autoFindBtn.addEventListener('mouseenter', () => {
+    autoFindBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; // Light white tint on hover
+});
+autoFindBtn.addEventListener('mouseleave', () => {
+    autoFindBtn.style.backgroundColor = "transparent"; // Revert on mouse out
+});
+
+// Append the button to the body
+document.body.appendChild(autoFindBtn);
 
 // Animate the scene
 let lastTime = performance.now();
@@ -771,6 +808,7 @@ function startCameraZoom() {
             // Start star field transition
         } else {
             settingsModal.applyAMPIModalStyles();
+            incrementProgressBar(2);
             starFieldTransistion();
         }
     }
@@ -778,11 +816,15 @@ function startCameraZoom() {
     requestAnimationFrame(animateZoom);
 }
 
+
+
 function warpStars() {
     const starPos = stars.geometry.attributes.position.array;
     for (let i = 0; i < starPos.length; i += 3) {
         starPos[i + 2] -= 0.5;
     }
+
+    autoFindBtn.remove();
 
     stars.geometry.attributes.position.needsUpdate = true;
 }
@@ -793,13 +835,15 @@ function initializeAutoHelp() {
     });
 }
 function triggerAutoHelp() {
-    document.getElementById("help-icon-button").click();
+    if (!phaseBool) {
+        document.getElementById("help-icon-button").click();
+    }
 }
 function resetAutoHelp() {
     clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(triggerAutoHelp, 60000);
+    inactivityTimer = setTimeout(triggerAutoHelp, 15000);
 }
-let inactivityTimer = setTimeout(triggerAutoHelp, 60000);
+let inactivityTimer = setTimeout(triggerAutoHelp, 15000);
 initializeAutoHelp();
 
 // Handle window resizing

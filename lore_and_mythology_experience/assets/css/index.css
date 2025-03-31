@@ -173,17 +173,17 @@ h1 {
 
 .about-link {
   text-decoration: none;
+  font-size: 10cqw;
   color: white;
 }
 
 .about-button {
   margin-top: 10px;
   margin-bottom: 25px;
-  font-size: 20px;
+  container-type: inline-size;
   color: white;
   font-weight: bold;
   background-color: gray;
-  /* background-color: #f9a000;#20162f; */
   border: 2px 50% black;
   border-radius: 16px;
   height: 40px;
