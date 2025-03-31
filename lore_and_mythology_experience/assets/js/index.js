@@ -5,6 +5,12 @@ function onClick() {
     document.body.appendChild(iframe);
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("psyche-icon").addEventListener("click", function() {
+        window.top.location.href = "https://psyche.asu.edu/";
+    });
+});
+
 const fadeInSections = document.querySelectorAll('.fade-in-section');
 
 const observer = new IntersectionObserver((entries) => {

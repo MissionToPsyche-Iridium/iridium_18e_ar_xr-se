@@ -5,6 +5,10 @@ import { startPhases } from "./phases.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 import { AudioManager } from './AudioManager.js';
 import { startPhasesSMP } from "./phasesSMP.js";
+import incrementProgressBar from './progressBar.js';
+
+incrementProgressBar(1);
+
 // import {
 //     CSS2DRenderer,
 //     CSS2DObject,
@@ -15,13 +19,6 @@ import { startPhasesSMP } from "./phasesSMP.js";
 // Create the scene
 const scene = new THREE.Scene();
 
-const GraphicsQuality = Object.freeze({
-    LOW: 'low',
-    MEDIUM: 'medium',
-    HIGH: 'high'
-});
-let currentGraphicsQuality = localStorage.getItem('graphicsQuality') || GraphicsQuality.MEDIUM;
-
 // Create a camera
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -30,12 +27,6 @@ const camera = new THREE.PerspectiveCamera(
     1000,
 );
 camera.position.z = 5;
-window.onload = audio;
-function audio() {
-    const audioManager = new AudioManager("amp");
-    audioManager.play();
-    audioManager.setVolume(0.5);
-}
 
 // Create a renderer
 const renderer = new THREE.WebGLRenderer();
@@ -123,17 +114,8 @@ function createSpaceClouds() {
 let starMaterial;
 
 function createStarField() {
-    // Adjust star count using quality setting
-    let starCount;
-    if (currentGraphicsQuality === GraphicsQuality.HIGH) {
-        starCount = 10000;
-    } else if (currentGraphicsQuality === GraphicsQuality.MEDIUM) {
-        starCount = 3000;
-    } else { // LOW
-        starCount = 1000;
-    }
-
-    const minDistance = 50; // Minimum distance from camera
+    const starCount = 10000; // Number of stars
+    const minDistance = 50; // Minimum distance from origin (camera)
 
     // Initialize star field data
     const geometry = new THREE.BufferGeometry();
@@ -141,7 +123,7 @@ function createStarField() {
     const colors = new Float32Array(starCount * 3);
     const sizes = new Float32Array(starCount);
 
-    // Generate star data as before…
+    // For each star
     for (let i = 0; i < starCount; i++) {
         // Calculate star position
         let x, y, z;
@@ -166,13 +148,11 @@ function createStarField() {
             r = 1.0;
             g = 0.85 + Math.random() * 0.15;
             b = 0.7 + Math.random() * 0.1;
-
             // Yellow-Orange
         } else if (tint > 0.1) {
             r = 1.0;
             g = 0.7 + Math.random() * 0.3;
             b = 0.4 + Math.random() * 0.2;
-
             // White-Blue
         } else {
             r = 0.9;
@@ -185,67 +165,86 @@ function createStarField() {
         colors[i * 3 + 2] = b;
     }
 
+    // Assign attributes to geometry
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
 
-    // Choose shader precision based on quality.
-    const shaderPrecision = (currentGraphicsQuality === GraphicsQuality.LOW) ? 'mediump' : 'highp';
-
+    // Vertex shader
     const vertexShader = `
-      precision ${shaderPrecision} float;
-      attribute float size;
-      varying vec3 vColor;
-  
-      void main() {
-          vColor = color;
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (600.0 / -mvPosition.z);
-          gl_Position = projectionMatrix * mvPosition;
-      }
-    `;
+    precision highp float;
+    attribute float size;
+    varying vec3 vColor;
 
+    void main() {
+        vColor = color;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * (600.0 / -mvPosition.z);
+        gl_Position = projectionMatrix * mvPosition;
+    }
+`;
+
+    // Fragment shader
     const fragmentShader = `
-      precision ${shaderPrecision} float;
-      varying vec3 vColor;
-      uniform vec2 uCirclePos; 
-      uniform float uCircleRadius;
-      uniform bool uBlurEnabled;
-      uniform bool uBlurCircle;
-      uniform vec2 uResolution;
-  
-      void main() {
-          vec2 coord = gl_PointCoord - vec2(0.5);
-          float dist = length(coord);
-  
-          if (dist > 0.5) {
-              discard;
-          }
-  
-          float core = 1.0 - smoothstep(0.0, 0.08, dist);
-          float glow = 1.0 - smoothstep(0.08, 0.5, dist);
-          glow *= 0.5;
-          float alpha = core + glow;
-  
-          vec2 fragPos = gl_FragCoord.xy / uResolution;
-          float minDim = min(uResolution.x, uResolution.y);
-          float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
-          float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
-          float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
-          float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
-          vec4 starColor = vec4(vColor, alpha);
-  
-          if (uBlurCircle && uBlurEnabled && screenDist > 1.0) {
-              starColor.rgb *= 0.3; 
-          }
-          if (!uBlurCircle && uBlurEnabled) {
-              starColor.rgb *= 0.3; 
-          }
-          gl_FragColor = starColor;
-      }
-    `;
+    precision highp float;
+    varying vec3 vColor;
+    uniform vec2 uCirclePos; 
+    uniform float uCircleRadius;
+    uniform bool uBlurEnabled;
+    uniform bool uBlurCircle;
+    uniform vec2 uResolution;
 
-    // Create the shader material
+    void main() {
+        vec2 coord = gl_PointCoord - vec2(0.5);
+        float dist = length(coord);
+
+        if (dist > 0.5) {
+            discard;
+        }
+
+        // Star core and glow
+        float core = 1.0 - smoothstep(0.0, 0.08, dist);
+        float glow = 1.0 - smoothstep(0.08, 0.5, dist);
+        glow *= 0.5;
+        float alpha = core + glow;
+
+        // Convert fragment position to normalized coordinates (0 to 1)
+        vec2 fragPos = gl_FragCoord.xy / uResolution;
+
+        // Calculate the aspect ratio of the screen (x / y)
+        float aspectRatio = uResolution.x / uResolution.y;
+
+        // Adjust the radius based on aspect ratio
+        // Using the smaller dimension (height or width) for the radius
+        float adjustedRadius = uCircleRadius * (uResolution.y / uResolution.x);
+
+        // Calculate distance from draggable circle (center and radius)
+        float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
+        float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
+        float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
+
+        // Default star color
+        vec4 starColor = vec4(vColor, alpha);
+
+        // Apply blur effect outside the circle (simulated by reducing brightness)
+        if (uBlurCircle && uBlurEnabled && screenDist > 1.0) {
+            starColor.rgb *= 0.3; 
+        }
+
+        if (!uBlurCircle && uBlurEnabled) {
+            starColor.rgb *= 0.3; 
+        }
+
+        gl_FragColor = starColor;
+    }
+`;
+
+    // calculate scope radius
+    document.getElementById('scope').style.display = 'block';
+    const aspect = window.innerWidth / window.innerHeight;
+    const scopeRadius = document.getElementById('scope').offsetWidth / 2 / window.innerWidth * aspect;
+
+    // Material
     starMaterial = new THREE.ShaderMaterial({
         vertexColors: true,
         transparent: true,
@@ -255,32 +254,21 @@ function createStarField() {
         fragmentShader,
         uniforms: {
             uCirclePos: { value: new THREE.Vector2(0.5, 0.5) },
-            uCircleRadius: { value: 0.16 },
+            uCircleRadius: { value: scopeRadius },
             uBlurEnabled: { value: true },
             uBlurCircle: { value: false },
             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         }
     });
 
+    document.getElementById('scope').style.display = 'none';
     return new THREE.Points(geometry, starMaterial);
 }
 
 // Add star field
-let stars = createStarField();
+const stars = createStarField();
 scene.add(stars);
 
-function updateGraphicsQuality(newQuality) {
-    currentGraphicsQuality = newQuality;
-    localStorage.setItem('graphicsQuality', newQuality);
-
-    if (stars) {
-        scene.remove(stars);
-    }
-    stars = createStarField();
-    scene.add(stars);
-
-    console.log(`Graphics quality set to ${newQuality}`);
-}
 
 // Asteroid distance from edges of screen
 const MIN_X = getMaxX();
@@ -335,10 +323,9 @@ function generateAsteroidTexture() {
     return new THREE.CanvasTexture(canvas);
 }
 
-
 // create and add asteroid belt
 function createAsteroidBelt(scene) {
-    const numAsteroids = window.innerWidth * .3;
+    const numAsteroids = 500;
     const beltRadius = 50;
     const beltThickness = 10;
     // const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
@@ -443,9 +430,10 @@ loader.load('../assets/models/telescope_lower.glb', (gltf) => {
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xffffff, 1.5);
-pointLight.position.set(5, 5, 5);
-scene.add(pointLight);
+// lighting
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5, 5, 5);
+scene.add(light);
 
 // Scope behavior
 const scope = document.getElementById('scope');
@@ -461,10 +449,10 @@ controls.enableRotate = false;
 controls.enablePan = false;
 controls.enableZoom = false;
 
-const settingsModal = new SettingsModal(updateGraphicsQuality);
+const settingsModal = new SettingsModal();
 
 let holdTime = 0.0; // Time on asteroid
-const holdThreshold = 3.0; // Time to trigger zoom
+const holdThreshold = 0.5; // Time to trigger zoom
 let isLockOn = false; // Scope is locked on
 let isZoom = false; // Camera zoom starts
 
@@ -484,21 +472,21 @@ function moveScope(event) {
     }
     scope.style.left = `${clientX - scope.offsetWidth / 2}px`;
     scope.style.top = `${clientY - scope.offsetHeight / 2}px`;
-
+  
     mouse.x = (clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(clientY / window.innerHeight) * 2 + 1;
-
+  
     const normX = clientX / window.innerWidth;
     const normY = 1 - (clientY / window.innerHeight);
     starMaterial.uniforms.uCirclePos.value.set(normX, normY);
-}
+  }
 
 let currentYaw = 0;
 let currentPitch = 0;
 function pointTelescopeAt(target3D, delta) {
     // TEMPORARY SOLUTION
     if (!telescopeUpper) return;
-
+  
     // Rotate the telescope upper to follow the target position
     const dx = target3D.x - telescopeUpper.position.x;
     const dz = target3D.z - telescopeUpper.position.z;
@@ -512,7 +500,7 @@ function pointTelescopeAt(target3D, delta) {
 
     // if (!telescopeLower || !telescopeUpper) return;
     // const rotationSpeed = 4.0;
-
+    
     // // Lower telescope yaw
     // const lowerWorldPos = new THREE.Vector3();
     // telescopeLower.getWorldPosition(lowerWorldPos);
@@ -523,25 +511,23 @@ function pointTelescopeAt(target3D, delta) {
     // const rawYaw = -Math.atan2(flatDir.x, flatDir.z);
     // currentYaw = THREE.MathUtils.lerp(currentYaw, rawYaw, rotationSpeed * delta);
     // telescopeLower.rotation.y = currentYaw;
-
+    
     // // Upper telescope pitch
     // const targetLocal = telescopeLower.worldToLocal(target3D.clone());
     // const deltaVec = new THREE.Vector3().subVectors(targetLocal, telescopeUpper.position);
     // const distXZ = Math.sqrt(deltaVec.x * deltaVec.x + deltaVec.z * deltaVec.z);
     // const desiredPitch = -Math.atan2(deltaVec.y, distXZ);
-
+    
     // currentPitch = THREE.MathUtils.lerp(currentPitch, desiredPitch, rotationSpeed * delta);
     // telescopeUpper.rotation.x = currentPitch;
-}
+  }
 
 // Star transition
 const starTransistionGeometry = new THREE.BufferGeometry();
 let isStarTransition = false;
+let phaseBool = false;
 function starFieldTransistion() {
     isStarTransition = true;
-
-    // Remove telescope from scene
-    scene.remove(telescopeLower);
 
     setTimeout(() => {
         camera.position.z = 0;
@@ -554,10 +540,10 @@ function starFieldTransistion() {
             mainTitle.style.visibility = "hidden";
             mainTitle.style.opacity = "0";
         }
+        phaseBool = true;
         startPhases();
     }, 2000);
 }
-
 
 // Pointer events
 function onPointerDown(event) {
@@ -602,6 +588,38 @@ document.addEventListener('mouseup', onPointerUp);
 document.addEventListener('touchstart', onPointerDown);
 document.addEventListener('touchmove', onPointerMove);
 document.addEventListener('touchend', onPointerUp);
+
+// Create a button to auto find Psyche Asteroid
+const autoFindBtn = document.createElement('button');
+autoFindBtn.innerText = "Auto Find Psyche Asteroid";
+autoFindBtn.style.position = "fixed";
+autoFindBtn.style.bottom = "20px";
+autoFindBtn.style.left = "20px";
+autoFindBtn.style.padding = "10px 20px";
+autoFindBtn.style.backgroundColor = "transparent";
+autoFindBtn.style.color = "white";
+autoFindBtn.style.border = "2px solid white";
+autoFindBtn.style.borderRadius = "5px";
+autoFindBtn.style.cursor = "pointer";
+autoFindBtn.style.zIndex = "1000";
+autoFindBtn.style.fontSize = "16px";
+
+// Click autoFindBtn to auto find the Psyche Asteroid
+autoFindBtn.addEventListener('click', () => {
+    asteroid.visible = true;
+    lockOn();
+});
+
+// Add hover effect to autoFindBtn
+autoFindBtn.addEventListener('mouseenter', () => {
+    autoFindBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; // Light white tint on hover
+});
+autoFindBtn.addEventListener('mouseleave', () => {
+    autoFindBtn.style.backgroundColor = "transparent"; // Revert on mouse out
+});
+
+// Append the button to the body
+document.body.appendChild(autoFindBtn);
 
 // Animate the scene
 let lastTime = performance.now();
@@ -660,72 +678,73 @@ function checkAsteroidInScope(delta) {
     const scopeY = scopeRect.top + scopeRect.height / 2;
     const scopeRadius = scopeRect.width / 2;
 
-    // Calculate distance between asteroid and scope
-    const dx = asteroidScreenPos.x - scopeX;
-    const dy = asteroidScreenPos.y - scopeY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+  // Calculate distance between asteroid and scope
+  const dx = asteroidScreenPos.x - scopeX;
+  const dy = asteroidScreenPos.y - scopeY;
+  const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // If asteroid is in scope
-    if (distance <= scopeRadius) {
-        asteroid.visible = true;
-        asteroid.rotation.x += 0.002;
-        asteroid.rotation.y += 0.002;
-        holdTime += delta;
+  // If asteroid is in scope
+  if (distance <= scopeRadius) {
+    asteroid.visible = true;
+    asteroid.rotation.x += 0.002;
+    asteroid.rotation.y += 0.002;
+    holdTime += delta;
 
-        if (holdTime >= holdThreshold) {
-            lockOn();
-        }
-    } else {
-        asteroid.visible = false;
-        holdTime = 0;
+    if (holdTime >= holdThreshold) {
+      lockOn();
     }
+  } else {
+    asteroid.visible = false;
+    holdTime = 0;
+  }
 }
 
 function lockOn() {
     isLockOn = true;
     window.scopeDisabled = true;
-
+  
     // Get scope position
     const scopeRectangle = scope.getBoundingClientRect();
     const startLeft = parseFloat(scope.style.left);
     const startTop = parseFloat(scope.style.top);
-
+  
     // Get asteroid position in 2D
     const asteroidScreenPos = asteroid.position.clone();
     asteroidScreenPos.project(camera);
     asteroidScreenPos.x = (asteroidScreenPos.x + 1) * window.innerWidth / 2;
     asteroidScreenPos.y = (-asteroidScreenPos.y + 1) * window.innerHeight / 2;
-
+  
     // Target position for scope
     const endLeft = asteroidScreenPos.x - scopeRectangle.width / 2;
     const endTop = asteroidScreenPos.y - scopeRectangle.height / 2;
-
+  
     const duration = 1000;
     const startTime = performance.now();
-
+  
     function animateScopeToAsteroid(tNow) {
-        const elapsed = tNow - startTime;
-        const t = Math.min(elapsed / duration, 1);
-
-        // LERP scope to asteroid
-        const newLeft = startLeft + (endLeft - startLeft) * t;
-        const newTop = startTop + (endTop - startTop) * t;
-        scope.style.left = newLeft + 'px';
-        scope.style.top = newTop + 'px';
-
-        // Rotate asteroid to make noticable
-        asteroid.rotation.x += 0.002;
-        asteroid.rotation.y += 0.002;
-
-        if (t < 1) {
-            requestAnimationFrame(animateScopeToAsteroid);
-        } else {
-            startCameraZoom();
-        }
+      const elapsed = tNow - startTime;
+      const t = Math.min(elapsed / duration, 1);
+  
+      // LERP scope to asteroid
+      const newLeft = startLeft + (endLeft - startLeft) * t;
+      const newTop = startTop + (endTop - startTop) * t;
+      scope.style.left = newLeft + 'px';
+      scope.style.top = newTop + 'px';
+  
+      // Rotate asteroid to make noticable
+      asteroid.rotation.x += 0.002;
+      asteroid.rotation.y += 0.002;
+  
+      if (t < 1) {
+        requestAnimationFrame(animateScopeToAsteroid);
+      } else {
+        startCameraZoom();
+      }
     }
 
+
     requestAnimationFrame(animateScopeToAsteroid);
-}
+  }
 
 function startCameraZoom() {
     isZoom = true;
@@ -771,6 +790,7 @@ function startCameraZoom() {
             // Start star field transition
         } else {
             settingsModal.applyAMPIModalStyles();
+            incrementProgressBar(2);
             starFieldTransistion();
         }
     }
@@ -778,11 +798,15 @@ function startCameraZoom() {
     requestAnimationFrame(animateZoom);
 }
 
+
+
 function warpStars() {
     const starPos = stars.geometry.attributes.position.array;
     for (let i = 0; i < starPos.length; i += 3) {
         starPos[i + 2] -= 0.5;
     }
+
+    autoFindBtn.remove();
 
     stars.geometry.attributes.position.needsUpdate = true;
 }
@@ -793,13 +817,15 @@ function initializeAutoHelp() {
     });
 }
 function triggerAutoHelp() {
-    document.getElementById("help-icon-button").click();
+    if (!phaseBool) {
+        document.getElementById("help-icon-button").click();
+    }
 }
 function resetAutoHelp() {
     clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(triggerAutoHelp, 60000);
+    inactivityTimer = setTimeout(triggerAutoHelp, 15000);
 }
-let inactivityTimer = setTimeout(triggerAutoHelp, 60000);
+let inactivityTimer = setTimeout(triggerAutoHelp, 15000);
 initializeAutoHelp();
 
 // Handle window resizing

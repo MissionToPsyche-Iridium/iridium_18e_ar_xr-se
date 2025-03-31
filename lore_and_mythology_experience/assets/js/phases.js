@@ -1,17 +1,33 @@
 import { startPhasesSMP } from "./phasesSMP.js";
+import incrementProgressBar from './progressBar.js';
+
+incrementProgressBar(2);
+
 // TODO: store phase data in json file
 const phases = {
     annibale1: {
         title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
+        duration: 250,
+        scroll: "../assets/images/papyrus_scroll_double_sided.png",
+        text: [
+            "On March 17, 1852, the Italian",
+            "astronomer Annibale De Gasparis",
+            "discovered an asteroid",
+            "in the night sky."
+        ]
+    },
+    annibale2: {
+        title: "Discovery of Psyche",
+        image: "../assets/images/annibale.jpg",
+        alt: "image of astronomer Annibale De Gasparis",
         duration: 2000,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
-            "On March 17, 1852, the Italian astronomer",
-            "Annibale De Gasparis discovered the 16th",
-            "asteroid in the main asteroid belt",
-            "between Mars and Jupiter.",
+            "It is the 16th asteroid in",
+            "the main asteroid belt between",
+            "Mars and Jupiter.",
             "De Gasparis named this asteroid Psyche."
         ]
     },
@@ -19,7 +35,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "image of asteroid",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "The asteroid Psyche has the",
@@ -32,7 +48,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 2000,
+        duration: 250,
         scroll: "",
         text: [
             ""
@@ -41,24 +57,11 @@ const phases = {
             { src: "../assets/images/chrysalis/chrysalis.png", id: "chrysalis", position: "absolute", top: "0", left: "0" },
         ],
     },
-    chrysalis2: {
-        title: "Chrysalis Resemblance",
-        image: "",
-        alt: "image of chrysalis",
-        duration: 2000,
-        scroll: "",
-        text: [
-            ""
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/chrysalis.png", id: "chrysalis", position: "absolute", top: "0", left: "0" },
-        ],
-    },
-    chrysalis3: {
+    butterfly1: {
         title: "The 'Breath of Life'",
         image: "../assets/images/chrysalis/butterfly.png",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, the breath of life leaves",
@@ -71,7 +74,7 @@ const phases = {
         title: "The Goddess Psyche Opening Pandora's Box",
         image: "../assets/images/goddess_psyche/psyche_opening_box.png",
         alt: "image of Psyche goddess opening pandora's box.",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, Psyche, driven by",
@@ -85,7 +88,7 @@ const phases = {
         title: "The Goddess Psyche Falling Into a Deep Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out.png",
         alt: "image of Psyche goddess in a deep, dark sleep.",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "However, instead of beauty,",
@@ -97,19 +100,19 @@ const phases = {
         title: "The Goddess Psyche In A Dark, Dreamless Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "Psyche finds herself in",
             "a dark, dreamless sleep..."
         ]
     },
-    psychegoddess4: { // psyche goddess part5
+    psychegoddess4: { // psyche goddess part4
         title: "The Asteroid Psyche",
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 2000,
+        duration: 250,
         text: [
             "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
@@ -120,7 +123,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 2000,
+        duration: 250,
         text: [
             "Like Psyche opening the fateful box,",
             "revealing the unexpected,",
@@ -136,7 +139,6 @@ const phaseValues = Object.values(phases);
 // Start the phases
 export function startPhases() {
     phaseIndex = 0;
-
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
     showPhase(phaseValues[phaseIndex]);
 }
@@ -144,6 +146,30 @@ export function startPhases() {
 function afterPhases() {
     startPhasesSMP();
 }
+
+// Create a <style> tag and add fade effects
+const style = document.createElement("style");
+style.innerHTML = `
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.25s forwards;
+    }
+    
+    .fade-out {
+        animation: fadeOut 0.25s forwards;
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
 
 let phaseBool = false;
 
@@ -225,13 +251,14 @@ function showPhase(phase) {
         if (phase.additionalImages) {
             phase.additionalImages.forEach((image, index) => {
                 const overlayImage = document.createElement("img");
+                overlayImage.classList.add("fade-in");
                 overlayImage.setAttribute("src", image.src);
                 overlayImage.setAttribute("id", image.id);
 
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(30vh);" +
-                    " left: calc(50vw - ((0.8 * 50vh) / 2)); z-index: 21; transition: 1.5s;");
+                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
+                    " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s;");
 
                 document.body.appendChild(overlayImage);
             });
@@ -242,7 +269,7 @@ function showPhase(phase) {
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
             position: absolute;
-            bottom: 15px;
+            bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
             width: 200px;
@@ -253,8 +280,21 @@ function showPhase(phase) {
             cursor: pointer;
             z-index: 100;
             display: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         `);
-        nextButton.addEventListener("click", nextPhase);
+        nextButton.addEventListener("click", () => {
+                setTimeout(() => {
+                    phase_div.classList.remove("fade-in");
+                    phase_div.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        removeCurrentPhase();
+                        nextPhase();
+                    }, 250); // Matches fade-out duration
+                }, phase.duration);
+            }
+        );
         phase_div.appendChild(nextButton);
 
         // Next button appears after some time passes
@@ -275,28 +315,46 @@ function nextPhase() {
   
     // Move to next phase
     phaseIndex++;
+    incrementProgressBar(2 + phaseIndex);
     if (phaseIndex < phaseValues.length) {
-        console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
-        showPhase(phaseValues[phaseIndex]);
+        setTimeout(() => {
+            console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
+            showPhase(phaseValues[phaseIndex]);
+        }, 250);
 
     // If at end of phases
     } else {
         afterPhases();
     }
 }
-  
+
+// transition out of current phase. Fade out and signal calling the next phase.
 function removeCurrentPhase() {
-    // Remove phase modal
+    // Select phase modal
     const phaseModal = document.getElementById("phase_modal");
-    if (phaseModal) {
-        phaseModal.remove();
-    }
-  
-    // Remove phase images
+
+    // Select overlay images
     const overlayImages = document.querySelectorAll(
         '[id^="chrysalis"], [id^="butterfly"], [id^="chrysalis2"], [id^="butterfly2"]'
     );
-    overlayImages.forEach((img) => img.remove());
-  
+
+    // Force reflow (prevents animation issues)
+    phaseModal?.offsetHeight;
+    overlayImages.forEach((img) => img.offsetHeight);
+
+    // Apply fade-out effect
+    if (phaseModal) {
+        phaseModal.classList.add("fade-out");
+    }
+    overlayImages.forEach((img) => {
+        img.classList.add("fade-out");
+    });
+
+    // Remove elements after animation completes
+    setTimeout(() => {
+        phaseModal?.remove();
+        overlayImages.forEach((img) => img.remove());
+    }, 250); // Match fade-out duration in CSS
+
     phaseBool = false;
 }
