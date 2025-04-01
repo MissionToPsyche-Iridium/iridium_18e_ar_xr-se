@@ -5,6 +5,7 @@
  */
 
  import incrementProgressBar from './progressBar.js';
+import { AudioManager } from './AudioManager.js';
 
  incrementProgressBar(14);
 
@@ -87,13 +88,16 @@ let launchBool = false;
 let timerBool = false
 let phaseBool = false;
 let finaleBool = false;
+let audioManager;
 
 //
 /*
 * startPhasesSMP
 * Handles SMP and calls functions for SMP intro, launch video, mission timer, and for displaying the rest of the phases.
  */
-export function startPhasesSMP() {
+export function startPhasesSMP(phasesAudioManager) {
+    audioManager = phasesAudioManager;
+    audioManager.stopPlaying();
     phaseIndex = 0;
     // using callbacks to ensure one function completes before another starts
     showSMPIntro(() => {
@@ -113,6 +117,7 @@ export function startPhasesSMP() {
  */
 function showSMPIntro(callback) {
     console.log('Transitioning to satellite intro');
+    audioManager.play("typing");
     if (!introBool) {
         const text = "Psyche launched at \n10:19 a.m. EDT\nFriday, October 13, 2023.";
 
@@ -174,6 +179,7 @@ function showSMPIntro(callback) {
 * takes in a callback function so that phases display only when the prior one is completed
  */
 function showLaunch(callback) {
+    audioManager.stopPlaying();
     console.log('Transitioning to satellite launch');
     if (!launchBool) {
         const launchDiv = document.createElement("div");
@@ -241,6 +247,8 @@ function showLaunch(callback) {
  */
 function showTimer(callback) {
     console.log('Transitioning to satellite timer');
+    audioManager.play("smp");
+    audioManager.setVolume(.5);
 
     /**
      * The satellite is expected to be captured by Psyche's gravity in late July (2029).
@@ -736,6 +744,7 @@ document.head.appendChild(style);
 // can put css and html in separate files if needed.
 function showPhase(phase) {
     console.log('Transitioning to satellite phases');
+    new AudioManager("phase_transition");
     if (!phaseBool) {
         phaseBool = true;
 
