@@ -1,15 +1,21 @@
-/*
+/**
 * phasesSMP.js
-* This file handles SMP functions and phases.
+* This file handles satellite (SMP) phase functions and phases.
 * @author: Nicole Garcia
  */
 
- import incrementProgressBar from './progressBar.js';
+import incrementProgressBar from './progressBar.js';
 import { AudioManager } from './AudioManager.js';
 
- incrementProgressBar(14);
+incrementProgressBar(14);
 
-// Data for SMP-l phases
+/**
+ * Data for satellite (SMP) phases
+ * Represents different phases with images, text, and other properties.
+ * Titles, text, and images for satellite phase dialogues can be modified here as needed.
+ * TODO: Can move this to a json.
+ * @type {Object.<string, Phase>}
+ */
 const phases = {
     psycheSatellite1: {
         title: "The Psyche Satellite Resembles a Butterfly",
@@ -80,6 +86,27 @@ const phases = {
     }
 };
 
+/**
+ * @typedef {Object} Phase
+ * @property {string} title - The title of the phase.
+ * @property {string} image - Path to the main image for the phase.
+ * @property {string} alt - Alternative text for accessibility.
+ * @property {number} duration - Duration in milliseconds.
+ * @property {string} [banner] - Optional path to a banner image.
+ * @property {string[]} text - An optional array of text strings displayed in the phase.
+ * @property {AdditionalImage[]} [additionalImages] - Optional array of additional images.
+ */
+
+/**
+ * @typedef {Object} AdditionalImage
+ * @property {string} src - Path to the additional image.
+ * @property {string} id - Unique identifier for the image.
+ * @property {string} position - CSS position property.
+ * @property {string} top - CSS top position.
+ * @property {string} left - CSS left position.
+ */
+
+// phase index keeps track of which phase in the satellite dialog the application is currently on
 let phaseIndex = 0;
 const phaseValues = Object.values(phases);
 
@@ -90,7 +117,6 @@ let phaseBool = false;
 let finaleBool = false;
 let audioManager;
 
-//
 /*
 * startPhasesSMP
 * Handles SMP and calls functions for SMP intro, launch video, mission timer, and for displaying the rest of the phases.
@@ -113,7 +139,7 @@ export function startPhasesSMP(phasesAudioManager) {
 /*
 * showSMPIntro
 * display info about Psyche satellite launch date and time in a typing animation
-* takes in a callback function so that phases display only when the prior one is completed
+* takes in a callback function so that phases displays only when the prior one is completed
  */
 function showSMPIntro(callback) {
     console.log('Transitioning to satellite intro');
@@ -147,6 +173,12 @@ function showSMPIntro(callback) {
 
         let index = 0;
 
+        /*
+        * typeText
+        * Animates the line of text in a typing style.
+        * To update how fast the typing animation is, modify the number in the
+        * setTimeout (the line with the 'typing speed' comment.
+        */
         function typeText() {
             if (index < text.length) {
                 introDiv.innerHTML += text[index] === "\n" ? "<br>" : text[index];
@@ -156,7 +188,7 @@ function showSMPIntro(callback) {
                 introDiv.style.borderRight = "none";
             }
         }
-
+        // call the typeText function to animate the text
         typeText();
 
         setTimeout(() => {
@@ -166,7 +198,7 @@ function showSMPIntro(callback) {
             introBool = false;
             callback();
         }, 5000);
-    } else {
+    } else { // else the applicaiton is not on this phase, so do not display it.
         document.getElementById("intro-modal").setAttribute("style", "display: none;");
         introBool = false;
         callback();
@@ -177,9 +209,11 @@ function showSMPIntro(callback) {
 * showLaunch
 * display Psyche satellite launch video
 * takes in a callback function so that phases display only when the prior one is completed
+* To replace the embeded YouTube video with another one, replace the iframe code in showLaunch with the
+* corresponding embeded iframe code for the new YouTube video.
  */
 function showLaunch(callback) {
-    audioManager.stopPlaying();
+    audioManager.stopPlaying(); // pause the background audio during the launch video
     console.log('Transitioning to satellite launch');
     if (!launchBool) {
         const launchDiv = document.createElement("div");
@@ -187,7 +221,6 @@ function showLaunch(callback) {
         launchDiv.setAttribute("style", "display: flex; align-items: center; justify-content: center;" +
             " position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;" +
             " background-color: rgba(0, 0, 0, 0.8); overflow: hidden; transition: 1.5s; font-family: 'Comfortaa', Arial, sans-serif;");
-
 
         const iframe = document.createElement("iframe");
         iframe.setAttribute("width", "800");  // Set a reasonable default size
@@ -213,7 +246,12 @@ function showLaunch(callback) {
             });
         };
 
-        // determine video state changes
+        /*
+         * onPlayerStateChange
+         * Determines when the video state changes and uses the callback function
+         * to transition the applicaiton to the next phase.
+         *
+        */
         function onPlayerStateChange(event) {
             // video finished
             if (event.data === YT.PlayerState.ENDED) {
@@ -223,7 +261,6 @@ function showLaunch(callback) {
                 callback();  // transition to next function when video ends
             }
         }
-
         // load YouTube Iframe API script to determine when video ends
         const script = document.createElement("script");
         script.src = "https://www.youtube.com/iframe_api";
@@ -240,10 +277,9 @@ function showLaunch(callback) {
     }
 }
 
-/*
-* showTimer
-* display Psyche satellite mission timer
-* takes in a callback function so that phases display only when the prior one is completed
+/**
+ * Displays the Psyche satellite mission timer.
+ * @param callback - used so that the function contents display only after the prior callback function has completed.
  */
 function showTimer(callback) {
     console.log('Transitioning to satellite timer');
@@ -639,9 +675,9 @@ function showTimer(callback) {
     }, 1000);
 }
 
-/*
-* afterPhases
-* handler after phases show
+/**
+ * Shows the Psyche logo, which is a link to the psyche.edu website,
+ * and shows a button to restart the expereince
  */
 function afterPhasesSMP() {
     if (!finaleBool) {
@@ -717,7 +753,11 @@ function afterPhasesSMP() {
         });
     }
 }
-// Create a <style> tag and add fade effects
+
+/**
+ * Creates a <style> tag and adds fade in and fade out effects for the phases
+ * @type {HTMLStyleElement}
+ */
 const style = document.createElement("style");
 style.innerHTML = `
     .fade-in {
@@ -740,8 +780,12 @@ style.innerHTML = `
     }
 `;
 document.head.appendChild(style);
-// initialize SMP-l phase data and display it
-// can put css and html in separate files if needed.
+
+/**
+ * Initializes the satellite (SMP) phase data and displays it.
+ * Note: To update the text or images used in the satellite phases, modify the phases object.
+ * @param phase - The current phase from the phases data. Contains phase data for phase title, text, and images.
+ */
 function showPhase(phase) {
     console.log('Transitioning to satellite phases');
     new AudioManager("phase_transition");
@@ -757,19 +801,20 @@ function showPhase(phase) {
 
         let phase_innerHTML = "";
 
+        // Create a div and a span for the phase title
         if (phase.title && phase.title.length > 0) {
             phase_innerHTML += `<div id="phase-title">`;
             phase_innerHTML += `<span class="title">${phase.title}</span>`;
             phase_innerHTML += `</div>`;
         }
-
+        // Create a img for the phase image
         if (phase.image && phase.image.length > 0) {
             phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
         }
-
+        // Create a img for the phase text box banner image
         if (phase.banner && phase.banner.length > 0) {
             phase_innerHTML += `<img src="${phase.banner}" id="banner"/>`;
-
+            // Create a div and span for the phase text box text
             if (phase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="banner_text_box">`;
                 phase.text.forEach((line) => {
@@ -793,7 +838,7 @@ function showPhase(phase) {
                 "font-family: 'Comfortaa', Arial, sans-serif;");
         }
 
-        // add styles to the phase image and banner
+        // add styles to the phase image
         if (phase.image && phase.image.length > 0) {
             document.getElementById("phase").setAttribute("style",
                 "background-color: transparent; width: calc(0.8 * 45vh); height: auto;" +
@@ -801,6 +846,7 @@ function showPhase(phase) {
                 " left: 50%; transform: translateX(-50%); z-index: 10;" +
                 "transition: 1.5s ease-in-out;");
         }
+        // add stying to phase banner
         if (phase.banner && phase.banner.length > 0) {
             let banner = document.getElementById("banner");
 
@@ -817,6 +863,7 @@ function showPhase(phase) {
                 " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
                 " text-align: center; overflow: visible; flex-direction: column;");
 
+            // add stying to phase text
             if (phase.text.some(line => line !== "")) {
                 let textBox = document.getElementById("banner_text_box");
 
@@ -828,7 +875,7 @@ function showPhase(phase) {
                 }
 
                 let bottomValue;
-
+                // adjust text box size for various screen sizes. (Responsive design)
                 if (window.innerWidth <= 768) { // Small screens (mobile)
                     console.log("small screen");
                     if (phase.text.length > 3) {
@@ -865,6 +912,7 @@ function showPhase(phase) {
         }
 
         var infos = document.getElementsByClassName("info");
+        // set style of phase text box text
         for (var i = 0; i < infos.length; i++) {
             infos[i].setAttribute("style", "text-align: center; font-size: calc(0.045 * 40vh);" +
                 " z-index: 21; transition: 1.5s east-in;");
@@ -887,7 +935,7 @@ function showPhase(phase) {
             });
         }
 
-        // Add next button
+        // Create a next/continue button with styling
         const nextButton = document.createElement("button");
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
@@ -906,6 +954,10 @@ function showPhase(phase) {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         `);
+        /*
+        Create an event listener for the next/continue button.
+        When clicked, the application will transition to the next phase.
+        */
         nextButton.addEventListener("click", () => {
                 setTimeout(() => {
                     phase_div.classList.remove("fade-in");
@@ -932,6 +984,10 @@ function showPhase(phase) {
     }
 }
 
+/**
+ * Handles transitioning to the next phase.
+ * Increments the progress bar and phase index.
+ */
 function nextPhaseSMP() {
     // Remove current phase
     removeCurrentPhaseSMP();
@@ -951,7 +1007,10 @@ function nextPhaseSMP() {
     }
 }
 
-// transition out of current phase. Fade out and signal calling the next phase.
+/**
+ * Transitions out of the current phase.
+ * Fades out and signals calling the next phase.
+ */
 function removeCurrentPhaseSMP() {
     // Select phase modal
     const phaseModal = document.getElementById("phase_modal");

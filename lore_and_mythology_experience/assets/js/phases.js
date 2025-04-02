@@ -4,7 +4,13 @@ import { AudioManager } from './AudioManager.js';
 
 incrementProgressBar(2);
 
-// TODO: store phase data in json file
+/**
+ * Data for asteroid (AMP) phases
+ * Represents different phases with images, text, and other properties.
+ * Titles, text, and images for satellite phase dialogues can be modified here as needed.
+ * TODO: Can move this to a json.
+ * @type {Object.<string, Phase>}
+ */
 const phases = {
     annibale1: {
         title: "Discovery of Psyche",
@@ -149,11 +155,17 @@ export function startPhases(phasesAudioManager) {
     showPhase(phaseValues[phaseIndex]);
 }
 
+/**
+ * Handles calling the start of the satellite (SMP) phases
+ */
 function afterPhases() {
     startPhasesSMP(audioManager);
 }
 
-// Create a <style> tag and add fade effects
+/**
+ * Creates a <style> tag and adds fade in and fade out effects to the phases
+ * @type {HTMLStyleElement}
+ */
 const style = document.createElement("style");
 style.innerHTML = `
     .fade-in {
@@ -179,6 +191,11 @@ document.head.appendChild(style);
 
 let phaseBool = false;
 
+/**
+ * Initializes the asteroid (AMP) phase data and displays it.
+ * Note: To update the text or images used in the satellite phases, modify the phases object.
+ * @param phase - The current phase from the phases data. Contains phase data for phase title, text, and images.
+ */
 function showPhase(phase) {
     if (!phaseBool) {
         new AudioManager("pageTurn");
@@ -193,20 +210,20 @@ function showPhase(phase) {
             "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;");
 
         let phase_innerHTML = "";
-
+        // Create a div and a span for the phase title
         if (phase.title && phase.title.length > 0) {
             phase_innerHTML += `<div id="phase-title">`;
             phase_innerHTML += `<span class="title">${phase.title}</span>`;
             phase_innerHTML += `</div>`;
         }
-
+        // Create a img for the phase image
         if (phase.image && phase.image.length > 0) {
             phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
         }
-
+        // Create a img for the phase text box banner (scroll) image
         if (phase.scroll && phase.scroll.length > 0) {
             phase_innerHTML += `<img src="${phase.scroll}" id="papyrus_scroll"/>`;
-
+            // Create a div and span for the phase text box text
             if (phase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="scroll_text_box">`;
                 phase.text.forEach((line) => {
@@ -237,7 +254,7 @@ function showPhase(phase) {
                 " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
                 " left: 50%; transform: translateX(-50%); z-index: 10; transition: 1.5s;");
         }
-
+        // add stying to phase banner (scroll)
         if (phase.scroll && phase.scroll.length > 0) {
             let scroll = document.getElementById("papyrus_scroll");
 
@@ -254,6 +271,7 @@ function showPhase(phase) {
                 " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
                 " text-align: center; overflow: visible; flex-direction: column;");
 
+            // add stying to phase text
             if (phase.text.some(line => line !== "")) {
                 let textBox = document.getElementById("scroll_text_box");
 
@@ -265,7 +283,7 @@ function showPhase(phase) {
                 }
 
                 let bottomValue;
-
+                // adjust text box size for various screen sizes. (Responsive design)
                 if (window.innerWidth <= 768) { // Small screens (mobile)
                     console.log("small screen");
                     if (phase.text.length > 3) {
@@ -303,6 +321,7 @@ function showPhase(phase) {
             }
         }
         var infos = document.getElementsByClassName("info");
+        // set style of phase text box text
         for (var i = 0; i < infos.length; i++) {
             infos[i].setAttribute("style", "text-align: center; font-size: calc(0.045 * 40vh);" +
                 " z-index: 21; transition: 1.5s;");
@@ -315,7 +334,7 @@ function showPhase(phase) {
                 overlayImage.classList.add("fade-in");
                 overlayImage.setAttribute("src", image.src);
                 overlayImage.setAttribute("id", image.id);
-
+                // add position styles for stacking additional images on top of phase image
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                     " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
@@ -325,7 +344,7 @@ function showPhase(phase) {
             });
         }
 
-        // Add next button
+        // Create a next/continue button with styling
         const nextButton = document.createElement("button");
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
@@ -344,6 +363,10 @@ function showPhase(phase) {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         `);
+        /*
+        Create an event listener for the next/continue button.
+        When clicked, the application will transition to the next phase.
+        */
         nextButton.addEventListener("click", () => {
                 setTimeout(() => {
                     phase_div.classList.remove("fade-in");
@@ -369,7 +392,11 @@ function showPhase(phase) {
         phaseBool = false;
     }
 }
-  
+
+/**
+ * Handles transitioning to the next phase.
+ * Increments the progress bar and phase index.
+ */
 function nextPhase() {
     // Remove current phase
     removeCurrentPhase();
@@ -389,7 +416,10 @@ function nextPhase() {
     }
 }
 
-// transition out of current phase. Fade out and signal calling the next phase.
+/**
+ * Transitions out of the current phase.
+ * Fades out and signals calling the next phase.
+ */
 function removeCurrentPhase() {
     // Select phase modal
     const phaseModal = document.getElementById("phase_modal");
