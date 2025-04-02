@@ -1,9 +1,15 @@
 function onClick() {
     let iframe = document.createElement('iframe');
     iframe.style = "position: fixed; top: 0px; bottom: 0px; right: 0px; width: 100%; border: none; margin: 0; padding: 0; overflow: hidden; z-index: 999999; height: 100%;";
-    iframe.src = "../pages/amp_context.html";
+    iframe.src = "../pages/main_page.html";
     document.body.appendChild(iframe);
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("psyche-icon").addEventListener("click", function() {
+        window.top.location.href = "https://psyche.asu.edu/";
+    });
+});
 
 const fadeInSections = document.querySelectorAll('.fade-in-section');
 
