@@ -14,26 +14,6 @@ import showFinale from './showFinale.js';
 
 incrementProgressBar(14);
 
-/**
- * @typedef {Object} Phase
- * @property {string} title - The title of the phase.
- * @property {string} image - Path to the main image for the phase.
- * @property {string} alt - Alternative text for accessibility.
- * @property {number} duration - Duration in milliseconds.
- * @property {string} [banner] - Optional path to a banner image.
- * @property {string[]} text - An optional array of text strings displayed in the phase.
- * @property {AdditionalImage[]} [additionalImages] - Optional array of additional images.
- */
-
-/**
- * @typedef {Object} AdditionalImage
- * @property {string} src - Path to the additional image.
- * @property {string} id - Unique identifier for the image.
- * @property {string} position - CSS position property.
- * @property {string} top - CSS top position.
- * @property {string} left - CSS left position.
- */
-
 // phase index keeps track of which phase in the satellite dialog the application is currently on
 let phaseIndex = 0;
 const phaseValues = Object.values(phases);
