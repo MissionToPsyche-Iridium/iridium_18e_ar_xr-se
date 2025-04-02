@@ -355,8 +355,8 @@ export default function showPhase(phase) {
                     phase_div.classList.add("fade-out");
 
                     setTimeout(() => {
-                        removeCurrentPhaseSMP();
-                        nextPhaseSMP();
+                        removeCurrentPhase();
+                        nextPhase();
                     }, 250); // Matches fade-out duration
                 }, phase.duration);
             }
@@ -379,9 +379,9 @@ export default function showPhase(phase) {
  * Handles transitioning to the next phase.
  * Increments the progress bar and phase index.
  */
-function nextPhaseSMP() {
+function nextPhase() {
     // Remove current phase
-    removeCurrentPhaseSMP();
+    removeCurrentPhase();
 
     // Move to next phase
     phaseIndex++;
@@ -402,7 +402,7 @@ function nextPhaseSMP() {
  * Transitions out of the current phase.
  * Fades out and signals calling the next phase.
  */
-function removeCurrentPhaseSMP() {
+function removeCurrentPhase() {
     // Select phase modal
     const phaseModal = document.getElementById("phase_modal");
 
