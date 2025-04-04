@@ -751,9 +751,7 @@ function showPhase(phase) {
         // set up html and css
         const phase_div = document.createElement("div");
         phase_div.setAttribute("id", "phase_modal");
-        phase_div.setAttribute("style", "display: block; position: fixed;" +
-            " z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
-            "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s; font-size: 16px");
+        phase_div.classList.add("phase-modal");
 
         let phase_innerHTML = "";
 
@@ -768,7 +766,7 @@ function showPhase(phase) {
         }
 
         if (phase.banner && phase.banner.length > 0) {
-            phase_innerHTML += `<img src="${phase.banner}" id="banner"/>`;
+            phase_innerHTML += `<div id="banner" class="banner" style="background-image: url(${phase.banner}); background-size: cover; background-position: center center; background-repeat: no-repeat; width: 100%; height: 100%;">`;
 
             if (phase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="banner_text_box">`;
@@ -795,27 +793,19 @@ function showPhase(phase) {
 
         // add styles to the phase image and banner
         if (phase.image && phase.image.length > 0) {
-            document.getElementById("phase").setAttribute("style",
-                "background-color: transparent; width: calc(0.8 * 45vh); height: auto;" +
-                " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: 50%; transform: translateX(-50%); z-index: 10;" +
-                "transition: 1.5s ease-in-out;");
+            document.getElementById("phase").className = "phase";
         }
+
         if (phase.banner && phase.banner.length > 0) {
             let banner = document.getElementById("banner");
 
             // Ensure banner exists before applying styles
             if (!banner) {
                 banner = document.createElement("div");
+                banner.style.backgroundImage = `url(${phase.banner})`;
                 banner.id = "banner";
-                document.body.appendChild(banner);
             }
-
-            banner.setAttribute("style",
-                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 65vh); border-radius: 12px;" +
-                " position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%);" +
-                " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
-                " text-align: center; overflow: visible; flex-direction: column;");
+            banner.className = "banner";
 
             if (phase.text.some(line => line !== "")) {
                 let textBox = document.getElementById("banner_text_box");
@@ -825,39 +815,11 @@ function showPhase(phase) {
                     textBox = document.createElement("div");
                     textBox.id = "banner_text_box";
                     banner.appendChild(textBox);
+                    document.body.appendChild(banner);
                 }
 
-                let bottomValue;
 
-                if (window.innerWidth <= 768) { // Small screens (mobile)
-                    console.log("small screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "18vh";
-                    }  else {
-                        bottomValue = "22vh";
-                    }
-                } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
-                    console.log("medium screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "21vh";
-                    }  else {
-                        bottomValue = "23vh";
-                    }
-                } else { // Large screens (desktops)
-                    console.log("large screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "21vh";
-                    }  else {
-                        bottomValue = "24vh";
-                    }
-                }
-
-                textBox.setAttribute("style",
-                    `display: flex; flex-wrap: wrap; position: inherit; align-items: center;
-                    justify-content: center; width: calc(0.8* 28vh); color: #C9FFFC;
-                    font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Comfortaa', Arial, sans-serif;
-                    text-align: center; padding: 4vh; white-space: normal; bottom: ${bottomValue}; z-index: 10;
-                    left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))`);
+                textBox.className = "banner_text_box";
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
