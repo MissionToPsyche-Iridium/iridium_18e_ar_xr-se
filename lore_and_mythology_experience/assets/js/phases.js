@@ -1,4 +1,4 @@
-import { startPhasesSMP } from "./phasesSMP.js";
+import { startSatellitePhases } from './satellitePhases/satellitePhases.js';
 import incrementProgressBar from './progressBar.js';
 import { AudioManager } from './AudioManager.js';
 
@@ -23,7 +23,7 @@ const phases = {
         title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
-        duration: 2000,
+        duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "It is the 16th asteroid in",
@@ -150,7 +150,7 @@ export function startPhases(phasesAudioManager) {
 }
 
 function afterPhases() {
-    startPhasesSMP(audioManager);
+    startSatellitePhases(audioManager);
 }
 
 // Create a <style> tag and add fade effects
