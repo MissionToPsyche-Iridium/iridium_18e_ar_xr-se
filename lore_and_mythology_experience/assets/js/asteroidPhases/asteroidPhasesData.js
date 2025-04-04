@@ -143,7 +143,6 @@ const asteroidPhases = {
     }
 };
 
-
 /**
  * @typedef {Object} Phase
  * @property {string} title - The title of the phase.
@@ -163,4 +162,5 @@ const asteroidPhases = {
  * @property {string} top - CSS top position.
  * @property {string} left - CSS left position.
  */
-export default phases;
+
+export default asteroidPhases;

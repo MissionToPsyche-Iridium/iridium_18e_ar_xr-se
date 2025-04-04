@@ -6,7 +6,7 @@
 
 import incrementProgressBar from '../progressBar.js';
 import { AudioManager } from '../AudioManager.js';
-import phases from './satellitePhasesData.js';
+import satellitePhases from './satellitePhasesData.js';
 import showIntro from './showIntro.js';
 import showLaunch from './showLaunch.js';
 import showTimer from './showTimer.js';
@@ -16,7 +16,7 @@ incrementProgressBar(14);
 
 // phase index keeps track of which phase in the satellite dialog the application is currently on
 let phaseIndex = 0;
-const phaseValues = Object.values(phases);
+const phaseValues = Object.values(satellitePhases);
 
 let introBool = false;
 let launchBool = false;

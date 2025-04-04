@@ -7,7 +7,7 @@
 import { startSatellitePhases } from '../satellitePhases/satellitePhases.js';
 import incrementProgressBar from '../progressBar.js';
 import { AudioManager } from '../AudioManager.js';
-import phases from './asteroidPhasesData.js';
+import asteroidPhases from './asteroidPhasesData.js';
 
 incrementProgressBar(2);
 
@@ -24,14 +24,6 @@ export function startPhases(phasesAudioManager) {
     phaseIndex = 0;
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
     showPhase(phaseValues[phaseIndex]);
-}
-
-/**
- * afterAsteroidPhases
- * Handles calling the start of the satellite (SMP) phases
- */
-function afterAsteroidPhases() {
-    startSatellitePhases(audioManager);
 }
 
 /**
@@ -273,6 +265,14 @@ function showPhase(phase) {
 }
 
 /**
+ * afterAsteroidPhases
+ * Handles calling the start of the satellite (SMP) phases
+ */
+function afterAsteroidPhases() {
+    startSatellitePhases(audioManager);
+}
+
+/**
  * Handles transitioning to the next phase.
  * Increments the progress bar and phase index.
  */
@@ -291,7 +291,7 @@ function nextPhase() {
 
     // If at end of phases
     } else {
-        afterPhases();
+        afterAsteroidPhases();
     }
 }
 

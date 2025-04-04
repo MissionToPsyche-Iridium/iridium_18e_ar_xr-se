@@ -11,7 +11,7 @@
  * TODO: Can move this to a json.
  * @type {Object.<string, Phase>}
  */
-const phases = {
+const satellitePhases = {
     psycheSatellite1: {
         title: "The Psyche Satellite Resembles a Butterfly",
         image: "../assets/images/smp/psyche-satellite.png",
@@ -101,4 +101,4 @@ const phases = {
  * @property {string} left - CSS left position.
  */
 
-export default phases;
+export default satellitePhases;
