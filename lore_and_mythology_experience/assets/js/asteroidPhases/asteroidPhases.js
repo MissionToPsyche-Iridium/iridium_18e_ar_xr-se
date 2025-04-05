@@ -1,145 +1,24 @@
-import { startPhasesSMP } from "./phasesSMP.js";
-import incrementProgressBar from './progressBar.js';
-import { AudioManager } from './AudioManager.js';
+/**
+ * asteroidPhases.js
+ * This file handles asteroid (AMP) phase functions and phases.
+ * @author: Nicole Garcia, Ryan Dinville, Ryan Mcmanamy, Emily Dinaro, Collin Miller
+ */
+
+import { startSatellitePhases } from '../satellitePhases/satellitePhases.js';
+import incrementProgressBar from '../progressBar.js';
+import { AudioManager } from '../AudioManager.js';
+import asteroidPhases from './asteroidPhasesData.js';
 
 incrementProgressBar(2);
 
-// TODO: store phase data in json file
-const phases = {
-    annibale1: {
-        title: "Discovery of Psyche",
-        image: "../assets/images/annibale.jpg",
-        alt: "image of astronomer Annibale De Gasparis",
-        duration: 250,
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        text: [
-            "On March 17, 1852, the Italian",
-            "astronomer Annibale De Gasparis",
-            "discovered an asteroid",
-            "in the night sky."
-        ]
-    },
-    annibale2: {
-        title: "Discovery of Psyche",
-        image: "../assets/images/annibale.jpg",
-        alt: "image of astronomer Annibale De Gasparis",
-        duration: 2000,
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        text: [
-            "It is the 16th asteroid in",
-            "the main asteroid belt between",
-            "Mars and Jupiter.",
-            "De Gasparis named this asteroid Psyche."
-        ]
-    },
-    asteroid1: {
-        title: "Chrysalis Resemblance",
-        image: "../assets/images/chrysalis/asteroid.png",
-        alt: "image of asteroid",
-        duration: 250,
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        text: [
-            "The asteroid Psyche has the",
-            "resemblance of a chrysalis.",
-            "In Greek, the word for chrysalis is 'cyrsos',",
-            "meaning gold, gold-colored, or wealth."
-        ],
-    },
-    chrysalis1: {
-        title: "Chrysalis Resemblance",
-        image: "../assets/images/chrysalis/asteroid.png",
-        alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 250,
-        scroll: "",
-        text: [
-            ""
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/chrysalis.png", id: "chrysalis", position: "absolute", top: "0", left: "0" },
-        ],
-    },
-    butterfly1: {
-        title: "The 'Breath of Life'",
-        image: "../assets/images/chrysalis/butterfly.png",
-        alt: "Asteroid Psyche butterfly emerges from chrysalis",
-        duration: 250,
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        text: [
-            "In Greek mythology, the breath of life leaves",
-            "as someone dies and is represented as",
-            "a butterfly leaving its chrysalis.",
-            "This breath of life is called Psyche."
-        ],
-
-    },
-    psychegoddess1: { // psyche goddess part1
-        title: "The Goddess Psyche Opening Pandora's Box",
-        image: "../assets/images/goddess_psyche/psyche_opening_box.png",
-        alt: "image of Psyche goddess opening pandora's box.",
-        duration: 250,
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        text: [
-            "In Greek mythology, Psyche, driven by",
-            "curiosity, opens a box given to her",
-            "by Persephone, meant to contain a",
-            "fragment of the queen's divine beauty",
-            "for Aphrodite to use."
-        ]
-    },
-    psychegoddess2: { // psyche goddess part2
-        title: "The Goddess Psyche Falling Into a Deep Sleep",
-        image: "../assets/images/goddess_psyche/psyche_passing_out.png",
-        alt: "image of Psyche goddess in a deep, dark sleep.",
-        duration: 250,
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        text: [
-            "However, instead of beauty,",
-            "the box releases a deep sleep",
-            "that overwhelms Psyche."
-        ]
-    },
-    psychegoddess3: { // psyche goddess part3
-        title: "The Goddess Psyche In A Dark, Dreamless Sleep",
-        image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
-        alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
-        duration: 250,
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        text: [
-            "Psyche finds herself in",
-            "a dark, dreamless sleep..."
-        ]
-    },
-    psychegoddess4: { // psyche goddess part4
-        title: "The Asteroid Psyche",
-        image: "../assets/images/goddess_psyche/asteroid.png",
-        alt: "psyche asteroid sleeping",
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 250,
-        text: [
-            "The asteroid Psyche finds itself in",
-            "a similar dark, dreamless sleep..."
-        ]
-    },
-    psychegoddess5: { // psyche goddess part5
-        title: "Exploring the Asteroid Psyche",
-        image: "../assets/images/goddess_psyche/asteroid.png",
-        alt: "psyche asteroid core",
-        scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 250,
-        text: [
-            "Like Psyche opening the fateful box,",
-            "revealing the unexpected,",
-            "humanity explores the Psyche asteroid;",
-            "risking the unknown for discovery."
-        ]
-    }
-};
-
 let phaseIndex = 0;
 let audioManager;
-const phaseValues = Object.values(phases);
+const phaseValues = Object.values(asteroidPhases);
 
-// Start the phases
+/**
+ * Start the asteroid phases
+ * @param phasesAudioManager handles audio
+ */
 export function startPhases(phasesAudioManager) {
     audioManager = phasesAudioManager;
     phaseIndex = 0;
@@ -147,11 +26,10 @@ export function startPhases(phasesAudioManager) {
     showPhase(phaseValues[phaseIndex]);
 }
 
-function afterPhases() {
-    startPhasesSMP(audioManager);
-}
-
-// Create a <style> tag and add fade effects
+/**
+ * Creates a <style> tag and adds fade in and fade out effects to the phases
+ * @type {HTMLStyleElement}
+ */
 const style = document.createElement("style");
 style.innerHTML = `
     .fade-in {
@@ -177,6 +55,11 @@ document.head.appendChild(style);
 
 let phaseBool = false;
 
+/**
+ * Initializes the asteroid (AMP) phase data and displays it.
+ * Note: To update the text or images used in the satellite phases, modify the phases object.
+ * @param phase - The current phase from the phases data. Contains phase data for phase title, text, and images.
+ */
 function showPhase(phase) {
     if (!phaseBool) {
         new AudioManager("pageTurn");
@@ -190,19 +73,23 @@ function showPhase(phase) {
 
         let phase_innerHTML = "";
 
+        // Create a div and a span for the phase title
         if (phase.title && phase.title.length > 0) {
             phase_innerHTML += `<div id="phase-title">`;
             phase_innerHTML += `<span class="title">${phase.title}</span>`;
             phase_innerHTML += `</div>`;
         }
 
+        // Create a img for the phase image
         if (phase.image && phase.image.length > 0) {
             phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
         }
 
+        // Create a img for the phase text box banner (scroll) image
         if (phase.scroll && phase.scroll.length > 0) {
             phase_innerHTML += `<div id="scroll-container" class="scroll" style="background-image: url(${phase.scroll}); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 100%;">`;
 
+            // Create a div and span for the phase text box text
             if (phase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="scroll_text_box">`;
                 phase.text.forEach((line) => {
@@ -212,8 +99,6 @@ function showPhase(phase) {
             }
 
             phase_innerHTML += `</div>`;
-
-
         }
 
         phase_innerHTML += ``;
@@ -235,6 +120,7 @@ function showPhase(phase) {
             document.getElementById("phase").className = "phase";
         }
 
+        // add style to phase banner (scroll)
         if (phase.scroll && phase.scroll.length > 0) {
             let scroll = document.getElementById("papyrus_scroll");
 
@@ -245,7 +131,8 @@ function showPhase(phase) {
             }
             scroll.className = "scroll";
 
-            {
+            // add style to phase text
+            if (phase.text.some(line => line !== "")) {
                 let textBox = document.getElementById("scroll_text_box");
 
                 // Ensure the text box exists
@@ -263,6 +150,7 @@ function showPhase(phase) {
             }
         }
         var infos = document.getElementsByClassName("info");
+        // set style of phase text box text
         for (var i = 0; i < infos.length; i++) {
             infos[i].setAttribute("style", "text-align: center; font-size: calc(0.045 * 40vh);" +
                 " z-index: 21; transition: 1.5s;");
@@ -276,6 +164,7 @@ function showPhase(phase) {
                 overlayImage.setAttribute("src", image.src);
                 overlayImage.setAttribute("id", image.id);
 
+                // add position styles for stacking additional images on top of phase image
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
                     " border-radius: 12px; padding: 5vh; position: absolute; top: calc(30vh);" +
@@ -285,7 +174,7 @@ function showPhase(phase) {
             });
         }
 
-        // Add next button
+        // Create a next/continue button with styling
         const nextButton = document.createElement("button");
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
@@ -304,6 +193,10 @@ function showPhase(phase) {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         `);
+        /*
+        Create an event listener for the next/continue button.
+        When clicked, the application will transition to the next phase.
+        */
         nextButton.addEventListener("click", () => {
                 setTimeout(() => {
                     phase_div.classList.remove("fade-in");
@@ -329,7 +222,19 @@ function showPhase(phase) {
         phaseBool = false;
     }
 }
-  
+
+/**
+ * afterAsteroidPhases
+ * Handles calling the start of the satellite (SMP) phases
+ */
+function afterAsteroidPhases() {
+    startSatellitePhases(audioManager);
+}
+
+/**
+ * Handles transitioning to the next phase.
+ * Increments the progress bar and phase index.
+ */
 function nextPhase() {
     // Remove current phase
     removeCurrentPhase();
@@ -345,11 +250,14 @@ function nextPhase() {
 
     // If at end of phases
     } else {
-        afterPhases();
+        afterAsteroidPhases();
     }
 }
 
-// transition out of current phase. Fade out and signal calling the next phase.
+/**
+ * Transitions out of the current phase.
+ * Fades out and signals calling the next phase.
+ */
 function removeCurrentPhase() {
     // Select phase modal
     const phaseModal = document.getElementById("phase_modal");
