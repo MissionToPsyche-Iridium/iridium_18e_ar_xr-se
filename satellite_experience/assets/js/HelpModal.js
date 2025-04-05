@@ -37,9 +37,9 @@ export default class HelpModal {
         document.addEventListener('click', (event) => {
             const container = document.getElementById('help-modal-container-id');
             if (this._helpModal && this._helpModal.style.display === 'flex') {
-                if (container !== null && 
+                if (container !== null &&
                     (event.target.id === 'help-modal-close'
-                    || !container.contains(event.target))) {
+                        || !container.contains(event.target))) {
                     window.sfxManager.playSound("close");
                     this.close();
                 }

@@ -981,9 +981,9 @@ function launch() {
     }
     function resetAutoHelp() {
         clearTimeout(inactivityTimer);
-        inactivityTimer = setTimeout(triggerAutoHelp, 15000);
+        inactivityTimer = setTimeout(triggerAutoHelp, 40000);
     }
-    let inactivityTimer = setTimeout(triggerAutoHelp, 15000);
+    let inactivityTimer = setTimeout(triggerAutoHelp, 40000);
     initializeAutoHelp();
 
     // Handle window resizing
