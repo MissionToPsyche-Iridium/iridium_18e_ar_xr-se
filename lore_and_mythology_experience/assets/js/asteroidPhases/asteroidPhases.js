@@ -69,9 +69,7 @@ function showPhase(phase) {
         const phase_div = document.createElement("div");
         phase_div.setAttribute("id", "phase_modal");
         phase_div.classList.add("fade-in");
-        phase_div.setAttribute("style", "display: block; position: fixed;" +
-            " z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
-            "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;");
+        phase_div.classList.add("phase-modal")
 
         let phase_innerHTML = "";
 
@@ -89,7 +87,7 @@ function showPhase(phase) {
 
         // Create a img for the phase text box banner (scroll) image
         if (phase.scroll && phase.scroll.length > 0) {
-            phase_innerHTML += `<img src="${phase.scroll}" id="papyrus_scroll"/>`;
+            phase_innerHTML += `<div id="scroll-container" class="scroll" style="background-image: url(${phase.scroll}); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 100%;">`;
 
             // Create a div and span for the phase text box text
             if (phase.text.some(line => line !== "")) {
@@ -99,6 +97,8 @@ function showPhase(phase) {
                 });
                 phase_innerHTML += `</div>`;
             }
+
+            phase_innerHTML += `</div>`;
         }
 
         phase_innerHTML += ``;
@@ -117,10 +117,7 @@ function showPhase(phase) {
 
         // add styles to the phase image and scroll
         if (phase.image && phase.image.length > 0) {
-            document.getElementById("phase").setAttribute("style",
-                "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: 50%; transform: translateX(-50%); z-index: 10; transition: 1.5s;");
+            document.getElementById("phase").className = "phase";
         }
 
         // add style to phase banner (scroll)
@@ -130,15 +127,9 @@ function showPhase(phase) {
             // Ensure banner exists before applying styles
             if (!scroll) {
                 scroll = document.createElement("div");
-                scroll.id = "scroll";
-                document.body.appendChild(scroll);
+                scroll.id = "scroll-container";
             }
-
-            scroll.setAttribute("style",
-                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 56vh); border-radius: 12px;" +
-                " position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);" +
-                " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
-                " text-align: center; overflow: visible; flex-direction: column;");
+            scroll.className = "scroll";
 
             // add style to phase text
             if (phase.text.some(line => line !== "")) {
@@ -148,43 +139,11 @@ function showPhase(phase) {
                 if (!textBox) {
                     textBox = document.createElement("div");
                     textBox.id = "scroll_text_box";
-                    banner.appendChild(textBox);
+                    scroll.appendChild(textBox);
+                    document.body.appendChild(scroll);
                 }
 
-                let bottomValue;
-
-                // adjust text box size for various screen sizes. (Responsive design)
-                if (window.innerWidth <= 768) { // Small screens (mobile)
-                    console.log("small screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "16vh";
-                    }  else {
-                        bottomValue = "22vh";
-                    }
-                } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
-                    console.log("medium screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "21vh";
-                    }  else {
-                        bottomValue = "23vh";
-                    }
-                } else { // Large screens (desktops)
-                    console.log("large screen");
-                    if (phase.text.length > 4) {
-                        bottomValue = "19vh";
-                    } else if (phase.text.length > 3) {
-                        bottomValue = "22vh";
-                    } else {
-                        bottomValue = "23vh";
-                    }
-                }
-
-                textBox.setAttribute("style",
-                    `display: flex; flex-wrap: wrap; position: inherit; align-items: center; 
-                         justify-content: center; width: calc(0.8 * 40vh); color: black; 
-                         font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; 
-                         text-align: center; padding: 0vh 4vh; white-space: normal; 
-                         bottom: ${bottomValue}; z-index: 10; left: 50%; transform: translateX(-50%);`);
+                textBox.className = "scroll-text-box";
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
@@ -208,8 +167,8 @@ function showPhase(phase) {
                 // add position styles for stacking additional images on top of phase image
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                    " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s;");
+                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(30vh);" +
+                    " left: calc(50vw - ((0.8 * 50vh) / 2)); z-index: 21; transition: 1.5s;");
 
                 document.body.appendChild(overlayImage);
             });
