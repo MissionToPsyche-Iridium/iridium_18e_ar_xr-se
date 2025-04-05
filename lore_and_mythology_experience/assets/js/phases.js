@@ -60,7 +60,7 @@ const phases = {
     },
     butterfly1: {
         title: "The 'Breath of Life'",
-        image: "",
+        image: "../assets/images/chrysalis/butterfly.png",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
         duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
@@ -70,9 +70,7 @@ const phases = {
             "a butterfly leaving its chrysalis.",
             "This breath of life is called Psyche."
         ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/butterfly.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
-        ]
+
     },
     psychegoddess1: { // psyche goddess part1
         title: "The Goddess Psyche Opening Pandora's Box",
@@ -188,9 +186,7 @@ function showPhase(phase) {
         const phase_div = document.createElement("div");
         phase_div.setAttribute("id", "phase_modal");
         phase_div.classList.add("fade-in");
-        phase_div.setAttribute("style", "display: block; position: fixed;" +
-            " z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
-            "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;");
+        phase_div.classList.add("phase-modal")
 
         let phase_innerHTML = "";
 
@@ -205,7 +201,7 @@ function showPhase(phase) {
         }
 
         if (phase.scroll && phase.scroll.length > 0) {
-            phase_innerHTML += `<img src="${phase.scroll}" id="papyrus_scroll"/>`;
+            phase_innerHTML += `<div id="scroll-container" class="scroll" style="background-image: url(${phase.scroll}); background-size: cover; background-position: center; background-repeat: no-repeat; width: 100%; height: 100%;">`;
 
             if (phase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="scroll_text_box">`;
@@ -214,6 +210,10 @@ function showPhase(phase) {
                 });
                 phase_innerHTML += `</div>`;
             }
+
+            phase_innerHTML += `</div>`;
+
+
         }
 
         phase_innerHTML += ``;
@@ -232,10 +232,7 @@ function showPhase(phase) {
 
         // add styles to the phase image and scroll
         if (phase.image && phase.image.length > 0) {
-            document.getElementById("phase").setAttribute("style",
-                "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: 50%; transform: translateX(-50%); z-index: 10; transition: 1.5s;");
+            document.getElementById("phase").className = "phase";
         }
 
         if (phase.scroll && phase.scroll.length > 0) {
@@ -244,59 +241,22 @@ function showPhase(phase) {
             // Ensure banner exists before applying styles
             if (!scroll) {
                 scroll = document.createElement("div");
-                scroll.id = "scroll";
-                document.body.appendChild(scroll);
+                scroll.id = "scroll-container";
             }
+            scroll.className = "scroll";
 
-            scroll.setAttribute("style",
-                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 56vh); border-radius: 12px;" +
-                " position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);" +
-                " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
-                " text-align: center; overflow: visible; flex-direction: column;");
-
-            if (phase.text.some(line => line !== "")) {
+            {
                 let textBox = document.getElementById("scroll_text_box");
 
                 // Ensure the text box exists
                 if (!textBox) {
                     textBox = document.createElement("div");
                     textBox.id = "scroll_text_box";
-                    banner.appendChild(textBox);
+                    scroll.appendChild(textBox);
+                    document.body.appendChild(scroll);
                 }
 
-                let bottomValue;
-
-                if (window.innerWidth <= 768) { // Small screens (mobile)
-                    console.log("small screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "16vh";
-                    }  else {
-                        bottomValue = "22vh";
-                    }
-                } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
-                    console.log("medium screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "21vh";
-                    }  else {
-                        bottomValue = "23vh";
-                    }
-                } else { // Large screens (desktops)
-                    console.log("large screen");
-                    if (phase.text.length > 4) {
-                        bottomValue = "19vh";
-                    } else if (phase.text.length > 3) {
-                        bottomValue = "22vh";
-                    } else {
-                        bottomValue = "23vh";
-                    }
-                }
-
-                textBox.setAttribute("style",
-                    `display: flex; flex-wrap: wrap; position: inherit; align-items: center; 
-                         justify-content: center; width: calc(0.8 * 40vh); color: black; 
-                         font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Papyrus', Arial, sans-serif; 
-                         text-align: center; padding: 0vh 4vh; white-space: normal; 
-                         bottom: ${bottomValue}; z-index: 10; left: 50%; transform: translateX(-50%);`);
+                textBox.className = "scroll-text-box";
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
@@ -318,8 +278,8 @@ function showPhase(phase) {
 
                 overlayImage.setAttribute("style",
                     "background-color: transparent; width: calc(0.8 * 40vh); height: 40vh;" +
-                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                    " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s;");
+                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(30vh);" +
+                    " left: calc(50vw - ((0.8 * 50vh) / 2)); z-index: 21; transition: 1.5s;");
 
                 document.body.appendChild(overlayImage);
             });
