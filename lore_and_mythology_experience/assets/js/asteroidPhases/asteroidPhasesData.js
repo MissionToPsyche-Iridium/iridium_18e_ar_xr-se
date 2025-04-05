@@ -66,7 +66,7 @@ const asteroidPhases = {
     },
     butterfly1: {
         title: "The 'Breath of Life'",
-        image: "",
+        image: "../assets/images/chrysalis/butterfly.png",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
         duration: 250,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
@@ -76,9 +76,6 @@ const asteroidPhases = {
             "a butterfly leaving its chrysalis.",
             "This breath of life is called Psyche."
         ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/butterfly.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
-        ]
     },
     psychegoddess1: { // psyche goddess part1
         title: "The Goddess Psyche Opening Pandora's Box",
