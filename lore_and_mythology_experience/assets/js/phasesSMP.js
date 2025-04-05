@@ -26,7 +26,7 @@ const phases = {
     },
     psycheSatellite2: {
         title: "The Psyche Satellite Resembles a Butterfly",
-        image: "../assets/images/smp/psyche-satellite.png",
+        image: "../assets/images/chrysalis/butterfly.png",
         alt: "Satellite Psyche with wings like a butterfly",
         duration: 250,
         banner: "../assets/images/smp/smp-banner.png",
@@ -35,10 +35,7 @@ const phases = {
             "outstretched like a butterfly,",
             "the Psyche spacecraft echos",
             "the “Breath of Life” after death."
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/butterfly.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
-        ],
+        ]
     },
     quote1: {
         title: "Conclusion",
@@ -67,7 +64,7 @@ const phases = {
     },
     quote3: {
         title: "Conclusion",
-        image: "../assets/images/goddess_psyche/asteroid.png",
+        image: "../assets/images/smp/psyche-satellite.png",
         alt: "",
         duration: 250,
         banner: "../assets/images/smp/smp-banner.png",
@@ -842,7 +839,7 @@ function showPhase(phase) {
                 // add position styles for stacking additional images on top of phase image
                 overlayImage.setAttribute("style", `position: ${image.position}; top: ${image.top}; left: ${image.left}; z-index: 15;`);
                 overlayImage.setAttribute("style", "width: calc(0.8 * 50vh); height: auto" +
-                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 10vh);" +
+                    " border-radius: 12px; padding: 5vh; position: absolute; top: 20vh;" +
                     " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s ease-in-out;");
 
                 document.body.appendChild(overlayImage);
