@@ -521,7 +521,7 @@ function showTimer() {
             if (timerPhase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="banner_text_box">`;
                 timerPhase.text.forEach((line) => {
-                    phase_innerHTML += `<span class="info">${line}</span>`;
+                    phase_innerHTML += `<div class="info">${line}</div>`;
                 });
                 phase_innerHTML += `</div>`;
             }
@@ -561,7 +561,7 @@ function showTimer() {
             if (timerPhase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="banner_text_box">`;
                 timerPhase.text.forEach((line) => {
-                    phase_innerHTML += `<span class="info">${line}</span>`;
+                    phase_innerHTML += `<div class="info">${line}</div>`;
                 });
                 phase_innerHTML += `</div>`;
             }
@@ -601,7 +601,7 @@ function showTimer() {
 
         if (timerPhase.text.some(line => line !== "")) {
             const text = document.getElementById("banner_text_box");
-            text.className = "banner_text_box";
+            text.className = "timer";
         }
 
         let infos = document.getElementsByClassName("info");

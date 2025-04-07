@@ -448,7 +448,7 @@ input[type="range"]::-moz-range-thumb {
   overflow: hidden;
 }
 
-#banner_text_box {
+.banner_text_box {
   display: flex;
   flex-wrap: wrap;
   position: relative;
@@ -456,8 +456,9 @@ input[type="range"]::-moz-range-thumb {
   align-items: center;
   justify-content: left;
   left: 10%;
-  width: 45%;
-  max-width: 320px;
+  width: 52%;
+  max-height: 103px;
+  max-width: 52%;
   font-weight: bold;
   color: white;
   font-size: clamp(0.8rem, 2vw, 0.5rem);
@@ -481,4 +482,23 @@ input[type="range"]::-moz-range-thumb {
   z-Index:5;
   transition: 1.5s ease-in-out;
   transform: translate(-50%, -50%);
+}
+.timer {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  top: 45%;
+  align-items: center;
+  justify-content: left;
+  left: 8%;
+  width: 45%;
+  max-width: 320px;
+  font-weight: bold;
+  color: white;
+  font-size: clamp(0.8rem, 2vw, 0.5rem);
+  font-family: 'Comfortaa',
+  Arial, sans-serif;
+  text-align: left;
+  white-space: normal;
+  z-index: 10;
 }
