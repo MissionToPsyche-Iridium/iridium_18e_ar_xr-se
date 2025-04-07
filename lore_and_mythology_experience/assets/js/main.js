@@ -686,6 +686,7 @@ function launch() {
 
         // Remove telescope from scene
         scene.remove(telescopeLower);
+        scope.remove();
 
         setTimeout(() => {
             camera.position.z = 0;
