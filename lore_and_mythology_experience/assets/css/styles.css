@@ -440,7 +440,6 @@ input[type="range"]::-moz-range-thumb {
   justify-content: left;
   display: flex;
   max-width: 400px;
-  min-width: 50%;
   min-height: 50%;
   max-height: 30vh;
   border-radius: 12px;
@@ -467,4 +466,19 @@ input[type="range"]::-moz-range-thumb {
   text-align: left;
   white-space: normal;
   z-index: 10;
+}
+
+.banner-timer {
+  background-Color:transparent;
+  width: 100%;
+  height: auto;
+  border-Radius:12px;
+  max-Width:450px;
+  min-Width:450px;
+  position:absolute;
+  top:50%;
+  left:50%;
+  z-Index:5;
+  transition: 1.5s ease-in-out;
+  transform: translate(-50%, -50%);
 }

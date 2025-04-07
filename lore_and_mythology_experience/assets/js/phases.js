@@ -10,7 +10,7 @@ const phases = {
         title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
-        duration: 250,
+        duration: 100,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "On March 17, 1852, the Italian",
@@ -23,7 +23,7 @@ const phases = {
         title: "Discovery of Psyche",
         image: "../assets/images/annibale.jpg",
         alt: "image of astronomer Annibale De Gasparis",
-        duration: 2000,
+        duration: 100,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "It is the 16th asteroid in",
@@ -36,7 +36,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "image of asteroid",
-        duration: 250,
+        duration: 100,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "The asteroid Psyche has the",
@@ -49,7 +49,7 @@ const phases = {
         title: "Chrysalis Resemblance",
         image: "../assets/images/chrysalis/asteroid.png",
         alt: "Asteroid Psyche in the Chrysalis phase",
-        duration: 250,
+        duration: 100,
         scroll: "",
         text: [
             ""
@@ -62,7 +62,7 @@ const phases = {
         title: "The 'Breath of Life'",
         image: "../assets/images/chrysalis/butterfly.png",
         alt: "Asteroid Psyche butterfly emerges from chrysalis",
-        duration: 250,
+        duration: 100,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, the breath of life leaves",
@@ -76,7 +76,7 @@ const phases = {
         title: "The Goddess Psyche Opening Pandora's Box",
         image: "../assets/images/goddess_psyche/psyche_opening_box.png",
         alt: "image of Psyche goddess opening pandora's box.",
-        duration: 250,
+        duration: 100,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "In Greek mythology, Psyche, driven by",
@@ -90,7 +90,7 @@ const phases = {
         title: "The Goddess Psyche Falling Into a Deep Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out.png",
         alt: "image of Psyche goddess in a deep, dark sleep.",
-        duration: 250,
+        duration: 100,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "However, instead of beauty,",
@@ -102,7 +102,7 @@ const phases = {
         title: "The Goddess Psyche In A Dark, Dreamless Sleep",
         image: "../assets/images/goddess_psyche/psyche_passing_out_vector.png",
         alt: "outline and stars vector image of Psyche goddess in a deep, dark sleep",
-        duration: 250,
+        duration: 100,
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
         text: [
             "Psyche finds herself in",
@@ -114,7 +114,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid sleeping",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 250,
+        duration: 100,
         text: [
             "The asteroid Psyche finds itself in",
             "a similar dark, dreamless sleep..."
@@ -125,7 +125,7 @@ const phases = {
         image: "../assets/images/goddess_psyche/asteroid.png",
         alt: "psyche asteroid core",
         scroll: "../assets/images/papyrus_scroll_double_sided.png",
-        duration: 250,
+        duration: 100,
         text: [
             "Like Psyche opening the fateful box,",
             "revealing the unexpected,",
