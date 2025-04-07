@@ -185,7 +185,7 @@ function showPhase(phase) {
             width: 200px;
             height: 100px;
             border: none;
-            background: url('../assets/images/continue_button.png') no-repeat center center;
+            background: url('../assets/images/continue_button_papyrus.png') no-repeat center center;
             background-size: contain;
             cursor: pointer;
             z-index: 100;
