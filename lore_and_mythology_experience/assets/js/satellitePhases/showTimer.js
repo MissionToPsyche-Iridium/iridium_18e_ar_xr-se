@@ -23,10 +23,16 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
 
     /**
      * The satellite is expected to be captured by Psyche's gravity in late July (2029).
+     * 
      * The satellite is then expected to orbit indefinitely thereafter, yet the
      * mission is said to conclude roughly 2 years after arrival (November of 2031).
+     * 
+     * Sources: 
+     *  - https://www.jpl.nasa.gov/press-kits/psyche/quick-facts/
+     *  - https://psyche.asu.edu/mission/faq/
+     *  - https://www.jpl.nasa.gov/images/pia24930-psyches-mission-plan/
      */
-        // Launched: October 13th, 2023 @2:19PM (GMT)
+    // Launched: October 13th, 2023 @2:19PM (GMT)
     var launchTime = 1697206740000;
 
     // August 1st, 2029 (GMT)
@@ -53,6 +59,7 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
     // var arrivalTime = 1697206750000;
     // var missionCompletionTime = 1697206760000;
 
+    // Time constants
     var millisecondsInASecond = 1000;
     var millisecondsInAMinute = millisecondsInASecond * 60;
     var millisecondsInAnHour = millisecondsInAMinute * 60;
@@ -61,17 +68,29 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
 
     var currentTime = Date.now();
 
+    // Possible mission statuses include: "En Route", "Orbiting", and "Complete".
     let message1 = "Mission Status: ";
     let message2 = "";
 
+    // Possible countup and countdown combinations:
+    // The launch has already passed.
+    // Either the launch is the only event that has passed, in which case the arrival 
+    // and mission completion timers wil decrement how much time until each event occurs, 
+    // Or, launch and arrival have both passed, yet the mission is not complete, in which 
+    // case the mission completion timer will decrement how much time until the event occurs, 
+    // OR, all 3 temporal points of interest have passed, in which case the respective timers 
+    // will increment how much time has passed since each event.
     let colHeadings = [["|", "Since Launch  |", "Since Arrival  |", "Since Completion "],
         ["|", "Since Launch  |", "Since Arrival  |", "Until Completion "],
         ["|", "Since Launch  |", "Until Arrival  |", "Until Completion "]
     ];
     //let rowHeadings = ["|", "years  |", "days  |", "hours  |", minutes  |", "seconds  |"];
 
+    // The variables for the time since launch
     let launchCountup = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
     let timeSinceLaunch = currentTime - launchTime;
+
+    // Account for the leap day: 2/29/2028
     if (currentTime >= leapDay) {
         launchCountup["years"] = Math.floor((timeSinceLaunch - (2 * millisecondsInADay)) / millisecondsInAYear);
     }
@@ -87,7 +106,10 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
     timeSinceLaunch = timeSinceLaunch - (launchCountup["minutes"] * millisecondsInAMinute);
     launchCountup["seconds"] = Math.floor(timeSinceLaunch / millisecondsInASecond);
 
+    // The variables for the time until arrival
     let arrivalCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
+
+    // The variables for the time until mission completion
     let completionCountdown = { "years": 0, "days": 0, "hours": 0, "minutes": 0, "seconds": 0 };
 
     let timeUntilArrival = arrivalTime - currentTime;
@@ -95,10 +117,16 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
     let timeUntilCompletion = missionCompletionTime - currentTime;
     let timeSinceCompletion = 0;
 
+    // The variables for incrementing or decrementing by seconds.
+    // The time since launch always increases.
+    // A positive increment denotes a count up since the event occurred, whereas 
+    // a negative increment denotes a count down until the event occurs.
     let launchIncrement = 1;
     let arrivalIncrement = 0;
     let completionIncrement = 0;
 
+    // If the current time is after the mission completion time, 
+    // then all 3 timers must count up from their temporal demarcation points.
     if (currentTime >= missionCompletionTime) {
         message1 += "Complete";
         arrivalIncrement = 1;
@@ -130,6 +158,10 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
 
         message2 = colHeadings[0];
     }
+    // If the current time is not after the mission completion time, 
+    // yet the current time is after the arrival time, 
+    // then only the mission completion timer must count down, 
+    // whereas the other two must count up from their temporal demarcation points.
     else if (currentTime >= arrivalTime) {
         message1 += "Orbiting";
         arrivalIncrement = 1;
@@ -159,6 +191,10 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
 
         message2 = colHeadings[1];
     }
+    // If the current time is not after the mission completion time, 
+    // and the current time is also not after the arrival time, 
+    // then only the time since launch must count up, 
+    // whereas the other two must count down from their temporal demarcation points.
     else {
         message1 += "En Route";
         arrivalIncrement = -1;
@@ -187,8 +223,10 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
         message2 = colHeadings[2];
     }
 
+    // Every second, update the display with the new timer values
     let counter = 0;
     let intervalID = setInterval(function() {
+        // Always increment the time since launch
         launchCountup["seconds"] += launchIncrement;
 
         launchCountup["minutes"] += Math.floor(launchCountup["seconds"] / 60);
@@ -201,6 +239,8 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
         launchCountup["hours"] = launchCountup["hours"] % 24;
         launchCountup["days"] = launchCountup["days"] % 365;
 
+        // If the arrival increment is positive, 
+        // we are incrementing the time since arrival.
         if (arrivalIncrement > 0) {
             arrivalCountdown["seconds"] = (arrivalCountdown["seconds"] + arrivalIncrement) % 60;
 
@@ -217,6 +257,8 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
                 }
             }
         }
+        // If the arrival increment is negative, 
+        // we are counting down until the event occurs.
         else {
             arrivalCountdown["seconds"] = (arrivalCountdown["seconds"] + 60 + arrivalIncrement) % 60;
 
@@ -234,6 +276,8 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
             }
         }
 
+        // If the mission completion increment is positive, 
+        // we are incrementing the time since mission completion.
         if (completionIncrement > 0) {
             completionCountdown["seconds"] = (completionCountdown["seconds"] + completionIncrement) % 60;
 
@@ -250,6 +294,8 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
                 }
             }
         }
+        // If the mission completion increment is negative, 
+        // we are counting down until the event occurs.
         else {
             completionCountdown["seconds"] = (completionCountdown["seconds"] + 60 + completionIncrement) % 60;
 
@@ -267,6 +313,7 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
             }
         }
 
+        // Following the format of the other phases for consistency
         let countdown = {
             placeholder: {
                 image: "",
@@ -286,6 +333,7 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
 
         // setTimeout(function() { showCountdown(timerPhase, i) }, 1000 * i);
 
+        // Only create the timer div upon the first iteration.
         if (counter == 0) {
             // set up html and css
             const phase_div = document.createElement("div");
@@ -331,6 +379,7 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
 
             document.body.appendChild(phase_div);
         }
+        // Otherwise, simply update the div.
         else {
             let phase_innerHTML = "";
 
