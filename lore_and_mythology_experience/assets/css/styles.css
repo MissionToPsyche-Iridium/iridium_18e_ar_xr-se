@@ -453,7 +453,7 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  top: 10%;
+  top: 11%;
   align-items: center;
   justify-content: left;
   left: 10%;
@@ -487,12 +487,11 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  top: 45%;
+  top: 44%;
   align-items: center;
   justify-content: left;
   left: 8%;
-  width: 40%;
-  max-width: 40%;
+  max-width: 50%;
   max-height: 103px;
   font-weight: bold;
   color: white;

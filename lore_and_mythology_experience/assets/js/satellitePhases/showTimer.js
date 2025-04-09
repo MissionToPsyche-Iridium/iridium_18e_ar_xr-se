@@ -382,28 +382,32 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
             text.className = "timer";
         }
 
+        const tableHeaderFontSizeMultiplier = .055;
+        const tableFontSizeMultiplier = .03;
+        const parentSize = document.getElementsByClassName("timer").item(0).getBoundingClientRect().width;
+
         let infos = document.getElementsByClassName("info");
         for (let i = 0; i < infos.length; i++) {
-            infos[i].setAttribute("style", "text-align: center; font-size: calc(0.045 * 40vh);" +
-                " z-index: 21; transition: 1.5s east-in;");
+            infos[i].setAttribute("style", `text-align: center; font-size: calc(${tableHeaderFontSizeMultiplier} * ${parentSize}px);` +
+                " z-index: 21;");
         }
 
         let colHeaders = document.getElementsByClassName("colHeader");
         for (let j = 0; j < colHeaders.length; j++) {
-            colHeaders[j].setAttribute("style", "text-align: center; font-size: calc(0.025 * 40vh);" +
-                " z-index: 21; transition: 1.5s east-in; white-space: pre;");
+            colHeaders[j].setAttribute("style", `text-align: center; font-size: calc(${tableFontSizeMultiplier} * ${parentSize}px);` +
+                " z-index: 21; white-space: pre;");
         }
 
         let rowHeaders = document.getElementsByClassName("rowHeader");
         for (let k = 0; k < rowHeaders.length; k++) {
-            rowHeaders[k].setAttribute("style", "text-align: right; font-size: calc(0.025 * 40vh);" +
-                " z-index: 21; transition: 1.5s east-in; white-space: pre;");
+            rowHeaders[k].setAttribute("style", `text-align: right; font-size: calc(${tableFontSizeMultiplier} * ${parentSize}px);` +
+                " z-index: 21; white-space: pre;");
         }
 
         let dataCells = document.getElementsByClassName("dataCells");
         for (let l = 0; l < dataCells.length; l++) {
-            dataCells[l].setAttribute("style", "text-align: center; font-size: calc(0.025 * 40vh);" +
-                " z-index: 21; transition: 1.5s east-in;");
+            dataCells[l].setAttribute("style", `text-align: center; font-size: calc(${tableFontSizeMultiplier} * ${parentSize}px);` +
+                " z-index: 21;");
         }
         counter++;
         console.log(counter);
