@@ -1,20 +1,43 @@
+/**
+ * Three.js - 3D library
+ */
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
+
+/**
+ * Custom SettingsModal for handling user adjustments like graphics quality.
+ */
 import SettingsModal from './SettingsModal.js';
+
+/**
+ * OrbitControls - Allows orbiting, panning, and zooming a camera in a 3D scene.
+ */
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
+
+/**
+ * startPhases - Custom function that handles the phases portion.
+ */
 import { startPhases } from "./asteroidPhases/asteroidPhases.js";
+
+/**
+ * GLTFLoader - Loader for glTF models (3D models in .glb or .gltf format).
+ */
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
+
+/**
+ * AudioManager - Custom module handling background music, sfx, volume, etc.
+ */
 import { AudioManager } from './AudioManager.js';
+
+/**
+ * Increment a progress bar UI element as steps in the scene are loaded.
+ */
 import incrementProgressBar from './progressBar.js';
 
 incrementProgressBar(1);
 
-// import {
-//     CSS2DRenderer,
-//     CSS2DObject,
-// } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/renderers/CSS2DRenderer.js";
-// import HelpModal from "./HelpModal.js";
-// import { TextureLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
-// import TWEEN from "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.esm.js";
+/**
+ * Global AudioManager instance used for playing context music and ambient sounds.
+ */
 let audioManager = new AudioManager();
 
 window.onload = async () => {
@@ -25,10 +48,26 @@ window.onload = async () => {
 
 //================ CONTEXT FUNCTIONS ========================
 
-let telescopeBackground;
+/**
+ * Audio manager plays "context" sound immediately.
+ */
 audioManager.play("context");
 audioManager.setVolume(0.5);
 
+/**
+ * Stores a reference to the telescope background element in the context modal.
+ * @type {HTMLElement|null}
+ */
+let telescopeBackground;
+
+/**
+ * Asynchronously loads the "context" modal
+ * and waits for the user to dismiss it.
+ *
+ * @async
+ * @function showContext
+ * @returns {Promise<void>} A promise that resolves once the user clicks on the telescope background.
+ */
 async function showContext() {
     const phase_div = document.createElement("div");
     phase_div.setAttribute("id", "context_modal");
@@ -39,6 +78,7 @@ async function showContext() {
     );
 
     try {
+        // Fetch an external HTML snippet that describes the "context" overlay
         const response = await fetch("../pages/amp_context.html");
         const data = await response.text();
         phase_div.innerHTML = data;
@@ -53,6 +93,12 @@ async function showContext() {
     hideContext();
 }
 
+/**
+ * Returns a promise that resolves when the user clicks on the telescope background.
+ *
+ * @function waitForTelescopeClick
+ * @returns {Promise<Event>} Resolves with the click event once it occurs.
+ */
 function waitForTelescopeClick() {
     return new Promise((resolve) => {
         telescopeBackground.addEventListener(
@@ -65,6 +111,12 @@ function waitForTelescopeClick() {
     });
 }
 
+/**
+ * Removes the context modal from the DOM.
+ *
+ * @function hideContext
+ * @returns {void}
+ */
 function hideContext() {
     const modal = document.getElementById("context_modal");
     if (modal) {
@@ -72,8 +124,13 @@ function hideContext() {
     }
 }
 
+/**
+ * Starts some basic UI animations in the context modal.
+ *
+ * @function startAnimations
+ * @returns {void}
+ */
 function startAnimations() {
-
     let opacity = 0;
     let intervalID = 0;
     const scroll = document.getElementById("scroll");
@@ -82,16 +139,29 @@ function startAnimations() {
     let blinkIn = 0;
     fadeIn();
 
+    /**
+     * Fades in the scroll prompt over time.
+     * @inner
+     */
     function fadeIn() {
         clearInterval(intervalID);
         intervalID = setInterval(showScroll, 10);
     }
 
+    /**
+     * Fades out the scroll prompt over time.
+     * @inner
+     */
     function fadeOut() {
         clearInterval(intervalID);
         intervalID = setInterval(hideScroll, 10);
     }
 
+    /**
+     * Increases scroll prompt opacity until fully visible,
+     * then schedules fadeOut after a short delay.
+     * @inner
+     */
     function showScroll() {
         opacity = Number(window.getComputedStyle(scroll).getPropertyValue("opacity"));
         if (opacity < 1) {
@@ -103,6 +173,11 @@ function startAnimations() {
         }
     }
 
+    /**
+     * Decreases scroll prompt opacity until fully invisible,
+     * then starts blinking the telescope background.
+     * @inner
+     */
     function hideScroll() {
         opacity = Number(window.getComputedStyle(scroll).getPropertyValue("opacity"));
         if (opacity > 0) {
@@ -116,6 +191,10 @@ function startAnimations() {
         }
     }
 
+    /**
+     * Blinks the telescope background in/out by manipulating its opacity.
+     * @inner
+     */
     function blinkTelescope() {
         const currentColor = window.getComputedStyle(telescopeBackground).getPropertyValue("background-color");
         // Updated the regex to allow optional spaces after commas.
@@ -148,6 +227,13 @@ function startAnimations() {
     }
 }
 
+/**
+ * Stops the "context" audio, starts new audio, and initializes the main 3D scene.
+ * Called once the user dismisses the context modal.
+ *
+ * @function launch
+ * @returns {void}
+ */
 function launch() {
     audioManager.stopPlaying();
     audioManager.play("amp");
@@ -156,11 +242,21 @@ function launch() {
     // Create the scene
     const scene = new THREE.Scene();
 
+    /**
+     * Enum-like object to represent graphics quality levels.
+     * @readonly
+     * @enum {string}
+     */
     const GraphicsQuality = Object.freeze({
         LOW: 'low',
         MEDIUM: 'medium',
         HIGH: 'high'
     });
+
+    /**
+     * Current graphics quality (defaulting to MEDIUM if not stored).
+     * @type {string}
+     */
     let currentGraphicsQuality = localStorage.getItem('graphicsQuality') || GraphicsQuality.MEDIUM;
 
     // Create a camera
@@ -177,7 +273,17 @@ function launch() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Common Fractal Noise algorithm implementation using perlin
+    /**
+     * Generates fractal noise using Perlin noise as the base function.
+     * 
+     * @function fractalNoise2
+     * @param {number} x - X coordinate.
+     * @param {number} y - Y coordinate.
+     * @param {number} [octaves=4] - Number of noise layers.
+     * @param {number} [lacunarity=2] - Frequency multiplier per octave.
+     * @param {number} [persistence=0.5] - Amplitude multiplier per octave.
+     * @returns {number} A fractal noise value in the range (-1, 1).
+     */
     function fractalNoise2(x, y, octaves = 4, lacunarity = 2, persistence = 0.5) {
         let frequency = 1.0;
         let amplitude = 1.0;
@@ -196,6 +302,15 @@ function launch() {
         return sum / maxValue;
     }
 
+    /**
+     * Generates a data texture for a "space cloud" effect using fractal noise.
+     *
+     * @function generateSpaceCloudTexture
+     * @param {number} width - The width of the texture.
+     * @param {number} height - The height of the texture.
+     * @param {number} [scale=2.0] - Scales how large features in the texture appear.
+     * @returns {THREE.DataTexture} A DataTexture containing RGBA data that looks like space clouds.
+     */
     function generateSpaceCloudTexture(width, height, scale = 2.0) {
         const size = width * height;
         const data = new Uint8Array(4 * size);
@@ -238,6 +353,12 @@ function launch() {
         return texture;
     }
 
+    /**
+     * Creates a large sphere (inverted) that serves as a space-cloud background.
+     *
+     * @function createSpaceClouds
+     * @returns {THREE.Mesh} A sphere mesh with fractal cloud material, facing inward.
+     */
     function createSpaceClouds() {
         // Generate cloud texture using fractal noise
         const cloudTexture = generateSpaceCloudTexture(1024, 1024, 25.0);
@@ -255,8 +376,19 @@ function launch() {
         return spaceCloudSphere;
     }
 
+    /**
+     * Shader material for the starfield (kept in an outer variable to update uniforms later).
+     * @type {THREE.ShaderMaterial}
+     */
     let starMaterial;
 
+    /**
+     * Creates a starfield with random star positions, colors, and sizes, using a custom shader.
+     * The star density scales with currentGraphicsQuality.
+     *
+     * @function createStarField
+     * @returns {THREE.Points} A Points object representing the starfield.
+     */
     function createStarField() {
         // Adjust star count using quality setting
         let starCount;
@@ -276,9 +408,9 @@ function launch() {
         const colors = new Float32Array(starCount * 3);
         const sizes = new Float32Array(starCount);
 
-        // Generate star data as before…
+        // Generate star data
         for (let i = 0; i < starCount; i++) {
-            // Calculate star position
+            // Random star position, ensuring it's outside the minDistance bubble around camera
             let x, y, z;
             do {
                 x = (Math.random() - 0.5) * 1000;
@@ -296,19 +428,20 @@ function launch() {
             // Calculate star tint
             const tint = Math.random();
             let r, g, b;
+
             // White-Yellow
             if (tint > 0.7) {
                 r = 1.0;
                 g = 0.85 + Math.random() * 0.15;
                 b = 0.7 + Math.random() * 0.1;
 
-                // Yellow-Orange
+            // Yellow-Orange
             } else if (tint > 0.1) {
                 r = 1.0;
                 g = 0.7 + Math.random() * 0.3;
                 b = 0.4 + Math.random() * 0.2;
 
-                // White-Blue
+            // White-Blue
             } else {
                 r = 0.9;
                 g = 0.9;
@@ -327,60 +460,69 @@ function launch() {
         // Choose shader precision based on quality.
         const shaderPrecision = (currentGraphicsQuality === GraphicsQuality.LOW) ? 'mediump' : 'highp';
 
+        /**
+         * Vertex shader for the starfield.
+         * It calculates the final size of each point based on the perspective distance.
+         */
         const vertexShader = `
-      precision ${shaderPrecision} float;
-      attribute float size;
-      varying vec3 vColor;
-  
-      void main() {
-          vColor = color;
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (600.0 / -mvPosition.z);
-          gl_Position = projectionMatrix * mvPosition;
-      }
-    `;
+            precision ${shaderPrecision} float;
+            attribute float size;
+            varying vec3 vColor;
+        
+            void main() {
+                vColor = color;
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                gl_PointSize = size * (600.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
 
+        /**
+         * Fragment shader for the starfield.
+         * It creates a circular point with a glow/falloff effect.
+         * Has logic to dim stars outside a scope area if blur is enabled.
+         */
         const fragmentShader = `
-      precision ${shaderPrecision} float;
-      varying vec3 vColor;
-      uniform vec2 uCirclePos; 
-      uniform float uCircleRadius;
-      uniform bool uBlurEnabled;
-      uniform bool uBlurCircle;
-      uniform vec2 uResolution;
-  
-      void main() {
-          vec2 coord = gl_PointCoord - vec2(0.5);
-          float dist = length(coord);
-  
-          if (dist > 0.5) {
-              discard;
-          }
-  
-          float core = 1.0 - smoothstep(0.0, 0.08, dist);
-          float glow = 1.0 - smoothstep(0.08, 0.5, dist);
-          glow *= 0.5;
-          float alpha = core + glow;
-  
-          vec2 fragPos = gl_FragCoord.xy / uResolution;
-          float minDim = min(uResolution.x, uResolution.y);
-          float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
-          float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
-          float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
-          float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
-          vec4 starColor = vec4(vColor, alpha);
-  
-          if (uBlurCircle && uBlurEnabled && screenDist > 1.0) {
-              starColor.rgb *= 0.3; 
-          }
-          if (!uBlurCircle && uBlurEnabled) {
-              starColor.rgb *= 0.3; 
-          }
-          gl_FragColor = starColor;
-      }
-    `;
+            precision ${shaderPrecision} float;
+            varying vec3 vColor;
+            uniform vec2 uCirclePos; 
+            uniform float uCircleRadius;
+            uniform bool uBlurEnabled;
+            uniform bool uBlurCircle;
+            uniform vec2 uResolution;
+        
+            void main() {
+                vec2 coord = gl_PointCoord - vec2(0.5);
+                float dist = length(coord);
+        
+                if (dist > 0.5) {
+                    discard;
+                }
+        
+                float core = 1.0 - smoothstep(0.0, 0.08, dist);
+                float glow = 1.0 - smoothstep(0.08, 0.5, dist);
+                glow *= 0.5;
+                float alpha = core + glow;
+        
+                vec2 fragPos = gl_FragCoord.xy / uResolution;
+                float minDim = min(uResolution.x, uResolution.y);
+                float adjustedRadius = uCircleRadius * (minDim / uResolution.x); 
+                float screenDistX = abs(fragPos.x - uCirclePos.x) / adjustedRadius;
+                float screenDistY = abs(fragPos.y - uCirclePos.y) / uCircleRadius;
+                float screenDist = sqrt(screenDistX * screenDistX + screenDistY * screenDistY);
+                vec4 starColor = vec4(vColor, alpha);
+        
+                if (uBlurCircle && uBlurEnabled && screenDist > 1.0) {
+                    starColor.rgb *= 0.3; 
+                }
+                if (!uBlurCircle && uBlurEnabled) {
+                    starColor.rgb *= 0.3; 
+                }
+                gl_FragColor = starColor;
+            }
+        `;
 
-        // calculate scope radius
+        // Calculate scope radius from an on-screen DOM element
         document.getElementById('scope').style.display = 'block';
         const aspect = window.innerWidth / window.innerHeight;
         const scopeRadius = document.getElementById('scope').offsetWidth / 2 / window.innerWidth * aspect;
@@ -412,6 +554,13 @@ function launch() {
     let stars = createStarField();
     scene.add(stars);
 
+    /**
+     * Updates the current graphics quality setting, rebuilds the star field, and saves it locally.
+     *
+     * @function updateGraphicsQuality
+     * @param {string} newQuality - The new graphics quality level.
+     * @returns {void}
+     */
     function updateGraphicsQuality(newQuality) {
         currentGraphicsQuality = newQuality;
         localStorage.setItem('graphicsQuality', newQuality);
@@ -427,7 +576,7 @@ function launch() {
 
     camera.lookAt(0, 0, 0);
 
-    // Asteroid distance from edges of screen
+    // Boundaries for placing the asteroid on the screen
     const MIN_X = -1;
     const MAX_X = 1;
     const MIN_Y = -0.1;
@@ -437,6 +586,13 @@ function launch() {
     let asteroidY;
     let asteroidZ;
 
+    /**
+     * Dynamically generates a texture for an asteroid using an HTML canvas.
+     * Simulates craters by drawing radial gradients.
+     *
+     * @function generateAsteroidTexture
+     * @returns {THREE.CanvasTexture} The generated texture for the asteroid surface.
+     */
     function generateAsteroidTexture() {
         const size = 512;
         const canvas = document.createElement("canvas");
@@ -469,13 +625,18 @@ function launch() {
         return new THREE.CanvasTexture(canvas);
     }
 
-
-    // create and add asteroid belt
+    /**
+     * Creates an asteroid belt with many small asteroids. Also determines a random position
+     * for the main asteroid (to ensure it remains on-screen).
+     *
+     * @function createAsteroidBelt
+     * @param {THREE.Scene} scene - The Three.js scene to which the asteroids will be added.
+     * @returns {void}
+     */
     function createAsteroidBelt(scene) {
         const numAsteroids = window.innerWidth * .3;
         const beltRadius = 50;
         const beltThickness = 10;
-        // const asteroidGeometry = new THREE.SphereGeometry(0.5, 8, 8);
         const asteroidGeometry = new THREE.SphereGeometry(0.5, 256, 256);
         const asteroidMaterial = new THREE.MeshStandardMaterial({
             map: generateAsteroidTexture(),
@@ -487,16 +648,15 @@ function launch() {
         asteroidGeometry.computeBoundingBox();
         asteroidGeometry.computeVertexNormals();
 
+        // Randomly choose the X and Y for the main asteroid, ensuring it's within boundaries
         while (true) {
-            // const asteroidAngle = Math.random() * Math.PI * 2;
-            // const asteroidDistance = beltRadius + (Math.random() - 0.5) * beltThickness;
-
             asteroidX = THREE.MathUtils.lerp(MIN_X, MAX_X, Math.random());
             asteroidY = THREE.MathUtils.lerp(MIN_Y, MAX_Y, Math.random());
             asteroidZ = 0;
             if (asteroidX < MAX_X && asteroidX > MIN_X) { break; }
         }
 
+        // Populate the belt
         for (let i = 0; i < numAsteroids; i++) {
             const angle = Math.random() * Math.PI * 2;
             const distance = beltRadius + (Math.random() - 0.5) * beltThickness;
@@ -520,40 +680,45 @@ function launch() {
         }
     }
 
-    // add asteroid belt
+    // Add the asteroid belt to the scene
     createAsteroidBelt(scene);
 
     // Add space clouds
     const spaceCloudSphere = createSpaceClouds();
     scene.add(spaceCloudSphere);
 
-    // Define the camera's vertical and horizontal bounds
+    // Calculate the camera's "viewplane" dimensions
     const cameraHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
     const cameraWidth = cameraHeight * camera.aspect;
 
-    // Unproject from normalized coordinates to camera
+    // Convert normalized screen coordinates to 3D coordinates in front of the camera
     const asteroidVector = new THREE.Vector3(asteroidX, asteroidY, 0);
     asteroidVector.unproject(camera);
 
-    // The ray from camera
+    // Ray from the camera to the unprojected point
     const cameraRay = asteroidVector.sub(camera.position).normalize();
 
-    // Distance from camera to z plane
+    // We assume the main asteroid will be placed at Z=0 plane in front of camera
     const distanceFromCamera = (0 - camera.position.z) / cameraRay.z * 2;
 
-    // Final position at z plane
+    // Final position for the main asteroid
     const asteroidPosition = camera.position.clone().add(cameraRay.multiplyScalar(distanceFromCamera));
 
-    // Load asteroid
-    const loader = new GLTFLoader();
+    /**
+     * The main asteroid GLTF model once loaded.
+     * @type {THREE.Object3D|null}
+     */
     let asteroid;
+
+    // Load the main asteroid model
+    const loader = new GLTFLoader();
     loader.load('../assets/models/asteroid.glb', (gltf) => {
         asteroid = gltf.scene;
         asteroid.scale.set(0.2, 0.2, 0.2);
         asteroid.position.copy(asteroidPosition);
         asteroid.visible = false;
 
-        // Make asteroid model lighter (original too dark)
+        // Make asteroid model lighter
         asteroid.traverse((child) => {
             if (child.isMesh) {
                 child.material.emissive = new THREE.Color(0x222222);
@@ -564,7 +729,7 @@ function launch() {
         scene.add(asteroid);
     });
 
-    // Load telescope parts
+    // Load telescope models (lower and upper parts)
     let telescopeLower, telescopeUpper;
     loader.load('../assets/models/telescope_lower.glb', (gltf) => {
         telescopeLower = gltf.scene;
@@ -574,7 +739,7 @@ function launch() {
         telescopeLower.rotation.y = THREE.MathUtils.degToRad(90); // Base rotation away from camera
         scene.add(telescopeLower);
 
-        // Once loaded, load the upper
+        // Once the lower is loaded, load the upper part
         loader.load('../assets/models/telescope_upper.glb', (gltf2) => {
             telescopeUpper = gltf2.scene;
             telescopeUpper.position.set(0, 0, 0); // x y z (y and z will reposition to align with scope)
@@ -582,7 +747,7 @@ function launch() {
         });
     });
 
-    // Add lighting
+    // Add global lighting
     const ambientLight = new THREE.AmbientLight(0x404040, 2);
     scene.add(ambientLight);
 
@@ -590,34 +755,47 @@ function launch() {
     pointLight.position.set(5, 5, 5);
     scene.add(pointLight);
 
-    // Scope behavior
+    // DOM element for the "scope" overlay
     const scope = document.getElementById('scope');
 
-    // Raycaster setup
+    // Raycaster to handle 3D picking or alignment
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2()
 
-    // OrbitControls 
+    // Basic orbit controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = false;
     controls.enableRotate = false;
     controls.enablePan = false;
     controls.enableZoom = false;
 
+    // Settings modal instance that allows changing graphics quality
     const settingsModal = new SettingsModal(updateGraphicsQuality);
 
-    let holdTime = 0.0; // Time on asteroid
-    const holdThreshold = 0.5; // Time to trigger zoom
-    let isLockOn = false; // Scope is locked on
-    let isZoom = false; // Camera zoom starts
+    // State variables for the scope-based lock-on logic
+    let holdTime = 0.0; // Time the scope has hovered over the asteroid
+    const holdThreshold = 0.5; // Time to lock onto the asteroid
+    let isLockOn = false; // Indicates if we've locked onto the asteroid
+    let isZoom = false; // Indicates if camera zoom is in progress
 
+    // Public global flag indicating if the scope overlay is disabled
     window.scopeDisabled = false;
 
+    // Target coordinate in 3D space to point the telescope at
     let target3D = new THREE.Vector3();
 
+    /**
+     * Moves the "scope" DOM element to follow the pointer.
+     * Updates mouse coordinates for Raycaster usage.
+     *
+     * @function moveScope
+     * @param {MouseEvent|TouchEvent} event - The pointer event.
+     * @returns {void}
+     */
     function moveScope(event) {
         let clientX, clientY;
         if (event.touches) {
+            // For touch devices, use the last touch point
             const touch = event.touches[event.touches.length - 1];
             clientX = touch.clientX;
             clientY = touch.clientY;
@@ -625,17 +803,30 @@ function launch() {
             clientX = event.clientX;
             clientY = event.clientY;
         }
+
+        // Center scope on pointer
         scope.style.left = `${clientX - scope.offsetWidth / 2}px`;
         scope.style.top = `${clientY - scope.offsetHeight / 2}px`;
 
+        // Convert to normalized device coords for raycasting
         mouse.x = (clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(clientY / window.innerHeight) * 2 + 1;
 
+        // Update star shader uniform to track the scope's position
         const normX = clientX / window.innerWidth;
         const normY = 1 - (clientY / window.innerHeight);
         starMaterial.uniforms.uCirclePos.value.set(normX, normY);
     }
 
+    /**
+     * Angles the telescope upper part to aim at the target3D position over time.
+     * The current code only partially controls X rotation.
+     * 
+     * @function pointTelescopeAt
+     * @param {THREE.Vector3} target3D - The 3D point we aim at.
+     * @param {number} delta - Time elapsed since last frame (seconds).
+     * @returns {void}
+     */
     let currentYaw = 0;
     let currentPitch = 0;
     function pointTelescopeAt(target3D, delta) {
@@ -647,6 +838,8 @@ function launch() {
         const dz = target3D.z - telescopeUpper.position.z;
         const targetYaw = Math.atan2(dz, dx);
         const rotationSpeed = 4.0;
+
+        // Rotate the telescope upper assembly
         telescopeUpper.rotation.x = THREE.MathUtils.lerp(
             telescopeUpper.rotation.x,
             targetYaw + THREE.MathUtils.degToRad(90),
@@ -677,10 +870,18 @@ function launch() {
         // telescopeUpper.rotation.x = currentPitch;
     }
 
-    // Star transition
+    // Used for star transition effect
     const starTransistionGeometry = new THREE.BufferGeometry();
     let isStarTransition = false;
     let phaseBool = false;
+
+    /**
+     * Trigger a warp-like animation on the stars, 
+     * then remove the telescope and start the next "phases."
+     *
+     * @function starFieldTransistion
+     * @returns {void}
+     */
     function starFieldTransistion() {
         isStarTransition = true;
 
@@ -692,7 +893,6 @@ function launch() {
             isStarTransition = false;
             asteroid.visible = false;
             console.log('Transitioning to phases');
-            // startPhases();
             const mainTitle = document.querySelector(".main-title");
             if (mainTitle) {
                 mainTitle.style.visibility = "hidden";
@@ -703,8 +903,13 @@ function launch() {
         }, 2000);
     }
 
-
-    // Pointer events
+    /**
+     * Pointer down event - shows the scope overlay and dims the stars outside it.
+     * 
+     * @function onPointerDown
+     * @param {MouseEvent|TouchEvent} event - The pointer down event.
+     * @returns {void}
+     */
     function onPointerDown(event) {
         if (window.scopeDisabled) return;
         scope.style.display = 'block';
@@ -712,6 +917,13 @@ function launch() {
         moveScope(event);
     }
 
+    /**
+     * Pointer move event - if scope is visible, move it and update star uniforms.
+     *
+     * @function onPointerMove
+     * @param {MouseEvent|TouchEvent} event - The pointer move event.
+     * @returns {void}
+     */
     function onPointerMove(event) {
         if (window.scopeDisabled) return;
 
@@ -720,6 +932,12 @@ function launch() {
         }
     }
 
+    /**
+     * Pointer up event - hides the scope and disables star dimming.
+     *
+     * @function onPointerUp
+     * @returns {void}
+     */
     function onPointerUp() {
         if (window.scopeDisabled) return;
 
@@ -727,6 +945,7 @@ function launch() {
         scope.style.display = 'none';
     }
 
+    // Touch event listeners
     document.addEventListener('touchstart', (event) => {
         if (window.scopeDisabled) return;
         starMaterial.uniforms.uBlurCircle.value = true;
@@ -739,7 +958,8 @@ function launch() {
         starMaterial.uniforms.uBlurCircle.value = false;
         scope.style.display = 'none';
     });
-    // Attach pointer events
+
+    // Attach pointer events for mouse
     document.addEventListener('mousedown', onPointerDown);
     document.addEventListener('pointermove', onPointerMove);
     document.addEventListener('mouseup', onPointerUp);
@@ -748,7 +968,10 @@ function launch() {
     document.addEventListener('touchmove', onPointerMove);
     document.addEventListener('touchend', onPointerUp);
 
-    // Create a button to auto find Psyche Asteroid
+    /**
+     * A simple button to automatically locate and lock onto the main asteroid.
+     * @type {HTMLButtonElement}
+     */
     const autoFindBtn = document.createElement('button');
     autoFindBtn.innerText = "Auto Find Psyche Asteroid";
     autoFindBtn.style.position = "fixed";
@@ -780,7 +1003,11 @@ function launch() {
     // Append the button to the body
     document.body.appendChild(autoFindBtn);
 
-    // Animate the scene
+    /**
+     * Main animation loop for rendering the scene and updating logic.
+     * @function animate
+     * @returns {void}
+     */
     let lastTime = performance.now();
     function animate() {
         requestAnimationFrame(animate);
@@ -794,24 +1021,32 @@ function launch() {
         // Aim telescope
         pointTelescopeAt(target3D, delta);
 
-        // Star transition
+        // If we are in a star transition, warp star positions
         if (isStarTransition) {
             warpStars();
         } else {
+            // Slight rotation to create a star drift effect
             stars.rotation.x += 0.00002;
             stars.rotation.y += 0.00002;
         }
 
-        // Check if in scope
+        // Check if asteroid is in scope
         if (!isLockOn && asteroid && scope.style.display === 'block') {
             checkAsteroidInScope(delta);
         }
 
-        // Render
+        // Render the scene
         renderer.render(scene, camera);
     }
     animate();
 
+    /**
+     * Updates the global target3D vector by projecting from mouse coords
+     * onto a plane at the asteroid's Z position.
+     *
+     * @function updateTarget3D
+     * @returns {void}
+     */
     function updateTarget3D() {
         if (!asteroid) return;
         const asteroidZ = asteroid.position.z;
@@ -822,10 +1057,18 @@ function launch() {
         target3D.copy(intersectPoint);
     }
 
+    /**
+     * Checks if the asteroid is within the scope circle.
+     * If it remains in the circle for holdThreshold seconds, we lock on.
+     *
+     * @function checkAsteroidInScope
+     * @param {number} delta - Time elapsed since last frame (seconds).
+     * @returns {void}
+     */
     function checkAsteroidInScope(delta) {
         if (!asteroid) return;
 
-        // Get asteroid position 2D
+        // Get asteroid position in 2D screen coords
         const asteroidScreenPos = asteroid.position.clone();
         asteroidScreenPos.project(camera);
         asteroidScreenPos.x = (asteroidScreenPos.x + 1) * window.innerWidth / 2;
@@ -858,6 +1101,12 @@ function launch() {
         }
     }
 
+    /**
+     * Animates the scope to snap onto the asteroid, then initiates camera zoom.
+     *
+     * @function lockOn
+     * @returns {void}
+     */
     function lockOn() {
         isLockOn = true;
         window.scopeDisabled = true;
@@ -867,7 +1116,7 @@ function launch() {
         const startLeft = parseFloat(scope.style.left);
         const startTop = parseFloat(scope.style.top);
 
-        // Get asteroid position in 2D
+        // Convert asteroid position to screen space
         const asteroidScreenPos = asteroid.position.clone();
         asteroidScreenPos.project(camera);
         asteroidScreenPos.x = (asteroidScreenPos.x + 1) * window.innerWidth / 2;
@@ -880,6 +1129,11 @@ function launch() {
         const duration = 1000;
         const startTime = performance.now();
 
+        /**
+         * Internal function to animate the scope overlay from current position to asteroid position.
+         * @inner
+         * @param {DOMHighResTimeStamp} tNow - Current time in ms (high-res).
+         */
         function animateScopeToAsteroid(tNow) {
             const elapsed = tNow - startTime;
             const t = Math.min(elapsed / duration, 1);
@@ -890,7 +1144,7 @@ function launch() {
             scope.style.left = newLeft + 'px';
             scope.style.top = newTop + 'px';
 
-            // Rotate asteroid to make noticable
+            // Rotate asteroid slightly for visual effect
             asteroid.rotation.x += 0.002;
             asteroid.rotation.y += 0.002;
 
@@ -904,6 +1158,13 @@ function launch() {
         requestAnimationFrame(animateScopeToAsteroid);
     }
 
+    /**
+     * Zooms the camera in toward the asteroid.
+     * Once complete, triggers the starFieldTransistion.
+     *
+     * @function startCameraZoom
+     * @returns {void}
+     */
     function startCameraZoom() {
         isZoom = true;
         scope.style.display = 'none';
@@ -923,30 +1184,34 @@ function launch() {
         const startScale = asteroid.scale.clone();
         const endScale = new THREE.Vector3(0.25, 0.25, 0.25);
 
+        /**
+         * Animates the camera moving in toward the asteroid over a fixed duration.
+         * 
+         * @inner
+         * @param {DOMHighResTimeStamp} time - Current time in ms (high-res).
+         */
         function animateZoom(time) {
             const elapsed = time - startTime;
             const t = Math.min(elapsed / duration, 1);
 
-            // Move camera/controls
+            // LERP camera and controls
             camera.position.lerpVectors(startCameraPos, endCameraPos, t);
             controls.target.lerpVectors(startTarget, endTarget, t);
 
-            // Asteroid rotation
+            // Slight asteroid rotation
             asteroid.rotation.x += 0.002;
             asteroid.rotation.y += 0.002;
 
-            // Increase asteroid scale
+            // Scale the asteroid
             const currentScale = new THREE.Vector3().lerpVectors(startScale, endScale, t);
             asteroid.scale.copy(currentScale);
 
             controls.update();
 
-            // Animate zoom
             if (t < 1) {
                 requestAnimationFrame(animateZoom);
-
-                // Start star field transition
             } else {
+                // When done zooming, style the modal, increment progress, and start star transition
                 settingsModal.applyAMPIModalStyles();
                 incrementProgressBar(2);
                 starFieldTransistion();
@@ -956,29 +1221,57 @@ function launch() {
         requestAnimationFrame(animateZoom);
     }
 
-
-
+    /**
+     * Simulates warp-like motion for the starfield by shifting their Z positions.
+     * Once warp starts, the button to auto-find the asteroid is removed.
+     *
+     * @function warpStars
+     * @returns {void}
+     */
     function warpStars() {
         const starPos = stars.geometry.attributes.position.array;
         for (let i = 0; i < starPos.length; i += 3) {
+            // Move each star along Z
             starPos[i + 2] -= 0.5;
         }
 
+        // Remove the autoFindBtn from the DOM once we warp
         autoFindBtn.remove();
 
         stars.geometry.attributes.position.needsUpdate = true;
     }
 
+    /**
+     * Registers event listeners to detect user activity (mouse/touch/scroll).
+     * If user is inactive, automatically opens a "help" modal.
+     *
+     * @function initializeAutoHelp
+     * @returns {void}
+     */
     function initializeAutoHelp() {
         ['mousemove', 'keydown', 'click', 'touchstart', 'scroll'].forEach(event => {
             window.addEventListener(event, resetAutoHelp);
         });
     }
+
+    /**
+     * Automatically opens a "help" modal if user remains inactive.
+     *
+     * @function triggerAutoHelp
+     * @returns {void}
+     */
     function triggerAutoHelp() {
         if (!phaseBool) {
             document.getElementById("help-icon-button").click();
         }
     }
+
+    /**
+     * Resets a timer that triggers help if user is inactive for 15 seconds.
+     *
+     * @function resetAutoHelp
+     * @returns {void}
+     */
     function resetAutoHelp() {
         clearTimeout(inactivityTimer);
         inactivityTimer = setTimeout(triggerAutoHelp, 15000);
@@ -986,7 +1279,10 @@ function launch() {
     let inactivityTimer = setTimeout(triggerAutoHelp, 15000);
     initializeAutoHelp();
 
-    // Handle window resizing
+    /**
+     * Listen to window resize events so that the scene and uniforms
+     * adjust to the new resolution.
+     */
     window.addEventListener("resize", () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
