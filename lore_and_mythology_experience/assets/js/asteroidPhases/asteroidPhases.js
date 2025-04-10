@@ -23,7 +23,8 @@ export function startPhases(phasesAudioManager) {
     audioManager = phasesAudioManager;
     phaseIndex = 0;
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
-    showPhase(phaseValues[phaseIndex]);
+    startSatellitePhases(audioManager);
+    // showPhase(phaseValues[phaseIndex]);
 }
 
 /**
