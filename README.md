@@ -235,32 +235,54 @@ CSS is located in '/lore_and_mythology_experience/assets/css'.
 
 #### JavaScript
 JavaScript is located in '/lore_and_mythology_experience/assets/js'.
-- 'AudioManager.js'
+- 'AudioManager.js' contains the js for the audio.
+* Play aduio based on user action.
+* Play aduio based on user progress.
 
-- 'index.js'
+- 'index.js' contains the js for the launch page.
 
-- 'main.js'
+- 'main.js' contains the js for the background of the experience.
+* Generates 3D environment for mini-game.
+* Add event listeners.
 
-- 'perlin.js'
+- 'perlin.js' contains code from Stefan Gustavson.
+* A speed improved perlin and simplex noise algorithm for 2D.
 
-- 'progressBar.js'
+- 'progressBar.js' contains the js for the launch page.
+* Shows a progress bar on the bottom of the screen.
 
 - 'SettingsModal.js'
+* The settings icon button.
+* Loading settings modal content.
+* Closing the settings modal.
+* Setting the experience CSS style based on the mode chosen.
+* Adjusting the volume in the SFXManager based on the volume slider.
 
-- 'asteroidPhases/asteroidPhases.js'
+- 'asteroidPhases/asteroidPhases.js' contains the js for the asteroid phases.
+* Shows the next Phase.
+* Close the current Phase before going to the next.
 
-- 'asteroidPhases/asteroidPhasesData.js'
+- 'asteroidPhases/asteroidPhasesData.js' contains an array of information for each asteroid phase. 
 
-- 'satellitePhases/satellitePhases.js'
+- 'satellitePhases/satellitePhases.js' contains the js for the satellite phases.
+* Shows the next Phase.
+* Close the current Phase before going to the next.
 
-- 'satellitePhases/satellitePhasesData.js'
+- 'satellitePhases/satellitePhasesData.js' contains an array of information for each asteroid phase. 
 
-- 'satellitePhases/showFinale.js'
+- 'satellitePhases/showFinale.js' contains the js for the finale popup.
+* Shows at the end of the experience.
+* Psyche logo that is a button to pysche.asu.edu.
+* Button that takes you back to the launch page. 
 
-- 'satellitePhases/showIntro.js'
+- 'satellitePhases/showIntro.js' contains the js to show infor about Psyche satellite.
+* Display data and time in a typing animation before a short video.
 
-- 'satellitePhases/showLaunch.js'
+- 'satellitePhases/showLaunch.js' contains the js for the Psyche satellite launch video.
+* Display launch video for Psyche satellite video.
 
-- 'satellitePhases/showTimer.js'
+- 'satellitePhases/showTimer.js' contains the js for the Psyche satellite mission timer.
+* Display timer for Psyche satellite progress.
 
 ### Screenshots
+![Page Screenshots](lore_and_mythology_experience/assets/images/page_screenshots.png)
