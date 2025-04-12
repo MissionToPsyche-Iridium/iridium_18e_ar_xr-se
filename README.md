@@ -265,24 +265,24 @@ JavaScript is located in '/lore_and_mythology_experience/assets/js'.
 - 'asteroidPhases/asteroidPhasesData.js' contains an array of information for each asteroid phase. 
 
 - 'satellitePhases/satellitePhases.js' contains the js for the satellite phases.
-* Shows the next Phase.
-* Close the current Phase before going to the next.
+ * Shows the next Phase.
+ * Close the current Phase before going to the next.
 
 - 'satellitePhases/satellitePhasesData.js' contains an array of information for each asteroid phase. 
 
 - 'satellitePhases/showFinale.js' contains the js for the finale popup.
-* Shows at the end of the experience.
-* Psyche logo that is a button to pysche.asu.edu.
-* Button that takes you back to the launch page. 
+ * Shows at the end of the experience.
+ * Psyche logo that is a button to pysche.asu.edu.
+ * Button that takes you back to the launch page. 
 
 - 'satellitePhases/showIntro.js' contains the js to show infor about Psyche satellite.
-* Display data and time in a typing animation before a short video.
+ * Display data and time in a typing animation before a short video.
 
 - 'satellitePhases/showLaunch.js' contains the js for the Psyche satellite launch video.
-* Display launch video for Psyche satellite video.
+ * Display launch video for Psyche satellite video.
 
 - 'satellitePhases/showTimer.js' contains the js for the Psyche satellite mission timer.
-* Display timer for Psyche satellite progress.
+ * Display timer for Psyche satellite progress.
 
 ### Screenshots
 ![Page Screenshots](lore_and_mythology_experience/assets/images/page_screenshots.png)
