@@ -40,24 +40,25 @@ export function startSatellitePhases(phasesAudioManager) {
     document.getElementById("close_help").textContent = "×";
     document.getElementById("close_help").setAttribute("style", "position: absolute; top: calc(((100vh - 70vh) / 2) + ((0.7 * 70vh) / 15)); left: calc((100vw / 2) + ((0.7 * 70vh) / 2) - ((0.7 * 70vh) / 6.3)); font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: bold; cursor: pointer;");
     document.getElementById("help_modal_title").setAttribute("style", "position: absolute; top: calc(((100vh - 70vh) / 2) + ((0.7 * 70vh) / 8)); left: calc((100vw / 2) - (48px / 2)); font-family: Arial, Helvetica, sans-serif; font-size: 24px;");
-    var swipes = document.getElementsByClassName("swipe");
-    for (var i = 0; i < swipes.length; i++) {
+    const swipes = document.getElementsByClassName("swipe");
+    for (let i = 0; i < swipes.length; i++) {
         swipes[i].setAttribute("style", "display: none;");
     }
     document.getElementById("swipe").setAttribute("style", "display: none;");
-    var taps = document.getElementsByClassName("tap");
-    for (var j = 0; j < taps.length; j++) {
+    const taps = document.getElementsByClassName("tap");
+    for (let j = 0; j < taps.length; j++) {
         taps[j].setAttribute("style", "position: absolute; top: calc(((100vh - 70vh) / 2) + 70vh - ((0.3 * 0.7 * 72vh) + 42px + ((0.7 * 70vh) / 4))); left: calc((100vw / 2) - (((0.58 * 0.7 * 70vh) / 2) + 0.7vh)); font-family: Arial, Helvetica, sans-serif;");
     }
     document.getElementById("tap").setAttribute("style", "width: calc(0.3 * 0.7 * 70vh); align-self: center; padding: 0.99vh;");
-    var text_boxes = document.getElementsByClassName("text_box");
-    for (var k = 0; k < text_boxes.length; k++) {
+    const text_boxes = document.getElementsByClassName("text_box");
+    for (let k = 0; k < text_boxes.length; k++) {
         text_boxes[k].setAttribute("style", "border-style: solid; border-width: thin; border-color: black; border-radius: 5px; padding: 0.5vh; display: flex; flex-direction: column; width: calc(0.58 * 0.7 * 70vh);");
     }
-    var instructs = document.getElementsByClassName("instructions");
-    for (var l = 0; l < instructs.length; l++) {
+    const instructs = document.getElementsByClassName("instructions");
+    for (let l = 0; l < instructs.length; l++) {
         instructs[l].setAttribute("style", "text-align: center; font-size: 16px; color: #333;");
     }
+
 
     phaseIndex = 0;
     // using callbacks to ensure one function completes before another starts
@@ -101,7 +102,7 @@ document.head.appendChild(style);
 /**
  * Initializes the satellite (SMP) phase data and displays it.
  * Note: To update the text or images used in the satellite phases, modify the phases object.
- * @param phase - The current phase from the phases data. Contains phase data for phase title, text, and images.
+ * @param phase - The current phase from the phase data. Contains phase data for phase title, text, and images.
  */
 export default function showPhase(phase) {
     console.log('Transitioning to satellite phases');
@@ -112,29 +113,23 @@ export default function showPhase(phase) {
         // set up html and css
         const phase_div = document.createElement("div");
         phase_div.setAttribute("id", "phase_modal");
-        phase_div.setAttribute("style", "display: block; position: fixed;" +
-            " z-index: 20; left: 0; top: 0; width: 100%; height: 100%; " +
-            "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s; font-size: 16px");
+        phase_div.classList.add("phase-modal");
 
         let phase_innerHTML = "";
 
-        // Create a div and a span for the phase title
         if (phase.title && phase.title.length > 0) {
             phase_innerHTML += `<div id="phase-title">`;
             phase_innerHTML += `<span class="title">${phase.title}</span>`;
             phase_innerHTML += `</div>`;
         }
 
-        // Create a img for the phase image
         if (phase.image && phase.image.length > 0) {
-            phase_innerHTML += `<img src="${phase.image}" id="phase"/>`;
+            phase_innerHTML += `<img src="${phase.image}" id="phase" alt="${phase.title}"/>`;
         }
 
-        // Create a img for the phase text box banner image
         if (phase.banner && phase.banner.length > 0) {
-            phase_innerHTML += `<img src="${phase.banner}" id="banner"/>`;
+            phase_innerHTML += `<div id="banner" class="banner" style="background-image: url(${phase.banner}); background-size: cover; background-position: center center; background-repeat: no-repeat; width: 100%; height: 100%;">`;
 
-            // Create a div and span for the phase text box text
             if (phase.text.some(line => line !== "")) {
                 phase_innerHTML += `<div id="banner_text_box">`;
                 phase.text.forEach((line) => {
@@ -149,7 +144,7 @@ export default function showPhase(phase) {
         phase_div.innerHTML = phase_innerHTML;
         document.body.appendChild(phase_div);
 
-        // add styles to the phase title
+        // add style to phase title
         if (phase.title && phase.title.length > 0) {
             document.getElementById("phase-title").setAttribute(
                 "style", "text-align: center; font-size: calc(0.08 * 40vh);" +
@@ -158,32 +153,22 @@ export default function showPhase(phase) {
                 "font-family: 'Comfortaa', Arial, sans-serif;");
         }
 
-        // add styles to phase image
+        // add styles to the phase image and banner
         if (phase.image && phase.image.length > 0) {
-            document.getElementById("phase").setAttribute("style",
-                "background-color: transparent; width: calc(0.8 * 45vh); height: auto;" +
-                " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 40vh);" +
-                " left: 50%; transform: translateX(-50%); z-index: 10;" +
-                "transition: 1.5s ease-in-out;");
+            document.getElementById("phase").className = "phase";
         }
-        // add styles to phase banner
+
         if (phase.banner && phase.banner.length > 0) {
             let banner = document.getElementById("banner");
 
             // Ensure banner exists before applying styles
             if (!banner) {
                 banner = document.createElement("div");
+                banner.style.backgroundImage = `url(${phase.banner})`;
                 banner.id = "banner";
-                document.body.appendChild(banner);
             }
+            banner.className = "banner";
 
-            banner.setAttribute("style",
-                "background-color: transparent; max-width: 90vw; width: calc(0.8 * 65vh); border-radius: 12px;" +
-                " position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%);" +
-                " z-index: 5; transition: 1.5s ease-in-out; display: flex; align-items: center; justify-content: center;" +
-                " text-align: center; overflow: visible; flex-direction: column;");
-
-            // add styles to phase text
             if (phase.text.some(line => line !== "")) {
                 let textBox = document.getElementById("banner_text_box");
 
@@ -192,56 +177,26 @@ export default function showPhase(phase) {
                     textBox = document.createElement("div");
                     textBox.id = "banner_text_box";
                     banner.appendChild(textBox);
+                    document.body.appendChild(banner);
                 }
 
-                let bottomValue;
 
-                // adjust text box size for various screen sizes. (Responsive design)
-                if (window.innerWidth <= 768) { // Small screens (mobile)
-                    console.log("small screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "18vh";
-                    }  else {
-                        bottomValue = "22vh";
-                    }
-                } else if (window.innerWidth <= 1024) { // Medium screens (tablets)
-                    console.log("medium screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "21vh";
-                    }  else {
-                        bottomValue = "23vh";
-                    }
-                } else { // Large screens (desktops)
-                    console.log("large screen");
-                    if (phase.text.length > 3) {
-                        bottomValue = "21vh";
-                    }  else {
-                        bottomValue = "24vh";
-                    }
-                }
-
-                textBox.setAttribute("style",
-                    `display: flex; flex-wrap: wrap; position: inherit; align-items: center;
-                    justify-content: center; width: calc(0.8* 28vh); color: #C9FFFC;
-                    font-size: clamp(0.8rem, 2vw, 0.5rem); font-family: 'Comfortaa', Arial, sans-serif;
-                    text-align: center; padding: 4vh; white-space: normal; bottom: ${bottomValue}; z-index: 10;
-                    left: calc(50vw - ((0.8 * 50vh + 10vh) / 2))`);
+                textBox.className = "banner_text_box";
 
                 // Populate the text box with the phase text
                 textBox.innerHTML = phase.text.join(" ");  // Converts the array into a single line sentence
             }
         }
 
-        var infos = document.getElementsByClassName("info");
-        // set style of phase text box text
-        for (var i = 0; i < infos.length; i++) {
+        const infos = document.getElementsByClassName("info");
+        for (let i = 0; i < infos.length; i++) {
             infos[i].setAttribute("style", "text-align: center; font-size: calc(0.045 * 40vh);" +
                 " z-index: 21; transition: 1.5s east-in;");
         }
 
         // If the phase has additional images, add them
         if (phase.additionalImages) {
-            phase.additionalImages.forEach((image, index) => {
+            phase.additionalImages.forEach((image) => {
                 const overlayImage = document.createElement("img");
                 overlayImage.classList.add("fade-in");
                 overlayImage.setAttribute("src", image.src);
@@ -249,14 +204,14 @@ export default function showPhase(phase) {
                 // add position styles for stacking additional images on top of phase image
                 overlayImage.setAttribute("style", `position: ${image.position}; top: ${image.top}; left: ${image.left}; z-index: 15;`);
                 overlayImage.setAttribute("style", "width: calc(0.8 * 50vh); height: auto" +
-                    " border-radius: 12px; padding: 5vh; position: absolute; top: calc(0.25 * 10vh);" +
+                    " border-radius: 12px; padding: 5vh; position: absolute; top: 20vh;" +
                     " left: 50%; transform: translateX(-50%); z-index: 21; transition: 1.5s ease-in-out;");
 
                 document.body.appendChild(overlayImage);
             });
         }
 
-        // Create a next/continue button with styling
+        // Add next button
         const nextButton = document.createElement("button");
         nextButton.id = "next-btn";
         nextButton.setAttribute("style", `
@@ -275,10 +230,6 @@ export default function showPhase(phase) {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         `);
-        /*
-        Create an event listener for the next/continue button.
-        When clicked, the application will transition to the next phase.
-        */
         nextButton.addEventListener("click", () => {
                 setTimeout(() => {
                     phase_div.classList.remove("fade-in");
