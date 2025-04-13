@@ -1,4 +1,6 @@
-// modules/scope/ScopeOverlay.js
+/**
+ * Three.js - 3D library
+ */
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 
 /**
@@ -75,8 +77,13 @@ export class ScopeOverlay {
         this._checkAsteroidInScope(delta, asteroid);
     }
 
-    // ------------------ Pointer Down / Move / Up ------------------ //
-
+    /**
+     * Pointer down event - shows the scope overlay and dims the stars outside it.
+     * 
+     * @function onPointerDown
+     * @param {MouseEvent|TouchEvent} event - The pointer down event.
+     * @returns {void}
+     */
     onPointerDown(event) {
         if (window.scopeDisabled) return;
         this.scopeElement.style.display = 'block';
@@ -87,6 +94,13 @@ export class ScopeOverlay {
         this._moveScope(event);
     }
 
+    /**
+     * Pointer move event - if scope is visible, move it and update star uniforms.
+     *
+     * @function onPointerMove
+     * @param {MouseEvent|TouchEvent} event - The pointer move event.
+     * @returns {void}
+     */
     onPointerMove(event) {
         if (window.scopeDisabled) return;
         if (this.scopeElement.style.display === 'block') {
@@ -94,6 +108,12 @@ export class ScopeOverlay {
         }
     }
 
+    /**
+     * Pointer up event - hides the scope and disables star dimming.
+     *
+     * @function onPointerUp
+     * @returns {void}
+     */
     onPointerUp() {
         if (window.scopeDisabled) return;
         this.scopeElement.style.display = 'none';
@@ -102,7 +122,12 @@ export class ScopeOverlay {
     }
 
     /**
-     * Positions the scope overlay at the pointer and updates mouse vector.
+     * Moves the "scope" DOM element to follow the pointer.
+     * Updates mouse coordinates for Raycaster usage.
+     *
+     * @function moveScope
+     * @param {MouseEvent|TouchEvent} event - The pointer event.
+     * @returns {void}
      */
     _moveScope(event) {
         let clientX, clientY;
@@ -132,7 +157,12 @@ export class ScopeOverlay {
     }
 
     /**
-     * Updates target3D by intersecting a plane at z=asteroidZ.
+     * Updates the global target3D vector by projecting from mouse coords
+     * onto a plane at the asteroid's Z position.
+     *
+     * @function updateTarget3D
+     * @param {number} asteroidZ - The location of the asteroid on the Z plane.
+     * @returns {void}
      */
     _updateTarget3D(asteroidZ) {
         const plane = new THREE.Plane(new THREE.Vector3(0,0,1), -asteroidZ);
@@ -143,38 +173,46 @@ export class ScopeOverlay {
     }
 
     /**
-     * Checks if the asteroid is within the scope reticle.
-     * If it remains in the reticle for holdThreshold seconds, triggers lock-on.
+     * Checks if the asteroid is within the scope circle.
+     * If it remains in the circle for holdThreshold seconds, we lock on.
+     *
+     * @function checkAsteroidInScope
+     * @param {number} delta - Time elapsed since last frame (seconds).
+     * @param {THREE.Object3D} asteroid - The asteroid model.
+     * @returns {void}
      */
     _checkAsteroidInScope(delta, asteroid) {
-        // Project asteroid to screen coords
+        if (!asteroid) return;
+
+        // Get asteroid position in 2D screen coords
         const asteroidScreenPos = asteroid.position.clone();
         asteroidScreenPos.project(this.camera);
         asteroidScreenPos.x = (asteroidScreenPos.x + 1) * window.innerWidth / 2;
         asteroidScreenPos.y = (-asteroidScreenPos.y + 1) * window.innerHeight / 2;
 
-        // Get scope center & radius
+        // Get scope center
         const scopeRect = this.scopeElement.getBoundingClientRect();
         const scopeX = scopeRect.left + scopeRect.width / 2;
         const scopeY = scopeRect.top + scopeRect.height / 2;
         const scopeRadius = scopeRect.width / 2;
 
-        // Distance between asteroid center & scope center
+        // Calculate distance between asteroid and scope
         const dx = asteroidScreenPos.x - scopeX;
         const dy = asteroidScreenPos.y - scopeY;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
+        // If asteroid is in scope
         if (distance <= scopeRadius) {
-        asteroid.visible = true;
-        asteroid.rotation.x += 0.002;
-        asteroid.rotation.y += 0.002;
-        this.holdTime += delta;
-        if (this.holdTime >= this.holdThreshold) {
-            this.onStartLock();
-        }
+            asteroid.visible = true;
+            asteroid.rotation.x += 0.002;
+            asteroid.rotation.y += 0.002;
+            this.holdTime += delta;
+            if (this.holdTime >= this.holdThreshold) {
+                this.onStartLock();
+            }
         } else {
-        asteroid.visible = false;
-        this.holdTime = 0;
+            asteroid.visible = false;
+            this.holdTime = 0;
         }
     }
 

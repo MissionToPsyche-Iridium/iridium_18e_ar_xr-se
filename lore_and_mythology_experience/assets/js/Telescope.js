@@ -3,7 +3,7 @@
  */
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 
-// modules/telescope/Telescope.js
+// Load telescope models (lower and upper parts)
 export async function loadTelescopeParts(loader, scene) {
     // Load lower telescope
     const lower = await new Promise((resolve, reject) => {
@@ -30,8 +30,6 @@ export async function loadTelescopeParts(loader, scene) {
         }, undefined, reject);
     });
 
-    
-  
     return { lower, upper };
 }
   

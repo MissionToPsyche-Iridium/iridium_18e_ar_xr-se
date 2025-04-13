@@ -9,10 +9,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.mod
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/loaders/GLTFLoader.js";
 
 /**
- * OrbitControls - For orbital camera controls.
+ * OrbitControls - Allows orbiting, panning, and zooming a camera in a 3D scene.
  */
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js";
-
 
 /**
  * AudioManager - Custom module handling background music, sfx, volume, etc.
@@ -145,6 +144,9 @@ export default function launchScene() {
     const spaceCloudSphere = createSpaceClouds();
     scene.add(spaceCloudSphere);
 
+    // Create the “Auto Find Psyche Asteroid” button
+    let autoFindBtn;
+
     // Add the asteroid belt to the scene
     const { asteroidX, asteroidY } = createAsteroidBelt(scene);
 
@@ -174,6 +176,8 @@ export default function launchScene() {
 
         scene.add(asteroid);
         console.log("asteroid loaded successfully!");
+
+        autoFindBtn = createAutoFindButton(asteroid, scopeOverlay);
     });
 
     // Load telescope models (lower and upper parts)
@@ -192,7 +196,7 @@ export default function launchScene() {
         scope,
         camera,
         controls,
-        (target3D, delta) => pointTelescopeAt(telescopeUpper, target3D, delta),
+        (target3D, delta) => pointTelescopeAt(target3D, delta),
         (err) => console.error(err),
         () => lockOn(asteroid),
     );
@@ -201,10 +205,6 @@ export default function launchScene() {
     let isStarTransition = false;
     let phaseBool = false;
     let isLockOn = false;
-
-    // Create the “Auto Find Psyche Asteroid” button
-    let autoFindBtn;
-    autoFindBtn = createAutoFindButton(asteroid, scopeOverlay);
 
     /**
      * Main animation loop for rendering the scene and updating logic.
@@ -605,7 +605,6 @@ export default function launchScene() {
         });
     
         autoFindBtn.addEventListener('click', () => {
-            console.log("Auto-find clicked. Asteroid is:", asteroid);
             if (asteroid) {
                 asteroid.visible = true;
                 console.log("Forcing lock on...");

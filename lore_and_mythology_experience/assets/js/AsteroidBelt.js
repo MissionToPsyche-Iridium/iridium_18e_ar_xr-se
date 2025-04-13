@@ -1,10 +1,15 @@
-// modules/asteroids/AsteroidBelt.js
+/**
+ * Three.js - 3D library
+ */
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.118/build/three.module.js";
 
 /**
- * Creates an asteroid belt and returns the random (X, Y) for the main asteroid placement.
- * @param {THREE.Scene} scene 
- * @returns {{ asteroidX: number, asteroidY: number }}
+ * Creates an asteroid belt with many small asteroids. Also determines a random position
+ * for the main asteroid (to ensure it remains on-screen).
+ *
+ * @function createAsteroidBelt
+ * @param {THREE.Scene} scene - The Three.js scene to which the asteroids will be added.
+ * @returns {void}
  */
 export function createAsteroidBelt(scene) {
     const MIN_X = -1;
@@ -12,7 +17,7 @@ export function createAsteroidBelt(scene) {
     const MIN_Y = -0.1;
     const MAX_Y = 0.1;
 
-    // Randomly choose main asteroid X, Y
+    // Randomly choose the X and Y for the main asteroid, ensuring it's within boundaries
     let asteroidX, asteroidY;
     while (true) {
         asteroidX = THREE.MathUtils.lerp(MIN_X, MAX_X, Math.random());
@@ -59,6 +64,7 @@ export function createAsteroidBelt(scene) {
 
 /**
  * Places the main asteroid in front of the camera at the chosen (X, Y) range.
+ * 
  * @param {THREE.Camera} camera
  * @param {THREE.Object3D} asteroid
  * @param {number} asteroidX
@@ -78,7 +84,11 @@ export function positionMainAsteroid(camera, asteroid, asteroidX, asteroidY) {
 }
 
 /**
- * Creates a canvas-based crater texture for asteroids.
+ * Dynamically generates a texture for an asteroid using an HTML canvas.
+ * Simulates craters by drawing radial gradients.
+ *
+ * @function generateAsteroidTexture
+ * @returns {THREE.CanvasTexture} The generated texture for the asteroid surface.
  */
 function generateAsteroidTexture() {
     const size = 512;
@@ -87,19 +97,22 @@ function generateAsteroidTexture() {
     canvas.height = size;
     const ctx = canvas.getContext("2d");
 
-    // Base color
+    // Fill with a base color
     ctx.fillStyle = "#444";
     ctx.fillRect(0, 0, size, size);
 
-    // Random craters
+    // Create craters 
     for (let i = 0; i < 10; i++) {
         const x = Math.random() * size;
         const y = Math.random() * size;
         const r = Math.random() * (size / 8) + (size / 10);
+
+        // Outer glow
         const gradient = ctx.createRadialGradient(x, y, r * 0.3, x, y, r);
         gradient.addColorStop(0, "rgba(20, 20, 20, 1)");
         gradient.addColorStop(0.7, "rgba(50, 50, 50, 1)");
         gradient.addColorStop(1, "rgba(90, 90, 90, 0.6)");
+        
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fillStyle = gradient;

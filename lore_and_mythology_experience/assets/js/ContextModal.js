@@ -40,6 +40,11 @@ export default async function showContext() {
     } catch (error) {
         console.error("Error fetching the HTML:", error);
     }
+
+    /**
+     * Stores a reference to the telescope background element in the context modal.
+     * @type {HTMLElement|null}
+     */
     const telescopeBackground = document.getElementById("telescopeBg");
 
     startAnimations();
