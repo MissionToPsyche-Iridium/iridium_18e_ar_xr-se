@@ -1,4 +1,7 @@
 class AudioManager {
+    static masterVolume = parseFloat(localStorage.getItem('volumeSetting')) || 1;
+    static _allPlayers = new Set();
+
     constructor(choice) {
         if(choice === "pageTurn" || choice === "phase_transition") {
             if (choice === "pageTurn") {
@@ -6,8 +9,9 @@ class AudioManager {
             } else if (choice === "phase_transition") {
                 this.audio = new Audio(smpTransition);
             }
-            this.audio.loop = false;
-            this.audio.volume = 1;
+
+            this.audio.loop = choice === "pageTurn" ? false : true;
+            this.audio.volume = AudioManager.masterVolume;
             this.audio.autoplay = true;
             this.audio.addEventListener('error', (e) => console.error('Audio error:', e));
             this.audio.play().catch(error => console.error("Playback failed:", error));
@@ -16,6 +20,9 @@ class AudioManager {
                 const audioContainer = document.getElementById('audio-container') || document.body;
                 audioContainer.appendChild(this.audio);
             }
+
+            AudioManager._allPlayers.add(this.audio);
+            this.audio.addEventListener('ended', () => AudioManager._allPlayers.delete(this.audio));
         }
 
 
@@ -40,7 +47,6 @@ class AudioManager {
         }
 
         this.audio.loop = true;
-        this.audio.volume = 1;
         this.audio.autoplay = true;
 
         this.audio.addEventListener('error', (e) => console.error('Audio error:', e));
@@ -48,8 +54,10 @@ class AudioManager {
     }
 
 
-    setVolume(volume) {
-        this.audio.volume = volume;
+    static setMasterVolume(volume) {
+        AudioManager.masterVolume = volume;
+        localStorage.setItem('volumeSetting', volume);
+        AudioManager._allPlayers.forEach(audioManager => (audioManager.volume = volume));
     }
 
     stopPlaying() {

@@ -6,13 +6,13 @@ import { AudioManager } from './AudioManager.js';
 /**
  * Global AudioManager instance used for playing context music and ambient sounds.
  */
+AudioManager.setMasterVolume(AudioManager.masterVolume);
 let audioManager = new AudioManager();
 
 /**
  * Audio manager plays "context" sound immediately.
  */
 audioManager.play("context");
-audioManager.setVolume(0.5);
 
 /**
  * Asynchronously loads the "context" modal

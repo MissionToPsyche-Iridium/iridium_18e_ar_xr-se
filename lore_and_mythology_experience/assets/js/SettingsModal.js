@@ -1,7 +1,11 @@
+/**
+ * AudioManager - Custom module handling background music, sfx, volume, etc.
+ */
+import { AudioManager } from './AudioManager.js';
+
 /*
  * Settings Modal class
  */
-
 export default class SettingsModal {
     /*
      * Public methods
@@ -143,11 +147,11 @@ export default class SettingsModal {
         // Volume Settings
         const volumeSlider = document.getElementById("volume-slider");
 
-        // event listener for changes in volume slider
-        volumeSlider.addEventListener("input", function() {
-            const volumeValue = volumeSlider.value;
+        const saved = parseFloat(localStorage.getItem('volumeSetting')) || 1;
+        volumeSlider.value = saved;
 
-            localStorage.setItem("volumeSetting", volumeValue);
+        volumeSlider.addEventListener('input', () => {
+            AudioManager.setMasterVolume(parseFloat(volumeSlider.value));
         });
 
         button0.addEventListener('click', () => document.getElementById('default-mode').click());
