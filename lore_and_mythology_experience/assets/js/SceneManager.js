@@ -71,6 +71,10 @@ export default function launchScene() {
     const audioManager = new AudioManager();
     audioManager.play("amp");
     document.getElementById('main-title').style.visibility = 'visible';
+    document.getElementById('main-title').style.opacity = '1';
+    setTimeout(() => {
+        document.getElementById('main-title').style.opacity = '1';
+    }, 50);
 
     // Create the scene
     const scene = new THREE.Scene();

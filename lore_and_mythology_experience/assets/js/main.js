@@ -16,9 +16,12 @@ import incrementProgressBar from './progressBar.js';
 incrementProgressBar(1);
 
 window.onload = async () => {
-    // Wait for the user to click on the telescope background in the context modal.
-    await showContext();
-    
-    // After the modal is dismissed, start the fade in (and subsequent animations).
-    launchScene();
+    try {
+        // Wait for the user to click on the telescope background in the context modal.
+        await showContext();
+        // After the modal is dismissed, start the fade in (and subsequent animations).
+        launchScene();
+    } catch (error) {
+        console.error("Error during intro sequence:", error);
+    }
 };

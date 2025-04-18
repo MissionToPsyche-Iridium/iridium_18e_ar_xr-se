@@ -32,8 +32,8 @@ img {
   color: white;
   background: transparent;
   visibility: hidden;
-  opacity: 1;
-  transition: 1.5s;
+  opacity: 0;
+  transition: opacity 1.5s ease; /* fade in */
   user-select: all; /* allow copying */
 }
 
