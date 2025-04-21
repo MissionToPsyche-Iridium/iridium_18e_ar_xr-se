@@ -11,6 +11,7 @@
  * TODO: Can move this to a json.
  * @type {Object.<string, Phase>}
  */
+// Data for SMP-l phases
 const satellitePhases = {
     psycheSatellite1: {
         title: "The Psyche Satellite Resembles a Butterfly",
@@ -27,7 +28,7 @@ const satellitePhases = {
     },
     psycheSatellite2: {
         title: "The Psyche Satellite Resembles a Butterfly",
-        image: "../assets/images/smp/psyche-satellite.png",
+        image: "../assets/images/chrysalis/butterfly.png",
         alt: "Satellite Psyche with wings like a butterfly",
         duration: 250,
         banner: "../assets/images/smp/smp-banner.png",
@@ -36,10 +37,7 @@ const satellitePhases = {
             "outstretched like a butterfly,",
             "the Psyche spacecraft echos",
             "the “Breath of Life” after death."
-        ],
-        additionalImages: [
-            { src: "../assets/images/chrysalis/butterfly.png", id: "butterfly", position: "absolute", top: "0", left: "0" },
-        ],
+        ]
     },
     quote1: {
         title: "Conclusion",
@@ -68,7 +66,7 @@ const satellitePhases = {
     },
     quote3: {
         title: "Conclusion",
-        image: "../assets/images/goddess_psyche/asteroid.png",
+        image: "../assets/images/smp/psyche-satellite.png",
         alt: "",
         duration: 250,
         banner: "../assets/images/smp/smp-banner.png",

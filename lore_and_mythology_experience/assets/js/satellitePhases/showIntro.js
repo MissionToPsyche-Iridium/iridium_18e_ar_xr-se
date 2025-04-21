@@ -24,19 +24,20 @@ export default function showIntro(introBool, audioManager, callback) {
         document.body.appendChild(introDiv);
 
         Object.assign(introDiv.style, {
-            top: "100%",
+            top: "80%",
             left: "50%",
-            color: "white",
+            color: "#C9FFFC",
             background: "rgba(0, 0, 0, 0.2)",
             transform: "translate(-50%, -50%)",
-            fontSize: "20px",
+            fontSize: "24px",
             fontFamily: "Comfortaa, Arial, sans-serif",
             textAlign: "center",
             whiteSpace: "pre-line",
             borderRight: "2px solid #C9FFFC", // Cursor effect
             padding: "5px",
             overflow: "hidden",
-            transition: "1.5s"
+            transition: "1.5s",
+            fontWeight: "bold"
         });
 
         let index = 0;
