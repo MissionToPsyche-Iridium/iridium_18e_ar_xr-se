@@ -22,5 +22,3 @@ window.onload = async () => {
     // After the modal is dismissed, start the fade in (and subsequent animations).
     launchScene();
 };
-
-

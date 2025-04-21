@@ -44,7 +44,7 @@ export default function showFinale(finaleBool) {
         finaleText.setAttribute(
             "style",
             "font-size: 2vh; margin-top: 2vh; margin-bottom: 2vh; max-width: 60vw;" +
-            " color: white; text-align: center; font-weight: bold;"
+            " color: white; text-align: center; font-weight: bold; cursor: pointer;"
         );
 
         // restart button
@@ -79,7 +79,7 @@ export default function showFinale(finaleBool) {
         document.body.appendChild(finaleDiv);
 
         logo.addEventListener("click", function() {
-            window.top.location.href = "https://psyche.asu.edu/";
+            window.open("https://psyche.asu.edu/", "_blank", "noopener");
         });
     }
 }
