@@ -5,6 +5,7 @@ import SettingsModal from './SettingsModal.js';
 import InstrumentContentManager from './InstrumentContentManager.js';
 import MissionContentManager from './MissionContentManager.js';
 import SFXManager from './SFXManager.js';
+import interactivityTest from './interactivityTest.js';
 
 window.addEventListener("DOMContentLoaded", async () => {
     // Initialize SFX Manager
@@ -32,4 +33,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // Connect settings modal to help modal inactivity timer
     settingsModal.resetInactivityTimer = () => helpModal._setupInactivityTimer();
+
+    let intervalID = setInterval(function() {
+        interactivityTest(intervalID);
+    }, 3000);
 });

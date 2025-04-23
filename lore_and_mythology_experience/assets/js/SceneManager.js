@@ -50,6 +50,11 @@ import { loadTelescopeParts } from './Telescope.js';
 import { ScopeOverlay } from './ScopeOverlay.js';
 
 /**
+ * interactivityTest
+ */
+import interactivityTest from './interactivityTest.js';
+
+/**
  * Enum-like object to represent graphics quality levels.
  * @readonly
  * @enum {string}
@@ -813,4 +818,8 @@ export default function launchScene() {
         starMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
     });
+
+    let intervalID = setInterval(function() {
+        interactivityTest(intervalID);
+    }, 3000);
 }
