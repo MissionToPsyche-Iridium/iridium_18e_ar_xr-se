@@ -20,7 +20,6 @@ audioManager.play("context");
 audioManager.setVolume(0.5);
 
 incrementProgressBar(0);
-console.log(0);
 
 /**
  * Asynchronously loads the "context" modal
