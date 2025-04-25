@@ -325,7 +325,7 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
                 z-index: 101;
                 display: block;
             `);
-            nextButton.addEventListener("click", function() {incrementProgressBar(16); clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
+            nextButton.addEventListener("click", function() {incrementProgressBar(14); triggered("timer"); clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
             phase_div.appendChild(nextButton);
 
             document.body.appendChild(phase_div);
@@ -366,7 +366,7 @@ export default function showTimer(timerBool, audioManager, phaseValues, phaseInd
                 z-index: 101;
                 display: block;
             `);
-            nextButton.addEventListener("click", function() {incrementProgressBar(16); clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
+            nextButton.addEventListener("click", function() {incrementProgressBar(14); triggered("timer"); clearInterval(intervalID); document.getElementById("phase_modal").remove(); showPhase(phaseValues[phaseIndex]);});
             document.getElementById("phase_modal").appendChild(nextButton);
         }
 

@@ -53,6 +53,7 @@ export default class HelpModal {
     // Load help modal content
     _loadHelpModalContent() {
         window.sfxManager.playSound("open");
+        triggered("help");
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'help_modal.html', true);
         xhr.onreadystatechange = () => {

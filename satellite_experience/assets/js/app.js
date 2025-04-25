@@ -34,7 +34,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     // Connect settings modal to help modal inactivity timer
     settingsModal.resetInactivityTimer = () => helpModal._setupInactivityTimer();
 
-    let intervalID = setInterval(function() {
-        interactivityTest(intervalID);
-    }, 3000);
+    // let intervalID = setInterval(function() {
+    //     interactivityTest(intervalID);
+    // }, 3000);
 });

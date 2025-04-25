@@ -81,6 +81,7 @@ export default class SettingsModal {
 
     // Load settings modal content
     _loadSettingsModalContent() {
+        triggered("settings");
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'settings_modal.html', true);
         xhr.onreadystatechange = () => {
@@ -148,6 +149,7 @@ export default class SettingsModal {
             const volumeValue = volumeSlider.value;
 
             localStorage.setItem("volumeSetting", volumeValue);
+            triggered("volume");
         });
 
         button0.addEventListener('click', () => document.getElementById('default-mode').click());
