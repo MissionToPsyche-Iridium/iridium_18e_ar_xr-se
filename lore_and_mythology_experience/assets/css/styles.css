@@ -91,7 +91,7 @@ img {
 
 .modal-popup {
   background: url("../images/papyrus_scroll_double_sided_wide_rotated.png")
-    no-repeat center center;
+  no-repeat center center;
   background-size: 100% 100%;
   font-family: "Lucida Calligraphy", "Brush Script MT", cursive;
   margin: 10% auto;
@@ -200,15 +200,16 @@ img {
   pointer-events: auto;
   display: none;
   z-index: 10;
-  -webkit-mask-image: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 0) 30%,
-    rgba(0, 0, 0, 1) 60%
+  /*noinspection CssInvalidPropertyValue*/
+  -webkit-mask-image: -webkit-radial-gradient(
+          circle,
+          rgba(0, 0, 0, 0) 30%,
+          rgba(0, 0, 0, 1) 60%
   );
   mask-image: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 0) 30%,
-    rgba(0, 0, 0, 1) 60%
+          circle,
+          rgba(0, 0, 0, 0) 30%,
+          rgba(0, 0, 0, 1) 60%
   );
   backdrop-filter: none;
 }
@@ -358,8 +359,8 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   cursor: pointer;
   transition:
-    transform 0.2s,
-    background 0.2s;
+          transform 0.2s,
+          background 0.2s;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -429,6 +430,75 @@ input[type="range"]::-moz-range-thumb {
   font-family: 'Papyrus',
   Arial, sans-serif;
   text-align: center;
+  white-space: normal;
+  z-index: 10;
+}
+
+.banner {
+  background-color: transparent;
+  position: relative;
+  top: -10%;
+  justify-content: left;
+  display: flex;
+  max-width: 400px;
+  min-height: 50%;
+  max-height: 30vh;
+  border-radius: 12px;
+  z-index: 5;
+  transition: 1.5s ease-in-out;
+  overflow: hidden;
+}
+
+.banner_text_box {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  top: 11%;
+  align-items: center;
+  justify-content: left;
+  left: 10%;
+  width: 40%;
+  max-width: 40%;
+  font-weight: bold;
+  color: white;
+  font-size: clamp(0.8rem, 2vw, 0.5rem);
+  font-family: 'Comfortaa',
+  Arial, sans-serif;
+  text-align: left;
+  white-space: normal;
+  z-index: 10;
+}
+
+.banner-timer {
+  background-Color:transparent;
+  width: 100%;
+  height: auto;
+  border-Radius:12px;
+  max-Width:450px;
+  min-Width:450px;
+  position:absolute;
+  top:50%;
+  left:50%;
+  z-Index:5;
+  transition: 1.5s ease-in-out;
+  transform: translate(-50%, -50%);
+}
+.timer {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  top: 44%;
+  align-items: center;
+  justify-content: left;
+  left: 8%;
+  max-width: 50%;
+  max-height: 103px;
+  font-weight: bold;
+  color: white;
+  font-size: clamp(0.8rem, 2vw, 0.5rem);
+  font-family: 'Comfortaa',
+  Arial, sans-serif;
+  text-align: left;
   white-space: normal;
   z-index: 10;
 }
