@@ -50,6 +50,11 @@ import { loadTelescopeParts } from './Telescope.js';
 import { ScopeOverlay } from './ScopeOverlay.js';
 
 /**
+ * interactivityTest
+ */
+import interactivityTest from './interactivityTest.js';
+
+/**
  * Enum-like object to represent graphics quality levels.
  * @readonly
  * @enum {string}
@@ -70,7 +75,12 @@ const GraphicsQuality = Object.freeze({
 export default function launchScene() {
     const audioManager = new AudioManager();
     audioManager.play("amp");
+    incrementProgressBar(1);
     document.getElementById('main-title').style.visibility = 'visible';
+    document.getElementById('main-title').style.opacity = '1';
+    setTimeout(() => {
+        document.getElementById('main-title').style.opacity = '1';
+    }, 50);
 
     // Create the scene
     const scene = new THREE.Scene();
@@ -398,6 +408,8 @@ export default function launchScene() {
             }
         });
 
+        window.starMaterial = starMaterial
+
         document.getElementById('scope').style.display = 'none';
         return new THREE.Points(geometry, starMaterial);
     }
@@ -612,6 +624,15 @@ export default function launchScene() {
             }
         });
 
+        // Auto find pcyhe button resize
+        if (window.innerWidth <= 900) {
+            autoFindBtn.style.padding = "7px 10px";
+            autoFindBtn.style.fontSize = "7px";
+        } else {
+            autoFindBtn.style.padding = "10px 20px";
+            autoFindBtn.style.fontSize = "16px";
+        }
+
         document.body.appendChild(autoFindBtn);
 
         return autoFindBtn
@@ -729,6 +750,7 @@ export default function launchScene() {
                 // When done zooming, style the modal, increment progress, and start star transition
                 settingsModal.applyAMPIModalStyles();
                 incrementProgressBar(2);
+                triggered("lock-on");
                 starFieldTransition();
             }
         }
@@ -812,5 +834,18 @@ export default function launchScene() {
         camera.aspect = window.innerWidth / window.innerHeight;
         starMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
+
+        // Auto find pcyhe button resize
+        if (window.innerWidth <= 900) {
+            autoFindBtn.style.padding = "7px 10px";
+            autoFindBtn.style.fontSize = "7px";
+        } else {
+            autoFindBtn.style.padding = "10px 20px";
+            autoFindBtn.style.fontSize = "16px";
+        }
     });
+
+    // let intervalID = setInterval(function() {
+    //     interactivityTest(intervalID);
+    // }, 3000);
 }

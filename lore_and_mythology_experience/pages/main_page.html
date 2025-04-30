@@ -5,6 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3D Space Environment</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script>
+      let triggers = {
+        "help": false,
+        "settings": false,
+        "telescope": false,
+        "lock-on": false,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": false,
+        "8": false,
+        "9": false,
+        "10": false,
+        "11": false,
+        "12": false,
+        "launch-video": false,
+        "timer": false,
+        "15": false,
+        "16": false,
+        "17": false,
+        "18": false,
+        "19": false
+      };
+      
+      function triggered(trigger) {
+        triggers[trigger] = true;
+
+        let activatedTriggers = 0;
+
+        Object.keys(triggers).forEach(function (k) {
+          if (triggers[k]) {
+            activatedTriggers++;
+          }
+        });
+
+        let progress = ((activatedTriggers / Object.keys(triggers).length) * 100).toFixed(2);
+        console.log("Your current progress is " + progress + "%");
+      }
+    </script>
   </head>
   <body>
     <!-- scope -->
@@ -16,7 +56,7 @@
     <!-- Help Icon Button -->
     <img
       src="../assets/images/help_icon.png"
-      onclick="document.getElementById('help_modal').style.display='block'"
+      onclick="open_help()"
       id="help-icon-button"
     />
     <div id="help_modal">
@@ -66,6 +106,12 @@
       </div>
     </div>
 
+    <script>
+      function open_help() {
+        document.getElementById('help_modal').style.display='block';
+        triggered("help");
+      }
+    </script>
     <script src="../assets/js/perlin.js"></script>
     <script src="../assets/js/main.js" type="module"></script>
   </body>

@@ -19,6 +19,7 @@ export default class InstrumentContentManager {
 
     // Update content based on bubble id
     updateInstrumentContent(bubbleId) {
+        triggered(bubbleId);
         // Maps for instruments
         const instrumentTitleMap = {};
         const instrumentDescriptionMap = {};

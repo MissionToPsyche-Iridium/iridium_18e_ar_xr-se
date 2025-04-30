@@ -9,8 +9,6 @@ import incrementProgressBar from '../progressBar.js';
 import { AudioManager } from '../AudioManager.js';
 import asteroidPhases from './asteroidPhasesData.js';
 
-incrementProgressBar(2);
-
 let phaseIndex = 0;
 let audioManager;
 const phaseValues = Object.values(asteroidPhases);
@@ -21,6 +19,7 @@ const phaseValues = Object.values(asteroidPhases);
  */
 export function startPhases(phasesAudioManager) {
     audioManager = phasesAudioManager;
+    incrementProgressBar(2);
     phaseIndex = 0;
     console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);
     showPhase(phaseValues[phaseIndex]);
@@ -245,6 +244,8 @@ function nextPhase() {
     // Move to next phase
     phaseIndex++;
     incrementProgressBar(2 + phaseIndex);
+    let trigger = (2 + phaseIndex).toString();
+    triggered(trigger);
     if (phaseIndex < phaseValues.length) {
         setTimeout(() => {
             console.log("Current Phase Index:", phaseIndex, "Total Phases:", phaseValues.length);

@@ -13,6 +13,7 @@ export default class MissionContentManager {
 
     // Update content based on phase id
     updateMissionContent(phaseId) {
+        triggered(phaseId);
         // Maps for phases
         const phaseTitleMap = {};
         const phaseDescriptionMap = {};

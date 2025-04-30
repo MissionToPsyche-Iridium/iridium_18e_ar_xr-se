@@ -150,8 +150,10 @@ export default class MainStateManager {
         this._upperButton.addEventListener('click', () => {
             window.sfxManager.playSound("select");
             if (this.mainState === 'main') {
+                triggered("mission");
                 this.updateMainState('mission');
             } else {
+                triggered("main");
                 this.updateMainState('main');
             }
         });
@@ -160,10 +162,13 @@ export default class MainStateManager {
         this._lowerButton.addEventListener('click', () => {
             window.sfxManager.playSound("select");
             if (this.mainState === 'main') {
+                triggered("instrument");
                 this.updateMainState('instrument');
             } else if (this.mainState === 'mission') {
+                triggered("instrument");
                 this.updateMainState('instrument');
             } else {
+                triggered("mission");
                 this.updateMainState('mission');
             }
         });

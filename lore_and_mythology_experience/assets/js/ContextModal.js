@@ -4,6 +4,11 @@
 import { AudioManager } from './AudioManager.js';
 
 /**
+ * Increment a progress bar UI element as steps in the scene are loaded.
+ */
+import incrementProgressBar from './progressBar.js';
+
+/**
  * Global AudioManager instance used for playing context music and ambient sounds.
  */
 let audioManager = new AudioManager();
@@ -13,6 +18,8 @@ let audioManager = new AudioManager();
  */
 audioManager.play("context");
 audioManager.setVolume(0.5);
+
+incrementProgressBar(0);
 
 /**
  * Asynchronously loads the "context" modal
@@ -67,6 +74,8 @@ function waitForTelescopeClick(telescopeBackground) {
         telescopeBackground.addEventListener(
             "click",
             (event) => {
+                incrementProgressBar(1);
+                triggered("telescope");
                 resolve(event);
             },
             { once: true }

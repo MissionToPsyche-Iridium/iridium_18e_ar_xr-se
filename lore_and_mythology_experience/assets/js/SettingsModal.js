@@ -81,6 +81,7 @@ export default class SettingsModal {
 
     // Load settings modal content
     _loadSettingsModalContent() {
+        triggered("settings");
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'settings_modal.html', true);
         xhr.onreadystatechange = () => {
@@ -139,7 +140,5 @@ export default class SettingsModal {
                 this.updateGraphicsQuality(newQuality);
             });
         }
-
-
     }
 }
