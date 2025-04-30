@@ -408,6 +408,8 @@ export default function launchScene() {
             }
         });
 
+        window.starMaterial = starMaterial
+
         document.getElementById('scope').style.display = 'none';
         return new THREE.Points(geometry, starMaterial);
     }
