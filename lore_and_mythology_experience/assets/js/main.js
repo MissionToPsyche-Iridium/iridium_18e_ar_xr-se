@@ -18,9 +18,3 @@ window.onload = async () => {
         console.error("Error during intro sequence:", error);
     }
 };
-    // Wait for the user to click on the telescope background in the context modal.
-    await showContext();
-
-    // After the modal is dismissed, start the fade in (and subsequent animations).
-    launchScene();
-};
