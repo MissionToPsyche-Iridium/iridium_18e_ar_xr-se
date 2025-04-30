@@ -9,6 +9,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main Page</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
+    <link rel="shortcut icon" href="#">
+    <script>
+      let triggers = {
+        "help": false,
+        "settings": false,
+        "default-mode": false,
+        "high-contrast-mode": false,
+        "high-mode": false,
+        "color-blind-mode": false,
+        "volume": false,
+        "mission": false,
+        "launch": false,
+        "assist": false,
+        "a": false,
+        "b1": false,
+        "d": false,
+        "c": false,
+        "b2": false,
+        "end": false,
+        "instrument": false,
+        "arrays": false,
+        "spectrometer": false,
+        "antenna": false,
+        "imager": false,
+        "communication": false,
+        "detection": false,
+        "propulsion": false,
+        "main": false
+      };
+      
+      function triggered(trigger) {
+        triggers[trigger] = true;
+
+        let activatedTriggers = 0;
+
+        Object.keys(triggers).forEach(function (k) {
+          if (triggers[k]) {
+            activatedTriggers++;
+          }
+        });
+
+        let progress = ((activatedTriggers / Object.keys(triggers).length) * 100).toFixed(2);
+        console.log("Your current progress is " + progress + "%");
+      }
+    </script>
   </head>
   <body>
     <!-- Help Icon Button -->

@@ -51,16 +51,16 @@ export default class SpaceScene {
 
     click(bubbleId) {
         this._bubbles.forEach(bubble => {
-                const bubbleMaterial = bubble.material;
-                const bubbleLabelDiv = bubble.bubbleLabel.element;
-                const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
+            const bubbleMaterial = bubble.material;
+            const bubbleLabelDiv = bubble.bubbleLabel.element;
+            const bubbleProgressLabelDiv = bubble.bubbleProgressLabel.element;
 
-                if(bubble.bubbleId===bubbleId) {
-                    bubbleMaterial.opacity = 0.2;
-                    bubbleLabelDiv.style.opacity = '0.2';
-                    bubbleProgressLabelDiv.style.opacity = '0.2';
-                }
-            });
+            if (bubble.bubbleId === bubbleId) {
+                bubbleMaterial.opacity = 0.2;
+                bubbleLabelDiv.style.opacity = '0.2';
+                bubbleProgressLabelDiv.style.opacity = '0.2';
+            }
+        });
     }
 
     // Go to next phase
@@ -191,11 +191,11 @@ export default class SpaceScene {
         // Ambient Light
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
         this._scene.add(ambientLight);
-    
+
         // Load the sun texture
         const textureLoader = new THREE.TextureLoader();
         const sunTexture = textureLoader.load('../assets/images/sun.png');
-    
+
         // Create Sun Sprite
         const sunMaterial = new THREE.SpriteMaterial({
             map: sunTexture,
@@ -203,23 +203,23 @@ export default class SpaceScene {
             transparent: true,
             blending: THREE.AdditiveBlending,
         });
-    
+
         const sunSprite = new THREE.Sprite(sunMaterial);
         sunSprite.scale.set(500, 500, 1);
         sunSprite.position.set(-5000, 3000, 1000); // Sun distance from origin
         sunSprite.frustumCulled = false;
         this._scene.add(sunSprite);
-    
+
         // Add Directional Light at the sun's position
         const sunLight = new THREE.DirectionalLight(0xFFFFFF, 3);
         sunLight.position.copy(sunSprite.position);
         sunLight.castShadow = true;
-    
+
         // Configure shadow properties
         sunLight.shadow.bias = -0.0001;
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
-    
+
         // Adjust the shadow camera to encompass the satellite
         const d = 100;
         sunLight.shadow.camera.left = -d;
@@ -228,11 +228,11 @@ export default class SpaceScene {
         sunLight.shadow.camera.bottom = -d;
         sunLight.shadow.camera.near = 1;
         sunLight.shadow.camera.far = 10000;
-    
+
         // Set the target of the light to the origin
         sunLight.target.position.set(0, 0, 0);
         this._scene.add(sunLight.target);
-    
+
         this._scene.add(sunLight);
     }
 
@@ -240,26 +240,26 @@ export default class SpaceScene {
     _Controls() {
         this._controls = new OrbitControls(this._camera, this._threejs.domElement);
         this._controls.target.set(0, 0, 0); // Center the controls on the satellite
-    
+
         // Set initial camera rotation using spherical coordinates
         const radius = 10;
         const theta = THREE.MathUtils.degToRad(195);
         const phi = THREE.MathUtils.degToRad(75);
         this._setCameraFromSpherical(radius, phi, theta);
-    
+
         // Ensure the camera is looking at the target
         this._camera.lookAt(this._controls.target);
-    
+
         this._controls.enableZoom = true;
         this._controls.minDistance = 3;
         this._controls.maxDistance = 1000;
         this._controls.enablePan = false;
         this._controls.screenSpacePanning = false;
-    
+
         // Rotate the camera automatically
         this._controls.autoRotate = true;
         this._controls.autoRotateSpeed = 0.2;
-    
+
         // Update controls to reflect the new position and rotation
         this._controls.update();
     }
@@ -713,7 +713,7 @@ export default class SpaceScene {
                 }
             }
 
-        // If no intersects and in a detail state, exit detail state
+            // If no intersects and in a detail state, exit detail state
         } else {
             if (this._instrumentDetailState) {
                 this.exitInstrumentDetail();
@@ -758,7 +758,7 @@ export default class SpaceScene {
         const x = this._camera.position.x;
         const y = this._camera.position.y;
         const z = this._camera.position.z;
-        const radius = Math.sqrt(x*x + y*y + z*z);
+        const radius = Math.sqrt(x * x + y * y + z * z);
         const phi = Math.acos(y / radius);
         const theta = Math.atan2(z, x);
         return { radius, phi, theta };
@@ -798,14 +798,14 @@ export default class SpaceScene {
             this._instrumentSelectedBubble.bubbleLabel.element.style.opacity = '0.5';
             this._instrumentSelectedBubble.bubbleProgressLabel.element.style.opacity = '0.5';
         }
-    
+
         // Now set the new bubble as the selected one
         this._instrumentSelectedBubble = selectedBubble;
         this._instrumentSelectedBubble.visible = false;
-    
+
         this._controls.autoRotate = false;
         this._instrumentDetailState = true;
-    
+
         // Animate camera to the bubble's target angles
         const targetAngles = selectedBubble.targetAngles;
         if (targetAngles) {
@@ -823,7 +823,9 @@ export default class SpaceScene {
     exitInstrumentDetail() {
         this._controls.autoRotate = true;
         this._instrumentDetailState = null;
-        this._instrumentSelectedBubble.visible = true;
+        if (this._instrumentSelectedBubble) {
+            this._instrumentSelectedBubble.visible = true;
+        }
         this._instrumentSelectedBubble = null;
     }
 }

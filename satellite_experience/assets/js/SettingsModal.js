@@ -49,6 +49,7 @@ export default class SettingsModal {
     // Load settings modal content
     _loadSettingsModalContent() {
         window.sfxManager.playSound("open");
+        triggered("settings");
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'settings_modal.html', true);
         xhr.onreadystatechange = () => {
@@ -83,15 +84,19 @@ export default class SettingsModal {
                 if (document.getElementById('default-mode').checked) {
                     this.cssFile.href = '../assets/css/styles.css';
                     localStorage.setItem('theme', "default-mode");
+                    triggered("default-mode");
                 } else if (document.getElementById('high-contrast-mode').checked) {
                     this.cssFile.href = '../assets/css/high_contrast_mode.css';
                     localStorage.setItem('theme', "high-contrast-mode");
+                    triggered("high-contrast-mode");
                 } else if (document.getElementById('light-mode').checked) {
                     this.cssFile.href = '../assets/css/light_mode.css';
                     localStorage.setItem('theme', "high-mode");
+                    triggered("high-mode");
                 } else if (document.getElementById('color-blind-mode').checked) {
                     this.cssFile.href = '../assets/css/color_blind_mode.css';
                     localStorage.setItem('theme', "color-blind-mode");
+                    triggered("color-blind-mode");
                 }
                 document.head.appendChild(this.cssFile);
             });
@@ -112,6 +117,7 @@ export default class SettingsModal {
             const volumeValue = volumeSlider.value;
             window.sfxManager.setVolume(volumeValue / 100);
             localStorage.setItem("volumeSetting", volumeValue);
+            triggered("volume");
         });
 
         button0.addEventListener('click', () => document.getElementById('default-mode').click());
