@@ -197,6 +197,9 @@ function showPhase(phase) {
         When clicked, the application will transition to the next phase.
         */
         nextButton.addEventListener("click", () => {
+            // Prevent subsequent clicks
+            nextButton.disabled = true;
+            nextButton.style.pointerEvents = "none";
                 setTimeout(() => {
                     phase_div.classList.remove("fade-in");
                     phase_div.classList.add("fade-out");

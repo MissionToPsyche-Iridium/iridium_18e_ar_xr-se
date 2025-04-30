@@ -39,7 +39,7 @@ export default class SettingsModal {
         document.addEventListener('click', (event) => {
             const container = document.getElementById('modal-container-id');
             if (this.settingsModal && this.settingsModal.style.display !== 'none') {
-                if (event.target.id === 'settings-modal-close' || 
+                if (event.target.id === 'settings-modal-close' ||
                     (container && !container.contains(event.target))) {
                     this.close();
                 }
@@ -72,10 +72,10 @@ export default class SettingsModal {
         modalContent.style.margin = '0 auto';
         modalContent.style.display = 'block'
         modalContent.style.textAlign = 'center';
-    
+
         const textBlocks = modalPopup.querySelectorAll('.modal-text');
         textBlocks.forEach(tb => {
-          tb.style.color = '#333';
+            tb.style.color = '#333';
         });
     }
 
@@ -100,10 +100,10 @@ export default class SettingsModal {
         const settingThemeLink = document.getElementById('setting-theme');
         const radioSetting = document.querySelectorAll('input[name="setting"]');
         const savedSelection = localStorage.getItem('theme');
-        const button0 = document.getElementById("button0");
-        const button1 = document.getElementById("button1");
-        const button2 = document.getElementById("button2");
-        const button3 = document.getElementById("button3");
+        // const button0 = document.getElementById("button0");
+        // const button1 = document.getElementById("button1");
+        // const button2 = document.getElementById("button2");
+        // const button3 = document.getElementById("button3");
         if (savedSelection) {
             const radioToSelect = document.querySelector(`input[name="setting"][value="${savedSelection}"]`);
             if (radioToSelect) {
@@ -140,21 +140,5 @@ export default class SettingsModal {
                 this.updateGraphicsQuality(newQuality);
             });
         }
-
-        // Volume Settings
-        const volumeSlider = document.getElementById("volume-slider");
-
-        // event listener for changes in volume slider
-        volumeSlider.addEventListener("input", function() {
-            const volumeValue = volumeSlider.value;
-
-            localStorage.setItem("volumeSetting", volumeValue);
-            triggered("volume");
-        });
-
-        button0.addEventListener('click', () => document.getElementById('default-mode').click());
-        button1.addEventListener('click', () => document.getElementById('high-contrast-mode').click());
-        button2.addEventListener('click', () => document.getElementById('light-mode').click());
-        button3.addEventListener('click', () => document.getElementById('color-blind-mode').click());
     }
 }

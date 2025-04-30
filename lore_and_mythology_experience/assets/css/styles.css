@@ -27,14 +27,28 @@ img {
   top: 10%;
   transform: translateX(-50%);
   font-family: "Papyrus", fantasy;
-  font-size: 24px;
+  font-size: clamp(16px, 5vw, 24px); /* Responsive and limited */
   font-weight: bold;
   color: white;
   background: transparent;
   visibility: hidden;
-  opacity: 1;
-  transition: 1.5s;
-  user-select: all; /* allow copying */
+  opacity: 0;
+  transition: opacity 1.5s ease; /* fade in */
+  user-select: all;
+  text-align: center;
+  padding: 0 4vw;
+  max-width: 95%;
+  box-sizing: border-box;
+  word-wrap: normal;
+}
+
+/* Optional: Tweak further for very small screens */
+@media (max-width: 400px) {
+  .main-title {
+    font-size: 4vw;
+    top: 8%;
+    padding: 0;
+  }
 }
 
 .main-title::selection {

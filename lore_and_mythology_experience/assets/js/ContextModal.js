@@ -38,6 +38,9 @@ export default async function showContext() {
         "background-color: rgba(0, 0, 0, 0.2); overflow: hidden; transition: 1.5s;"
     );
 
+    // Hide settings button when context is shown
+    document.getElementById("settings-icon-button").style.display = "none";
+
     try {
         // Fetch an external HTML snippet that describes the "context" overlay
         const response = await fetch("../pages/amp_context.html");
@@ -87,6 +90,9 @@ function waitForTelescopeClick(telescopeBackground) {
  * @returns {void}
  */
 function hideContext() {
+    // Restore settings button visibility
+    document.getElementById("settings-icon-button").style.display = "block";
+
     const modal = document.getElementById("context_modal");
     if (modal) {
         modal.remove();

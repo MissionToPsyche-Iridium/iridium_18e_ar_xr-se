@@ -77,6 +77,10 @@ export default function launchScene() {
     audioManager.play("amp");
     incrementProgressBar(1);
     document.getElementById('main-title').style.visibility = 'visible';
+    document.getElementById('main-title').style.opacity = '1';
+    setTimeout(() => {
+        document.getElementById('main-title').style.opacity = '1';
+    }, 50);
 
     // Create the scene
     const scene = new THREE.Scene();
@@ -120,7 +124,7 @@ export default function launchScene() {
 
         console.log(`Graphics quality set to ${newQuality}`);
     }
-    
+
     // Basic orbit controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = false;
@@ -295,13 +299,13 @@ export default function launchScene() {
                 g = 0.85 + Math.random() * 0.15;
                 b = 0.7 + Math.random() * 0.1;
 
-            // Yellow-Orange
+                // Yellow-Orange
             } else if (tint > 0.1) {
                 r = 1.0;
                 g = 0.7 + Math.random() * 0.3;
                 b = 0.4 + Math.random() * 0.2;
 
-            // White-Blue
+                // White-Blue
             } else {
                 r = 0.9;
                 g = 0.9;
@@ -602,14 +606,14 @@ export default function launchScene() {
             zIndex: "1000",
             fontSize: "16px",
         });
-    
+
         autoFindBtn.addEventListener('mouseenter', () => {
             autoFindBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
         });
         autoFindBtn.addEventListener('mouseleave', () => {
             autoFindBtn.style.backgroundColor = "transparent";
         });
-    
+
         autoFindBtn.addEventListener('click', () => {
             if (asteroid) {
                 asteroid.visible = true;
@@ -617,7 +621,16 @@ export default function launchScene() {
                 scopeOverlay.forceLockOn();
             }
         });
-    
+
+        // Auto find pcyhe button resize
+        if (window.innerWidth <= 900) {
+            autoFindBtn.style.padding = "7px 10px";
+            autoFindBtn.style.fontSize = "7px";
+        } else {
+            autoFindBtn.style.padding = "10px 20px";
+            autoFindBtn.style.fontSize = "16px";
+        }
+
         document.body.appendChild(autoFindBtn);
 
         return autoFindBtn
@@ -819,6 +832,15 @@ export default function launchScene() {
         camera.aspect = window.innerWidth / window.innerHeight;
         starMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
         camera.updateProjectionMatrix();
+
+        // Auto find pcyhe button resize
+        if (window.innerWidth <= 900) {
+            autoFindBtn.style.padding = "7px 10px";
+            autoFindBtn.style.fontSize = "7px";
+        } else {
+            autoFindBtn.style.padding = "10px 20px";
+            autoFindBtn.style.fontSize = "16px";
+        }
     });
 
     // let intervalID = setInterval(function() {

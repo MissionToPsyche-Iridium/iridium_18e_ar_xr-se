@@ -230,6 +230,9 @@ export default function showPhase(phase) {
             -webkit-tap-highlight-color: transparent;
         `);
         nextButton.addEventListener("click", () => {
+            // Prevent subsequent clicks
+            nextButton.disabled = true;
+            nextButton.style.pointerEvents = "none";
                 setTimeout(() => {
                     phase_div.classList.remove("fade-in");
                     phase_div.classList.add("fade-out");
