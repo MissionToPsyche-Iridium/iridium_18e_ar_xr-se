@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings Page</title>
     <link id="setting-theme" rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="shortcut icon" href="#">
   </head>
   <body>
     <!-- Settings Container -->
@@ -24,61 +25,13 @@
 
       <!-- Content -->
       <div class="modal-content">
-        <!-- Default ModeContent -->
-        <div class="settings-modal-default-mode">
-          <input class="invisibuttons" id="button0" type="button" />
-          <label for="default-mode">
-            <span>Default Mode</span>
-          </label>
-          <input
-            type="radio"
-            id="default-mode"
-            name="setting"
-            value="default-mode"
-          />
-        </div>
-
-        <!-- High Contrast Mode Content -->
-        <div class="settings-modal-high-contrast-mode">
-          <input class="invisibuttons" id="button1" type="button" />
-          <label for="high-contrast-mode">
-            <span>High Contrast Mode</span>
-          </label>
-          <input
-            type="radio"
-            id="high-contrast-mode"
-            name="setting"
-            value="high-contrast-mode"
-          />
-        </div>
-
-        <!-- Light Mode Content -->
-        <div class="settings-modal-light-mode">
-          <input class="invisibuttons" id="button2" type="button" />
-          <label for="light-mode">
-            <span>Light Mode</span>
-          </label>
-          <input
-            type="radio"
-            id="light-mode"
-            name="setting"
-            value="high-mode"
-          />
-        </div>
-
-        <!-- Color-blind Mode Content -->
-        <div class="settings-modal-color-blind-mode">
-          <input class="invisibuttons" id="button3" type="button" />
-          <label for="color-blind-mode">
-            <span>Color-blind Mode</span>
-          </label>
-          <input
-            type="radio"
-            id="color-blind-mode"
-            name="setting"
-            value="color-blind-mode"
-          />
-        </div>
+        <!-- Graphics Quality Content-->
+        <label for="graphics-quality-dropdown">Graphics Quality:</label>
+        <select id="graphics-quality-dropdown">
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
 
         <!-- Volume Content -->
         <div class="settings-modal-volume">

@@ -8,12 +8,13 @@ export default class SettingsModal {
      */
 
     // Constructor
-    constructor() {
+    constructor(updateGraphicsQualityCallback) {
         this.settingsModal = document.getElementById('settings-modal');
         this.settingsModalContent = document.getElementById('settings-modal-content');
         this.settingsIconButton = document.getElementById('settings-icon-button');
         this.cssFile = document.createElement("link");
         this.cssFile.rel = "stylesheet";
+        this.updateGraphicsQuality = updateGraphicsQualityCallback;
 
         this._initialize();
     }
@@ -38,7 +39,7 @@ export default class SettingsModal {
         document.addEventListener('click', (event) => {
             const container = document.getElementById('modal-container-id');
             if (this.settingsModal && this.settingsModal.style.display !== 'none') {
-                if (event.target.id === 'settings-modal-close' || 
+                if (event.target.id === 'settings-modal-close' ||
                     (container && !container.contains(event.target))) {
                     this.close();
                 }
@@ -71,15 +72,16 @@ export default class SettingsModal {
         modalContent.style.margin = '0 auto';
         modalContent.style.display = 'block'
         modalContent.style.textAlign = 'center';
-    
+
         const textBlocks = modalPopup.querySelectorAll('.modal-text');
         textBlocks.forEach(tb => {
-          tb.style.color = '#333';
+            tb.style.color = '#333';
         });
     }
 
     // Load settings modal content
     _loadSettingsModalContent() {
+        triggered("settings");
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'settings_modal.html', true);
         xhr.onreadystatechange = () => {
@@ -98,10 +100,10 @@ export default class SettingsModal {
         const settingThemeLink = document.getElementById('setting-theme');
         const radioSetting = document.querySelectorAll('input[name="setting"]');
         const savedSelection = localStorage.getItem('theme');
-        const button0 = document.getElementById("button0");
-        const button1 = document.getElementById("button1");
-        const button2 = document.getElementById("button2");
-        const button3 = document.getElementById("button3");
+        // const button0 = document.getElementById("button0");
+        // const button1 = document.getElementById("button1");
+        // const button2 = document.getElementById("button2");
+        // const button3 = document.getElementById("button3");
         if (savedSelection) {
             const radioToSelect = document.querySelector(`input[name="setting"][value="${savedSelection}"]`);
             if (radioToSelect) {
@@ -128,19 +130,15 @@ export default class SettingsModal {
             });
         });
 
-        // Volume Settings
-        const volumeSlider = document.getElementById("volume-slider");
-
-        // event listener for changes in volume slider
-        volumeSlider.addEventListener("input", function() {
-            const volumeValue = volumeSlider.value;
-
-            localStorage.setItem("volumeSetting", volumeValue);
-        });
-
-        button0.addEventListener('click', () => document.getElementById('default-mode').click());
-        button1.addEventListener('click', () => document.getElementById('high-contrast-mode').click());
-        button2.addEventListener('click', () => document.getElementById('light-mode').click());
-        button3.addEventListener('click', () => document.getElementById('color-blind-mode').click());
+        // Graphics quality selection
+        const graphicsDropdown = document.getElementById('graphics-quality-dropdown');
+        if (graphicsDropdown) {
+            graphicsDropdown.value = localStorage.getItem('graphicsQuality') || 'medium';
+            graphicsDropdown.addEventListener('change', () => {
+                const newQuality = graphicsDropdown.value;
+                localStorage.setItem('graphicsQuality', newQuality);
+                this.updateGraphicsQuality(newQuality);
+            });
+        }
     }
 }
